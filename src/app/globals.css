@@ -1,0 +1,162 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------------------------------------------------------------------
+   Design tokens
+   Values sourced from design_break_down.md §2.2 "Color palette".
+   Never hardcode hex values in components — always reference these
+   CSS variables via the Tailwind color tokens configured in
+   tailwind.config.ts (e.g. `bg-surface`, `text-text-muted`, `border-border`).
+------------------------------------------------------------------------ */
+
+:root {
+  /* Surfaces */
+  --dx-bg: #ffffff;
+  --dx-surface: #ffffff;
+  --dx-surface-muted: #f5f5f5;
+  --dx-sidebar: #fafafa;
+
+  /* Borders */
+  --dx-border: #e5e5e5;
+  --dx-border-strong: #d4d4d4;
+
+  /* Text */
+  --dx-text: #171717;
+  --dx-text-muted: #737373;
+  --dx-text-subtle: #a3a3a3;
+
+  /* Black action buttons (Add Task / Add Project) */
+  --dx-black-action: #111111;
+  --dx-black-action-hover: #262626;
+
+  /* Priority */
+  --dx-priority-urgent: #dc2626;
+  --dx-priority-high: #f04444;
+  --dx-priority-medium: #f59e0b;
+  --dx-priority-low: #a8b0c0;
+
+  /* Danger / destructive */
+  --dx-danger: #dc2626;
+  --dx-danger-soft: #fde6e6;
+
+  /* Accent — overridden per color mode below (default: blue) */
+  --dx-accent: #6d5df5;
+  --dx-accent-hover: #5a4be0;
+  --dx-accent-fg: #ffffff;
+  --dx-accent-soft: #ece9fe;
+}
+
+/* -------------------------- Dark theme -------------------------------- */
+.dark {
+  --dx-bg: #0a0a0a;
+  --dx-surface: #141414;
+  --dx-surface-muted: #1f1f1f;
+  --dx-sidebar: #101010;
+
+  --dx-border: #2a2a2a;
+  --dx-border-strong: #3a3a3a;
+
+  --dx-text: #f5f5f5;
+  --dx-text-muted: #a3a3a3;
+  --dx-text-subtle: #737373;
+
+  --dx-black-action: #f5f5f5;
+  --dx-black-action-hover: #e5e5e5;
+
+  --dx-danger-soft: #3a1414;
+}
+
+/* ---------------------- Accent color modes ----------------------------
+   Applied via `[data-color-mode]` on <html>, independent of light/dark.
+------------------------------------------------------------------------ */
+[data-color-mode="amber"] {
+  --dx-accent: #f59e0b;
+  --dx-accent-hover: #d97e06;
+  --dx-accent-fg: #171717;
+  --dx-accent-soft: #fef3e0;
+}
+[data-color-mode="blue"] {
+  --dx-accent: #6d5df5;
+  --dx-accent-hover: #5a4be0;
+  --dx-accent-fg: #ffffff;
+  --dx-accent-soft: #ece9fe;
+}
+[data-color-mode="pink"] {
+  --dx-accent: #ec4899;
+  --dx-accent-hover: #db2777;
+  --dx-accent-fg: #ffffff;
+  --dx-accent-soft: #fce7f3;
+}
+[data-color-mode="rose"] {
+  --dx-accent: #f43f5e;
+  --dx-accent-hover: #e11d48;
+  --dx-accent-fg: #ffffff;
+  --dx-accent-soft: #ffe4e6;
+}
+[data-color-mode="emerald"] {
+  --dx-accent: #0f9f6e;
+  --dx-accent-hover: #0c8459;
+  --dx-accent-fg: #ffffff;
+  --dx-accent-soft: #dcfce7;
+}
+[data-color-mode="black"] {
+  --dx-accent: #111111;
+  --dx-accent-hover: #2a2a2a;
+  --dx-accent-fg: #ffffff;
+  --dx-accent-soft: #f0f0f0;
+}
+.dark[data-color-mode="black"] {
+  --dx-accent: #f5f5f5;
+  --dx-accent-hover: #e5e5e5;
+  --dx-accent-fg: #111111;
+  --dx-accent-soft: #262626;
+}
+
+/* ------------------------------------------------------------------- */
+
+* {
+  border-color: var(--dx-border);
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background-color: var(--dx-bg);
+  color: var(--dx-text);
+  font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Thin scrollbars used throughout the app shell */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: var(--dx-border-strong) transparent;
+}
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: var(--dx-border-strong);
+  border-radius: 999px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Respect reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

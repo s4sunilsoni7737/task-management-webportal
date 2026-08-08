@@ -1,0 +1,121 @@
+"use client";
+
+import { useRef, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
+import { TopBar } from "../../../../components/shell/top-bar";
+import { Breadcrumbs } from "../../../../components/shell/breadcrumbs";
+import { GlobalLoader } from "../../../../components/ui/global-loader";
+import { EmptyState } from "../../../../components/ui/empty-state";
+import { TaskHeader } from "../../../../components/task-detail/task-header";
+import { PropertiesRow } from "../../../../components/task-detail/properties-row";
+import { LabelsRow } from "../../../../components/task-detail/labels-row";
+import { ResourcesRow } from "../../../../components/task-detail/resources-row";
+import { SubtasksSection } from "../../../../components/task-detail/subtasks-section";
+import { CommentsSection } from "../../../../components/task-detail/comments-section";
+import { DetailsCard } from "../../../../components/task-detail/details-card";
+import { UpdatesCard } from "../../../../components/task-detail/updates-card";
+import { TaskDetailActions } from "../../../../components/task-detail/task-detail-actions";
+import { DatePickerPopover } from "../../../../components/task-detail/date-picker-popover";
+import { useTask, useUpdateTask, useDeleteTask } from "../../../../hooks/useTasks";
+import { routes } from "../../../../lib/routeBuilder";
+import type { UpdateTaskInput } from "../../../../lib/types";
+
+export default function TaskDetailPage() {
+  const { taskId } = useParams<{ taskId: string }>();
+  const router = useRouter();
+  const queryClient = useQueryClient();
+
+  const { data: task, isLoading } = useTask(taskId);
+  const updateTask = useUpdateTask(taskId);
+  const deleteTask = useDeleteTask();
+
+  const [panelOpen, setPanelOpen] = useState(true);
+  const [datePickerOpen, setDatePickerOpen] = useState(false);
+  const dateAnchorRef = useRef<HTMLDivElement>(null!);
+
+  function save(input: UpdateTaskInput) {
+    updateTask.mutate(input, {
+      onSuccess: (updated) => queryClient.setQueryData(["tasks", taskId], updated),
+    });
+  }
+
+  if (isLoading) {
+    return (
+      <div className="fixed inset-0">
+        <GlobalLoader />
+      </div>
+    );
+  }
+
+  if (!task) {
+    return (
+      <>
+        <TopBar />
+        <main className="flex-1 p-6">
+          <EmptyState title="Task not found" description="It may have been deleted or moved." />
+        </main>
+      </>
+    );
+  }
+
+  const breadcrumbItems = task.projectId
+    ? [
+        { label: "Projects", href: routes.projects() },
+        { label: "Tasks", href: routes.projectDetail(task.projectId) },
+        { label: task.title },
+      ]
+    : [{ label: "Tasks", href: routes.tasks() }, { label: task.title }];
+
+  return (
+    <>
+      <TopBar
+        left={<Breadcrumbs items={breadcrumbItems} />}
+        right={
+          <TaskDetailActions
+            task={task}
+            onToggleLock={() => save({ isLocked: !task.isLocked })}
+            onDelete={() => {
+              deleteTask.mutate(task.id, {
+                onSuccess: () => router.push(task.projectId ? routes.projectDetail(task.projectId) : routes.tasks()),
+              });
+            }}
+            panelOpen={panelOpen}
+            onTogglePanel={() => setPanelOpen((v) => !v)}
+          />
+        }
+      />
+      <main className="flex-1 overflow-y-auto scrollbar-thin">
+        <div className="flex flex-col gap-6 p-4 sm:p-6 lg:flex-row lg:items-start">
+          <div className="min-w-0 flex-1 lg:max-w-[560px]">
+            <TaskHeader task={task} onSave={save} />
+            <PropertiesRow
+              task={task}
+              dateAnchorRef={dateAnchorRef}
+              onOpenDatePicker={() => setDatePickerOpen((v) => !v)}
+            />
+            <DatePickerPopover
+              open={datePickerOpen}
+              onClose={() => setDatePickerOpen(false)}
+              anchorRef={dateAnchorRef}
+              startDate={task.startDate}
+              endDate={task.endDate}
+              onChange={(range) => save(range)}
+            />
+            <LabelsRow task={task} onChange={(labelIds) => save({ labelIds })} />
+            <ResourcesRow />
+            <SubtasksSection taskId={task.id} />
+            <CommentsSection taskId={task.id} />
+          </div>
+
+          {panelOpen && (
+            <aside className="flex w-full shrink-0 flex-col gap-4 lg:w-[280px]">
+              <DetailsCard task={task} onSave={save} />
+              <UpdatesCard taskId={task.id} />
+            </aside>
+          )}
+        </div>
+      </main>
+    </>
+  );
+}

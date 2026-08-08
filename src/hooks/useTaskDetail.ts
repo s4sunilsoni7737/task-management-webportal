@@ -1,0 +1,43 @@
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { tasksService } from "../services/tasks/tasks.service";
+import { useApiMutation } from "./useApiMutation";
+
+export function useComments(taskId: string | undefined) {
+  return useQuery({
+    queryKey: ["tasks", taskId, "comments"],
+    queryFn: () => tasksService.getComments(taskId as string),
+    enabled: Boolean(taskId),
+  });
+}
+
+export function useActivity(taskId: string | undefined) {
+  return useQuery({
+    queryKey: ["tasks", taskId, "activity"],
+    queryFn: () => tasksService.getActivity(taskId as string),
+    enabled: Boolean(taskId),
+  });
+}
+
+export function useAddComment(taskId: string) {
+  const queryClient = useQueryClient();
+  return useApiMutation({
+    mutationFn: (body: string) => tasksService.addComment(taskId, body),
+    errorMessage: "Couldn't post comment",
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tasks", taskId, "comments"] });
+      queryClient.invalidateQueries({ queryKey: ["tasks", taskId] });
+    },
+  });
+}
+
+export function useAddSubtask(taskId: string) {
+  const queryClient = useQueryClient();
+  return useApiMutation({
+    mutationFn: (title: string) => tasksService.addSubtask(taskId, title),
+    errorMessage: "Couldn't add subtask",
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tasks", taskId, "subtasks"] });
+      queryClient.invalidateQueries({ queryKey: ["tasks", taskId] });
+    },
+  });
+}
