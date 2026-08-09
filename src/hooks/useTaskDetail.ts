@@ -21,7 +21,7 @@ export function useActivity(taskId: string | undefined) {
 export function useAddComment(taskId: string) {
   const queryClient = useQueryClient();
   return useApiMutation({
-    mutationFn: (body: string) => tasksService.addComment(taskId, body),
+    mutationFn: (body: string) => tasksService.addComment(taskId, { body }),
     errorMessage: "Couldn't post comment",
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tasks", taskId, "comments"] });
@@ -57,7 +57,7 @@ export function useDeleteComment(taskId: string, commentId: string) {
 export function useAddSubtask(taskId: string) {
   const queryClient = useQueryClient();
   return useApiMutation({
-    mutationFn: (title: string) => tasksService.addSubtask(taskId, title),
+    mutationFn: (title: string) => tasksService.addSubtask(taskId, { title }),
     errorMessage: "Couldn't add subtask",
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tasks", taskId, "subtasks"] });

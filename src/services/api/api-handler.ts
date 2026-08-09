@@ -1,10 +1,21 @@
-import type { AxiosRequestConfig } from "axios";
+import type { AxiosRequestConfig, Method } from "axios";
 import "./api-interceptors"; // registers interceptors as a side effect on first import
 import { apiClient } from "./api-client";
 import { normalizeApiError } from "./api-error-handler";
 import { unwrapEnvelope, type ApiEnvelope } from "./api-response";
 
 export type RequestConfig = AxiosRequestConfig;
+
+interface RequestOptions<TBody = unknown> {
+  url: string;
+  method?: Method;
+  body?: TBody;
+  params?: Record<string, unknown>;
+  config?: AxiosRequestConfig;
+  // Optional token override for special cases. Most requests rely on the
+  // request interceptor to inject the Bearer token.
+  token?: string;
+}
 
 /**
  * Recursively transform a raw backend payload into the shape the frontend
@@ -50,11 +61,34 @@ function transformId<T>(payload: T): T {
  * Domain services (e.g. `tasksService.getAll()`) call this; components
  * never call `apiClient` or `axios` directly.
  */
-export async function request<TResponse>(config: RequestConfig): Promise<TResponse> {
+export async function request<TResponse, TBody = unknown>({
+  url,
+  method = "GET",
+  body,
+  params,
+  config,
+  token,
+}: RequestOptions<TBody>): Promise<TResponse> {
   try {
-    const response = await apiClient.request<ApiEnvelope<TResponse> | TResponse>(config);
+    const response = await apiClient.request<ApiEnvelope<TResponse> | TResponse>({
+      ...config,
+      url,
+      method,
+      data: body,
+      params,
+      headers: {
+        ...config?.headers,
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+    });
 
-    if (response.status === 204) {
+    // Gracefully handle 204 / empty responses.
+    if (
+      response.status === 204 ||
+      response.data === undefined ||
+      response.data === null ||
+      response.data === ""
+    ) {
       return undefined as TResponse;
     }
 

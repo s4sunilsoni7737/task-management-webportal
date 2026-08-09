@@ -2,10 +2,19 @@ import { AxiosError } from "axios";
 import { ApiError, type ApiFieldError } from "./api-error";
 
 interface BackendErrorBody {
+  statusCode?: number;
+  success?: boolean;
+  userMessage?: string;
+  developerMessage?: string;
   message?: string | string[];
   error?: string;
   code?: string;
   errors?: ApiFieldError[];
+  /** NestJS often nests details inside `data` (e.g. validation responses). */
+  data?: {
+    message?: string | string[];
+    errors?: ApiFieldError[];
+  };
 }
 
 /** Converts any thrown value (AxiosError, generic Error, unknown) into an ApiError. */
@@ -23,15 +32,18 @@ export function normalizeApiError(error: unknown): ApiError {
       });
     }
 
-    const rawMessage = body?.message;
+    // The backend always responds with `{ success, userMessage, developerMessage, data }`.
+    // Prefer `userMessage` (human-readable) then `developerMessage`, and fall back to
+    // any generic `message`/nested `data.message` shapes for resilience.
+    const rawMessage = body?.userMessage ?? body?.developerMessage ?? body?.message ?? body?.data?.message;
     const message = Array.isArray(rawMessage)
       ? rawMessage.join(", ")
-      : rawMessage ?? body?.error ?? error.message ?? "Something went wrong.";
+      : rawMessage || body?.error || error.message || "Something went wrong.";
 
     return new ApiError(message, {
       status,
       code: body?.code ?? null,
-      fieldErrors: body?.errors ?? [],
+      fieldErrors: body?.errors ?? body?.data?.errors ?? [],
     });
   }
 
@@ -43,6 +55,6 @@ export function normalizeApiError(error: unknown): ApiError {
 }
 
 /** Convenience helper for toasts / inline banners. */
-export function getErrorMessage(error: unknown): string {
-  return normalizeApiError(error).message;
+export function getErrorMessage(error: unknown, fallback = "An unexpected error occurred."): string {
+  return normalizeApiError(error).message || fallback;
 }

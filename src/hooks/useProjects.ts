@@ -1,12 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { projectsService } from "../services/projects/projects.service";
 import { useApiMutation } from "./useApiMutation";
-import type { CreateProjectInput, UpdateProjectInput } from "../lib/types";
+import type { CreateProjectInput, ProjectQueryParams, UpdateProjectInput } from "../lib/types";
 
-export function useProjects() {
+export function useProjects(params: ProjectQueryParams = {}) {
   return useQuery({
-    queryKey: ["projects"],
-    queryFn: () => projectsService.getAll(),
+    queryKey: ["projects", params],
+    queryFn: () => projectsService.getAll(params),
   });
 }
 

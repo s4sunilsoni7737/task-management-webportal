@@ -6,6 +6,9 @@
  * so the base URL is `http://localhost:8000/api/v1` (see constants.ts).
  * These endpoint paths are relative to that base.
  */
+
+export type ApiId = string | number;
+
 export const API_ENDPOINTS = {
   AUTH: {
     GUEST: "/auth/guest",

@@ -21,7 +21,7 @@ export const workspacesService = {
     return request<Workspace>({
       url: API_ENDPOINTS.WORKSPACES.ROOT,
       method: "POST",
-      data: input,
+      body: input,
     });
   },
 
@@ -29,7 +29,7 @@ export const workspacesService = {
     return request<Workspace>({
       url: API_ENDPOINTS.WORKSPACES.DETAIL(id),
       method: "PATCH",
-      data: input,
+      body: input,
     });
   },
 
@@ -44,7 +44,7 @@ export const workspacesService = {
     return request<Workspace>({
       url: API_ENDPOINTS.WORKSPACES.MEMBERS(id),
       method: "POST",
-      data: { userId: memberUserId },
+      body: { userId: memberUserId },
     });
   },
 };

@@ -39,7 +39,7 @@ export function KanbanCard({ task, onDragStart }: KanbanCardProps) {
 
       <div className="flex items-center justify-between gap-2">
         <PriorityBadge priority={task.priority} showLabel={false} />
-        <DateChip date={task.endDate} short />
+        <DateChip date={task.dueDate} short />
       </div>
 
       <div onClick={(e) => e.stopPropagation()}>

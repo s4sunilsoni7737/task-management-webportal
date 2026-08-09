@@ -1,35 +1,59 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, MessageCircle, ArrowRightLeft, Flag, CalendarClock, Sparkles } from "lucide-react";
+import {
+  ArrowRightLeft,
+  CalendarClock,
+  ChevronDown,
+  Flag,
+  ListPlus,
+  MessageCircle,
+  PencilLine,
+  Sparkles,
+  Tag,
+  UserPlus,
+} from "lucide-react";
 import { useActivity } from "../../hooks/useTaskDetail";
 import { formatRelativeTime } from "../../lib/utils/formatters";
 import type { ActivityLogEntry, ActivityType } from "../../lib/types";
 
 const ACTIVITY_ICONS: Record<ActivityType, typeof Flag> = {
+  created: Sparkles,
   status_change: ArrowRightLeft,
   priority_change: Flag,
+  assignee_change: UserPlus,
+  due_date_change: CalendarClock,
+  label_change: Tag,
+  title_change: PencilLine,
+  description_change: PencilLine,
   comment: MessageCircle,
-  member_added: Sparkles,
-  member_removed: Sparkles,
-  label_added: Sparkles,
-  label_removed: Sparkles,
-  date_change: CalendarClock,
-  created: Sparkles,
+  subtask_added: ListPlus,
 };
 
 function describeActivity(entry: ActivityLogEntry): string {
+  // The backend already writes a human-readable message, e.g.
+  // "You changed priority from No priority to Urgent".
+  if (entry.message) return entry.message;
+
   switch (entry.type) {
     case "status_change":
-      return `Changed status from ${entry.fromValue} to ${entry.toValue}`;
+      return `Changed status to ${entry.toValue ?? "unknown"}`;
     case "priority_change":
-      return `Changed priority from ${entry.fromValue ?? "No priority"} to ${entry.toValue}`;
-    case "date_change":
+      return `Changed priority to ${entry.toValue ?? "No priority"}`;
+    case "due_date_change":
       return `Updated due date to ${entry.toValue ?? "none"}`;
+    case "assignee_change":
+      return "Updated the assigned members";
+    case "label_change":
+      return "Updated the labels";
+    case "title_change":
+      return "Updated the task title";
+    case "description_change":
+      return "Updated the description";
+    case "subtask_added":
+      return "Added a subtask";
     case "comment":
       return "Posted an update";
-    case "created":
-      return `Created "${entry.toValue}"`;
     default:
       return "Updated the task";
   }

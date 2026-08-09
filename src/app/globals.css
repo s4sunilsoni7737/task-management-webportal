@@ -102,6 +102,7 @@
   /* Black action buttons (Add Task / Add Project) */
   --dx-black-action: #111111;
   --dx-black-action-hover: #262626;
+  --dx-black-action-fg: #ffffff;
 
   /* Priority */
   --dx-priority-urgent: #dc2626;
@@ -136,6 +137,7 @@
 
   --dx-black-action: #f5f5f5;
   --dx-black-action-hover: #e5e5e5;
+  --dx-black-action-fg: #111111;
 
   --dx-danger-soft: #3a1414;
 }

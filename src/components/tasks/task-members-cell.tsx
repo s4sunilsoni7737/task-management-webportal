@@ -8,19 +8,30 @@ import type { Member } from "../../lib/types";
 
 interface TaskMembersCellProps {
   members: Member[];
-  onChange: (memberIds: string[]) => void;
+  /** When omitted, renders read-only (used by mobile row cards). */
+  onChange?: (memberIds: string[]) => void;
   size?: "xs" | "sm" | "md";
 }
 
 /** Combines AvatarStack (display) with MemberPicker (assignment) — reused across List/Board/Subtasks. */
-export function TaskMembersCell({ members, onChange, size = "sm" }: TaskMembersCellProps) {
+export function TaskMembersCell({ members = [], onChange, size = "sm" }: TaskMembersCellProps) {
   const { data: allMembers = [] } = useMembers();
   const [open, setOpen] = useState(false);
   const anchorRef = useRef<HTMLDivElement>(null!);
 
+  if (!onChange) {
+    return (
+      <div onClick={(e) => e.stopPropagation()}>
+        <AvatarStack members={members} size={size} />
+      </div>
+    );
+  }
+
+  const handleChange = onChange;
+
   function toggle(memberId: string) {
     const ids = members.map((m) => m.id);
-    onChange(
+    handleChange(
       ids.includes(memberId) ? ids.filter((id) => id !== memberId) : [...ids, memberId],
     );
   }

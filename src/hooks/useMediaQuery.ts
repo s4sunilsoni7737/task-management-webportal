@@ -1,18 +1,24 @@
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 
-/** SSR-safe media query hook. Returns false on the server and first client render. */
-export function useMediaQuery(query: string): boolean {
-  const [matches, setMatches] = useState(false);
-
-  useEffect(() => {
+function subscribeToQuery(query: string) {
+  return (onStoreChange: () => void) => {
     const mql = window.matchMedia(query);
-    setMatches(mql.matches);
-    const listener = (event: MediaQueryListEvent) => setMatches(event.matches);
-    mql.addEventListener("change", listener);
-    return () => mql.removeEventListener("change", listener);
-  }, [query]);
+    mql.addEventListener("change", onStoreChange);
+    return () => mql.removeEventListener("change", onStoreChange);
+  };
+}
 
-  return matches;
+/**
+ * SSR-safe media query hook built on `useSyncExternalStore` — no cascading
+ * setState-in-effect (0ms first paint on desktop/mobile layouts).
+ * Returns false on the server and until the browser paints.
+ */
+export function useMediaQuery(query: string): boolean {
+  return useSyncExternalStore(
+    subscribeToQuery(query),
+    () => window.matchMedia(query).matches,
+    () => false,
+  );
 }
 
 /** Breakpoints referenced across the app shell, per design_break_down.md §14. */

@@ -4,8 +4,8 @@ import { Moon, Sun } from "lucide-react";
 import { Popover } from "../ui/popover";
 import { MenuItem } from "../ui/menu-item";
 import { useUiStore } from "../../store/uiStore";
-import { usersService } from "../../services/users/users.service";
-import { toast } from "../../store/toastStore";
+import { useUpdatePreferences } from "../../hooks/useUsers";
+import { useAuthStore } from "../../store/authStore";
 import type { ThemeMode } from "../../lib/types";
 
 const OPTIONS: { value: ThemeMode; label: string; icon: typeof Sun }[] = [
@@ -19,18 +19,23 @@ interface ThemeSubmenuProps {
   anchorRef: React.RefObject<HTMLElement>;
 }
 
-/** Light/Dark submenu opened from the "Change Theme" row in WorkspaceMenu. */
+/**
+ * Light/Dark submenu opened from the "Change Theme" row in WorkspaceMenu.
+ * Theme is owner by the BACKEND (`user.preferences.theme`): we optimistically
+ * apply it via the uiStore, then persist through `useUpdatePreferences`.
+ */
 export function ThemeSubmenu({ open, onClose, anchorRef }: ThemeSubmenuProps) {
   const theme = useUiStore((s) => s.theme);
-  const setTheme = useUiStore((s) => s.setTheme);
   const colorMode = useUiStore((s) => s.colorMode);
+  const setTheme = useUiStore((s) => s.setTheme);
+  const updatePreferences = useUpdatePreferences();
+  const user = useAuthStore((s) => s.user);
 
   function handleSelect(value: ThemeMode) {
-    setTheme(value);
-    // Persist to backend so the choice survives across sessions (guest or OAuth).
-    usersService.updatePreferences({ theme: value, colorMode }).catch(() => {
-      toast.error("Couldn't save theme preference");
-    });
+    setTheme(value); // optimistic DOM + store update
+    onClose();
+    // Persist to the backend — it is the source of truth for this preference.
+    updatePreferences.mutate({ theme: value, colorMode: colorMode || user?.preferences?.colorMode || "blue" });
   }
 
   return (

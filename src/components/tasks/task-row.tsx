@@ -51,7 +51,7 @@ export function TaskRow({ task, visibleFields }: TaskRowProps) {
       )}
       {visibleFields.dueDate && (
         <td className="px-3 py-2">
-          <DateChip date={task.endDate} short />
+          <DateChip date={task.dueDate} short />
         </td>
       )}
       <td className="w-10 px-2 py-2 text-right" onClick={(e) => e.stopPropagation()}>

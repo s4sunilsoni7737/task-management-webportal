@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Plus, Search as SearchIcon, X } from "lucide-react";
 import { TopBar } from "../../../components/shell/top-bar";
 import { PageHeader } from "../../../components/shell/page-header";
@@ -8,21 +8,44 @@ import { ProjectsTable } from "../../../components/projects/projects-table";
 import { Button } from "../../../components/ui/button";
 import { SearchInput } from "../../../components/ui/search-input";
 import { EmptyState } from "../../../components/ui/empty-state";
+import { QueryErrorCard } from "../../../components/ui/query-error-card";
+import { Skeleton } from "../../../components/ui/skeleton";
+import { Pagination } from "../../../components/ui/pagination";
 import { useProjects, useCreateProject } from "../../../hooks/useProjects";
+import { useDebouncedValue } from "../../../hooks/useDebouncedValue";
 import { PROJECT_PRIORITIES, type ProjectPriority } from "../../../lib/types";
 
+/**
+ * Projects list — fully server-driven: `search` (debounced), `page`,
+ * `pageSize`, `sortBy`/`sortOrder` go straight to `GET /projects`, and the
+ * compact Pagination footer drives page navigation. No more `limit:1000`.
+ */
 export default function ProjectsPage() {
-  const { data: projects = [], isLoading } = useProjects();
   const createProject = useCreateProject();
+
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
   const [search, setSearch] = useState("");
+
   const [modalOpen, setModalOpen] = useState(false);
   const [name, setName] = useState("");
   const [priority, setPriority] = useState<ProjectPriority>("medium");
 
-  const filtered = useMemo(
-    () => projects.filter((p) => p.name.toLowerCase().includes(search.toLowerCase())),
-    [projects, search],
-  );
+  const debouncedSearch = useDebouncedValue(search, 350);
+
+  const { data, isLoading, isError, error, refetch } = useProjects({
+    page,
+    limit: pageSize,
+    search: debouncedSearch || undefined,
+    sortBy: "createdAt",
+    sortOrder: "desc",
+  });
+
+  // Reset to page 1 whenever search or page-size changes.
+  function changeSearch(value: string) {
+    setSearch(value);
+    setPage(1);
+  }
 
   function handleAddProject() {
     const trimmed = name.trim();
@@ -47,7 +70,7 @@ export default function ProjectsPage() {
           title="Projects"
           toolbar={
             <>
-              <SearchInput value={search} onChange={setSearch} placeholder="Search projects..." />
+              <SearchInput value={search} onChange={changeSearch} placeholder="Search projects..." />
               <Button variant="black" size="sm" onClick={() => setModalOpen(true)}>
                 <Plus className="h-3.5 w-3.5" />
                 Add Project
@@ -57,15 +80,29 @@ export default function ProjectsPage() {
         />
 
         {isLoading ? (
-          <div className="h-48 animate-pulse rounded-md bg-surface-muted" />
-        ) : filtered.length === 0 ? (
+          <div>
+            <Skeleton className="h-48 rounded-md" />
+          </div>
+        ) : isError ? (
+          <QueryErrorCard error={error} onRetry={() => refetch()} />
+        ) : data && data.items.length === 0 ? (
           <EmptyState
             icon={SearchIcon}
             title="No projects found"
             description="Try a different search, or create a new project."
           />
         ) : (
-          <ProjectsTable projects={filtered} />
+          <>
+            <ProjectsTable projects={data?.items ?? []} />
+            <Pagination
+              page={data?.page ?? page}
+              pageSize={data?.pageSize ?? pageSize}
+              total={data?.total ?? 0}
+              totalPages={data?.totalPages ?? 1}
+              onPageChange={setPage}
+              onPageSizeChange={setPageSize}
+            />
+          </>
         )}
       </main>
 

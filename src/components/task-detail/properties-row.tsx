@@ -21,7 +21,7 @@ export function PropertiesRow({ task, onOpenDatePicker, dateAnchorRef }: Propert
           </div>
         )}
         <div ref={dateAnchorRef}>
-          <DateChip date={task.endDate} onClick={onOpenDatePicker} />
+          <DateChip date={task.dueDate} onClick={onOpenDatePicker} />
         </div>
       </div>
     </div>

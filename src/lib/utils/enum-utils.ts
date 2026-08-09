@@ -1,10 +1,11 @@
 import type { ComponentType, CSSProperties } from "react";
 import {
+  Archive,
   BarChart2,
   Circle,
+  CircleCheck,
   CircleDashed,
   CircleDot,
-  CircleCheck,
   CirclePause,
   ChevronsUp,
   ChevronUp,
@@ -34,11 +35,12 @@ export interface StatusConfig {
 }
 
 export const STATUS_CONFIG: Record<TaskStatus, StatusConfig> = {
+  backlog: { label: "Backlog", icon: Archive, colorVar: "--dx-text-subtle" },
   todo: { label: "To Do", icon: CircleDashed, colorVar: "--dx-text-subtle" },
   doing: { label: "Doing", icon: CircleDot, colorVar: "--dx-priority-medium" },
-  completed: { label: "Completed", icon: CircleCheck, colorVar: "--dx-accent" },
   on_hold: { label: "On Hold", icon: CirclePause, colorVar: "--dx-priority-low" },
+  completed: { label: "Completed", icon: CircleCheck, colorVar: "--dx-accent" },
 };
 
-// Fallback export kept for completeness/discoverability of the "empty" icon set.
+// Kept for compatibility: `Circle` was the previous "empty" status icon.
 export const EMPTY_CIRCLE_ICON = Circle;

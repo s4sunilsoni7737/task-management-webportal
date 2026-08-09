@@ -6,6 +6,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { TopBar } from "../../../../components/shell/top-bar";
 import { Breadcrumbs } from "../../../../components/shell/breadcrumbs";
 import { GlobalLoader } from "../../../../components/ui/global-loader";
+import { QueryErrorCard } from "../../../../components/ui/query-error-card";
 import { EmptyState } from "../../../../components/ui/empty-state";
 import { TaskHeader } from "../../../../components/task-detail/task-header";
 import { PropertiesRow } from "../../../../components/task-detail/properties-row";
@@ -26,7 +27,7 @@ export default function TaskDetailPage() {
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  const { data: task, isLoading } = useTask(taskId);
+  const { data: task, isLoading, isError, error, refetch } = useTask(taskId);
   const updateTask = useUpdateTask(taskId);
   const deleteTask = useDeleteTask();
 
@@ -45,6 +46,17 @@ export default function TaskDetailPage() {
       <div className="fixed inset-0">
         <GlobalLoader />
       </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <>
+        <TopBar />
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6">
+          <QueryErrorCard error={error} onRetry={() => refetch()} />
+        </main>
+      </>
     );
   }
 
@@ -99,7 +111,7 @@ export default function TaskDetailPage() {
               onClose={() => setDatePickerOpen(false)}
               anchorRef={dateAnchorRef}
               startDate={task.startDate}
-              endDate={task.endDate}
+              endDate={task.dueDate}
               onChange={(range) => save(range)}
             />
             <LabelsRow task={task} onChange={(labelIds) => save({ labelIds })} />

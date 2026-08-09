@@ -5,8 +5,16 @@ import type { CreateTaskInput, TaskQueryParams, UpdateTaskInput } from "../lib/t
 
 export function useTasks(params: TaskQueryParams = {}) {
   return useQuery({
-    queryKey: ["tasks", params],
+    queryKey: ["tasks", "list", params],
     queryFn: () => tasksService.getAll(params),
+  });
+}
+
+/** Grouped-by-status query — powering both the List view's sections and the Board columns. */
+export function useGroupedTasks(params: TaskQueryParams = {}) {
+  return useQuery({
+    queryKey: ["tasks", "grouped", params],
+    queryFn: () => tasksService.getGrouped(params),
   });
 }
 

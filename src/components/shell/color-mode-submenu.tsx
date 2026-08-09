@@ -3,8 +3,8 @@
 import { Check } from "lucide-react";
 import { Popover } from "../ui/popover";
 import { useUiStore } from "../../store/uiStore";
-import { usersService } from "../../services/users/users.service";
-import { toast } from "../../store/toastStore";
+import { useUpdatePreferences } from "../../hooks/useUsers";
+import { useAuthStore } from "../../store/authStore";
 import { COLOR_MODES, type ColorMode } from "../../lib/types";
 import { cn } from "../../lib/utils";
 
@@ -32,18 +32,22 @@ interface ColorModeSubmenuProps {
   anchorRef: React.RefObject<HTMLElement>;
 }
 
-/** Amber/Blue/Pink/Rose/Emerald/Black submenu opened from "Color Mode" row in WorkspaceMenu. */
+/**
+ * Amber/Blue/Pink/Rose/Emerald/Black submenu opened from "Color Mode" row in
+ * WorkspaceMenu. Color mode is owned by the BACKEND (`user.preferences.colorMode`);
+ * we optimistically apply it, then persist via `useUpdatePreferences`.
+ */
 export function ColorModeSubmenu({ open, onClose, anchorRef }: ColorModeSubmenuProps) {
   const colorMode = useUiStore((s) => s.colorMode);
   const setColorMode = useUiStore((s) => s.setColorMode);
   const theme = useUiStore((s) => s.theme);
+  const updatePreferences = useUpdatePreferences();
+  const user = useAuthStore((s) => s.user);
 
   function handleSelect(mode: ColorMode) {
-    setColorMode(mode);
-    // Persist to backend so the choice survives across sessions (guest or OAuth).
-    usersService.updatePreferences({ theme, colorMode: mode }).catch(() => {
-      toast.error("Couldn't save color mode preference");
-    });
+    setColorMode(mode); // optimistic DOM + store update
+    onClose();
+    updatePreferences.mutate({ theme: theme || user?.preferences?.theme || "light", colorMode: mode });
   }
 
   return (

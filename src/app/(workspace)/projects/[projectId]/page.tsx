@@ -1,9 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useParams } from "next/navigation";
 import { Search } from "lucide-react";
-import { useQueryClient } from "@tanstack/react-query";
 import { TopBar } from "../../../../components/shell/top-bar";
 import { PageHeader } from "../../../../components/shell/page-header";
 import { Breadcrumbs } from "../../../../components/shell/breadcrumbs";
@@ -11,10 +10,14 @@ import { TasksToolbar } from "../../../../components/tasks/tasks-toolbar";
 import { TaskGroup } from "../../../../components/tasks/task-group";
 import { TasksBoard } from "../../../../components/tasks/tasks-board";
 import { EmptyState } from "../../../../components/ui/empty-state";
+import { QueryErrorCard } from "../../../../components/ui/query-error-card";
+import { Skeleton } from "../../../../components/ui/skeleton";
 import { GlobalLoader } from "../../../../components/ui/global-loader";
+import { AddTaskModal } from "../../../../components/tasks/add-task-modal";
 import { useProject } from "../../../../hooks/useProjects";
-import { useTasks, useCreateTask } from "../../../../hooks/useTasks";
+import { useGroupedTasks } from "../../../../hooks/useTasks";
 import { useMembers, useLabels } from "../../../../hooks/useLookups";
+import { useDebouncedValue } from "../../../../hooks/useDebouncedValue";
 import { useUiStore } from "../../../../store/uiStore";
 import {
   DEFAULT_TASK_FIELDS,
@@ -28,48 +31,48 @@ const EMPTY_FILTERS: TaskFilters = { memberId: null, labelId: null, priority: nu
 
 /**
  * Project-scoped Tasks view. Reuses the exact Tasks module UI (toolbar,
- * grouping, fields), filtered to this project, per design_break_down.md §5
- * and Scope of Work §3.5 ("Project-scoped task screen reuses the exact
- * Tasks module UI").
+ * grouping, fields) — all search/filter criteria are SERVER-side params via
+ * `GET /tasks?projectId=<id>&groupByStatus=true`, per design_break_down.md §5.
  */
 export default function ProjectTasksPage() {
   const { projectId } = useParams<{ projectId: string }>();
-  const queryClient = useQueryClient();
   const view = useUiStore((s) => s.taskView);
   const setView = useUiStore((s) => s.setTaskView);
 
   const { data: project, isLoading: projectLoading } = useProject(projectId);
-  const { data: tasks = [], isLoading: tasksLoading } = useTasks({ projectId });
   const { data: members = [] } = useMembers();
   const { data: labels = [] } = useLabels();
-  const createTask = useCreateTask();
+  const [addModalOpen, setAddModalOpen] = useState(false);
 
   const [search, setSearch] = useState("");
   const [visibleFields, setVisibleFields] = useState<TaskFieldVisibility>(DEFAULT_TASK_FIELDS);
   const [filters, setFilters] = useState<TaskFilters>(EMPTY_FILTERS);
 
-  const filteredTasks = useMemo(() => {
-    return tasks.filter((task) => {
-      if (search && !task.title.toLowerCase().includes(search.toLowerCase())) return false;
-      if (filters.memberId && !task.members.some((m) => m.id === filters.memberId)) return false;
-      if (filters.labelId && !task.labels.some((l) => l.id === filters.labelId)) return false;
-      if (filters.priority && task.priority !== filters.priority) return false;
-      return true;
-    });
-  }, [tasks, search, filters]);
+  const debouncedSearch = useDebouncedValue(search, 350);
+
+  const {
+    data: tasksData,
+    isLoading: tasksLoading,
+    isError,
+    error,
+    refetch,
+  } = useGroupedTasks({
+    projectId,
+    q: debouncedSearch || undefined,
+    memberId: filters.memberId ?? undefined,
+    labelId: filters.labelId ?? undefined,
+    priority: filters.priority ?? undefined,
+  });
+
+  const grouped = tasksData?.grouped ?? {};
+  const total = tasksData?.total ?? 0;
+  const allTasks = Object.values(grouped).flat();
 
   function toggleField(key: string) {
     setVisibleFields((prev) => ({
       ...prev,
       [key]: !(prev[key as keyof TaskFieldVisibility] ?? true),
     }));
-  }
-
-  function handleAddTask() {
-    createTask.mutate(
-      { title: "New task", status: "todo", projectId },
-      { onSuccess: () => queryClient.invalidateQueries({ queryKey: ["tasks"] }) },
-    );
   }
 
   if (projectLoading) {
@@ -109,28 +112,32 @@ export default function ProjectTasksPage() {
               labels={labels}
               view={view}
               onViewChange={setView}
-              onAddTask={handleAddTask}
+              onAddTask={() => setAddModalOpen(true)}
             />
           }
         />
 
         {tasksLoading ? (
-          <div className="h-48 animate-pulse rounded-md bg-surface-muted" />
-        ) : filteredTasks.length === 0 ? (
+          <div>
+            <Skeleton className="h-48 rounded-md" />
+          </div>
+        ) : isError ? (
+          <QueryErrorCard error={error} onRetry={() => refetch()} />
+        ) : total === 0 ? (
           <EmptyState
             icon={Search}
             title="No tasks yet"
             description="Add the first task for this project."
           />
         ) : view === "board" ? (
-          <TasksBoard tasks={filteredTasks} projectId={projectId} />
+          <TasksBoard tasks={allTasks} projectId={projectId} />
         ) : (
           <div className="flex flex-col gap-5">
             {TASK_STATUSES.map((status) => (
               <TaskGroup
                 key={status}
                 status={status}
-                tasks={filteredTasks.filter((t) => t.status === status)}
+                tasks={grouped[status] ?? []}
                 visibleFields={visibleFields}
                 projectId={projectId}
               />
@@ -138,6 +145,12 @@ export default function ProjectTasksPage() {
           </div>
         )}
       </main>
+
+      <AddTaskModal
+        open={addModalOpen}
+        onClose={() => setAddModalOpen(false)}
+        projectId={projectId}
+      />
     </>
   );
 }

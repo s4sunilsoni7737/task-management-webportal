@@ -148,14 +148,14 @@ export function DetailsCard({ task, onSave }: DetailsCardProps) {
 
           <DetailRow icon={CalendarDays} label="Dates">
             <div ref={datesRef}>
-              <DateChip date={task.endDate} onClick={() => setOpenField("dates")} />
+              <DateChip date={task.dueDate} onClick={() => setOpenField("dates")} />
             </div>
             <DatePickerPopover
               open={openField === "dates"}
               onClose={() => setOpenField(null)}
               anchorRef={datesRef}
               startDate={task.startDate}
-              endDate={task.endDate}
+              endDate={task.dueDate}
               onChange={(range) => onSave(range)}
             />
           </DetailRow>

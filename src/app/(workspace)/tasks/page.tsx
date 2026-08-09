@@ -1,59 +1,62 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { Search } from "lucide-react";
 import { TopBar } from "../../../components/shell/top-bar";
 import { PageHeader } from "../../../components/shell/page-header";
 import { TasksToolbar } from "../../../components/tasks/tasks-toolbar";
 import { TaskGroup } from "../../../components/tasks/task-group";
 import { TasksBoard } from "../../../components/tasks/tasks-board";
 import { EmptyState } from "../../../components/ui/empty-state";
-import { useTasks, useCreateTask } from "../../../hooks/useTasks";
+import { QueryErrorCard } from "../../../components/ui/query-error-card";
+import { Skeleton } from "../../../components/ui/skeleton";
+import { AddTaskModal } from "../../../components/tasks/add-task-modal";
+import { useGroupedTasks } from "../../../hooks/useTasks";
 import { useMembers, useLabels } from "../../../hooks/useLookups";
+import { useDebouncedValue } from "../../../hooks/useDebouncedValue";
 import { useUiStore } from "../../../store/uiStore";
 import { DEFAULT_TASK_FIELDS, type TaskFieldVisibility } from "../../../components/tasks/task-fields";
 import type { TaskFilters } from "../../../components/ui/filter-popover";
 import { TASK_STATUSES } from "../../../lib/types";
-import { Search } from "lucide-react";
 
 const EMPTY_FILTERS: TaskFilters = { memberId: null, labelId: null, priority: null };
 
+/**
+ * Tasks home page. All search/filter criteria are SERVER-side query params
+ * (`q`, `memberId`, `labelId`, `priority`) consumed by `GET /tasks?groupByStatus=true`,
+ * which returns tasks pre-grouped into status buckets — powering the List
+ * view's collapsible sections and the Board's Kanban columns. No client-side
+ * filtering happens here (the old `limit:1000` + `.filter()` bug is gone).
+ */
 export default function TasksPage() {
-  const queryClient = useQueryClient();
   const view = useUiStore((s) => s.taskView);
   const setView = useUiStore((s) => s.setTaskView);
 
-  const { data: tasks = [], isLoading } = useTasks();
-  const { data: members = [] } = useMembers();
-  const { data: labels = [] } = useLabels();
-  const createTask = useCreateTask();
-
+  const [addModalOpen, setAddModalOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [visibleFields, setVisibleFields] = useState<TaskFieldVisibility>(DEFAULT_TASK_FIELDS);
   const [filters, setFilters] = useState<TaskFilters>(EMPTY_FILTERS);
 
-  const filteredTasks = useMemo(() => {
-    return tasks.filter((task) => {
-      if (search && !task.title.toLowerCase().includes(search.toLowerCase())) return false;
-      if (filters.memberId && !task.members.some((m) => m.id === filters.memberId)) return false;
-      if (filters.labelId && !task.labels.some((l) => l.id === filters.labelId)) return false;
-      if (filters.priority && task.priority !== filters.priority) return false;
-      return true;
-    });
-  }, [tasks, search, filters]);
+  const debouncedSearch = useDebouncedValue(search, 350);
+  const { data: members = [] } = useMembers();
+  const { data: labels = [] } = useLabels();
+
+  const { data, isLoading, isError, error, refetch } = useGroupedTasks({
+    q: debouncedSearch || undefined,
+    memberId: filters.memberId ?? undefined,
+    labelId: filters.labelId ?? undefined,
+    priority: filters.priority ?? undefined,
+  });
+
+  const grouped = data?.grouped ?? {};
+  const total = data?.total ?? 0;
+  const allTasks = Object.values(grouped).flat();
 
   function toggleField(key: string) {
     setVisibleFields((prev) => ({
       ...prev,
       [key]: !(prev[key as keyof TaskFieldVisibility] ?? true),
     }));
-  }
-
-  function handleAddTask() {
-    createTask.mutate(
-      { title: "New task", status: "todo" },
-      { onSuccess: () => queryClient.invalidateQueries({ queryKey: ["tasks"] }) },
-    );
   }
 
   return (
@@ -74,7 +77,7 @@ export default function TasksPage() {
               labels={labels}
               view={view}
               onViewChange={setView}
-              onAddTask={handleAddTask}
+              onAddTask={() => setAddModalOpen(true)}
             />
           }
         />
@@ -82,30 +85,34 @@ export default function TasksPage() {
         {isLoading ? (
           <div className="space-y-3">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-32 animate-pulse rounded-md bg-surface-muted" />
+              <Skeleton key={i} className="h-32 rounded-md" />
             ))}
           </div>
-        ) : filteredTasks.length === 0 ? (
+        ) : isError ? (
+          <QueryErrorCard error={error} onRetry={() => refetch()} />
+        ) : total === 0 ? (
           <EmptyState
             icon={Search}
             title="No tasks found"
             description="Try adjusting your search or filters."
           />
         ) : view === "board" ? (
-          <TasksBoard tasks={filteredTasks} />
+          <TasksBoard tasks={allTasks} />
         ) : (
           <div className="flex flex-col gap-5">
             {TASK_STATUSES.map((status) => (
               <TaskGroup
                 key={status}
                 status={status}
-                tasks={filteredTasks.filter((t) => t.status === status)}
+                tasks={grouped[status] ?? []}
                 visibleFields={visibleFields}
               />
             ))}
           </div>
         )}
       </main>
+
+      <AddTaskModal open={addModalOpen} onClose={() => setAddModalOpen(false)} />
     </>
   );
 }

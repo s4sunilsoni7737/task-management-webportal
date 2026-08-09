@@ -1,18 +1,27 @@
 /**
- * Enum-like unions shared between the frontend and the (future) NestJS
- * backend. Keeping these as string unions (rather than TS `enum`) keeps
- * them trivially serializable over JSON and easy to mirror in Mongoose
+ * Enum-like unions shared between the frontend and the NestJS backend.
+ * Keeping these as string unions (rather than TS `enum`) keeps them
+ * trivially serializable over JSON and easy to mirror in Mongoose
  * schema enums on the backend.
+ *
+ * Every value below mirrors `src/enums/*` in `task-management-api`.
  */
 
-export const TASK_STATUSES = ["todo", "doing", "completed", "on_hold"] as const;
+export const TASK_STATUSES = [
+  "backlog",
+  "todo",
+  "doing",
+  "on_hold",
+  "completed",
+] as const;
 export type TaskStatus = (typeof TASK_STATUSES)[number];
 
 export const TASK_STATUS_LABELS: Record<TaskStatus, string> = {
+  backlog: "Backlog",
   todo: "To Do",
   doing: "Doing",
-  completed: "Completed",
   on_hold: "On Hold",
+  completed: "Completed",
 };
 
 export const PRIORITIES = ["no_priority", "urgent", "high", "medium", "low"] as const;
@@ -43,12 +52,13 @@ export const COLOR_MODES = [
 export type ColorMode = (typeof COLOR_MODES)[number];
 
 export type ActivityType =
+  | "created"
   | "status_change"
   | "priority_change"
+  | "assignee_change"
+  | "due_date_change"
+  | "label_change"
+  | "title_change"
+  | "description_change"
   | "comment"
-  | "member_added"
-  | "member_removed"
-  | "label_added"
-  | "label_removed"
-  | "date_change"
-  | "created";
+  | "subtask_added";
