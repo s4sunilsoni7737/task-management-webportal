@@ -103,7 +103,7 @@ export default function TaskDetailPage() {
               onChange={(range) => save(range)}
             />
             <LabelsRow task={task} onChange={(labelIds) => save({ labelIds })} />
-            <ResourcesRow />
+            <ResourcesRow taskId={task.id} />
             <SubtasksSection taskId={task.id} />
             <CommentsSection taskId={task.id} />
           </div>

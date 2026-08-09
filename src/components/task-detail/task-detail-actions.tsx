@@ -6,6 +6,7 @@ import { IconButton } from "../ui/icon-button";
 import { Popover } from "../ui/popover";
 import { MenuItem } from "../ui/menu-item";
 import { toast } from "../../store/toastStore";
+import { tasksService } from "../../services/tasks/tasks.service";
 import type { Task } from "../../lib/types";
 
 interface TaskDetailActionsProps {
@@ -25,7 +26,19 @@ export function TaskDetailActions({
   onTogglePanel,
 }: TaskDetailActionsProps) {
   const [overflowOpen, setOverflowOpen] = useState(false);
+  const [watching, setWatching] = useState(false);
   const overflowRef = useRef<HTMLButtonElement>(null!);
+
+  function toggleWatch() {
+    setWatching(true);
+    const action = task.watcherCount > 0 ? tasksService.unwatch(task.id) : tasksService.watch(task.id);
+    action
+      .then(() => {
+        toast.success(task.watcherCount > 0 ? "Stopped watching task" : "Now watching task");
+      })
+      .catch(() => toast.error("Couldn't update watch status"))
+      .finally(() => setWatching(false));
+  }
 
   return (
     <>
@@ -33,10 +46,16 @@ export function TaskDetailActions({
         {task.isLocked ? <Lock className="h-4 w-4" /> : <LockOpen className="h-4 w-4" />}
       </IconButton>
 
-      <div className="flex h-8 items-center gap-1 rounded-sm px-2 text-text-muted">
+      <button
+        type="button"
+        onClick={toggleWatch}
+        disabled={watching}
+        aria-label={task.watcherCount > 0 ? "Stop watching task" : "Watch task"}
+        className="flex h-8 items-center gap-1 rounded-sm px-2 text-text-muted transition-colors hover:bg-surface-muted hover:text-text disabled:opacity-50"
+      >
         <Eye className="h-4 w-4" />
         <span className="text-xs">{task.watcherCount}</span>
-      </div>
+      </button>
 
       <IconButton
         aria-label="Share task"

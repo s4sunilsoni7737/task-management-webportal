@@ -5,6 +5,7 @@ import { Button } from "../../../components/ui/button";
 import { GoogleIcon } from "../../../components/ui/icons/google-icon";
 import { PyramidMark } from "../../../components/ui/icons/pyramid-mark";
 import { useGuestLogin } from "../../../hooks/useAuth";
+import { authService } from "../../../services/auth/auth.service";
 
 export default function LoginPage() {
   const guestLogin = useGuestLogin();
@@ -37,11 +38,7 @@ export default function LoginPage() {
           <Button
             variant="outline"
             className="h-10 w-full gap-2"
-            onClick={() => {
-              // TODO(auth): backend Google OAuth strategy not implemented yet;
-              // documented as an in-progress deviation in the README.
-              alert("Google sign-in isn't wired up to a backend yet — please continue as a guest.");
-            }}
+            onClick={() => authService.loginWithGoogle()}
           >
             <GoogleIcon className="h-4 w-4" />
             Login with Google

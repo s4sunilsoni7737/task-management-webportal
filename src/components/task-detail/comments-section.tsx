@@ -23,7 +23,7 @@ export function CommentsSection({ taskId }: { taskId: string }) {
           ) : (
             <div className="divide-y divide-border px-3">
               {comments.map((comment) => (
-                <CommentItem key={comment.id} comment={comment} />
+                <CommentItem key={comment.id} comment={comment} taskId={taskId} />
               ))}
             </div>
           )}

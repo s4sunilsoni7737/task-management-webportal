@@ -18,9 +18,12 @@ export function useGuestLogin() {
     onSuccess: (session) => {
       setSession(session.accessToken, {
         ...session.user,
-        preferences: { theme, colorMode },
+        // Backend now returns nested `preferences` on the user; fall back
+        // to the locally persisted uiStore values if absent.
+        preferences: session.user.preferences ?? { theme, colorMode },
       });
-      applyDocumentTheme(theme, colorMode);
+      const prefs = session.user.preferences ?? { theme, colorMode };
+      applyDocumentTheme(prefs.theme, prefs.colorMode);
       router.replace(routes.tasks());
     },
   });

@@ -3,6 +3,8 @@
 import { Check } from "lucide-react";
 import { Popover } from "../ui/popover";
 import { useUiStore } from "../../store/uiStore";
+import { usersService } from "../../services/users/users.service";
+import { toast } from "../../store/toastStore";
 import { COLOR_MODES, type ColorMode } from "../../lib/types";
 import { cn } from "../../lib/utils";
 
@@ -34,6 +36,15 @@ interface ColorModeSubmenuProps {
 export function ColorModeSubmenu({ open, onClose, anchorRef }: ColorModeSubmenuProps) {
   const colorMode = useUiStore((s) => s.colorMode);
   const setColorMode = useUiStore((s) => s.setColorMode);
+  const theme = useUiStore((s) => s.theme);
+
+  function handleSelect(mode: ColorMode) {
+    setColorMode(mode);
+    // Persist to backend so the choice survives across sessions (guest or OAuth).
+    usersService.updatePreferences({ theme, colorMode: mode }).catch(() => {
+      toast.error("Couldn't save color mode preference");
+    });
+  }
 
   return (
     <Popover
@@ -50,7 +61,7 @@ export function ColorModeSubmenu({ open, onClose, anchorRef }: ColorModeSubmenuP
           key={mode}
           type="button"
           role="menuitem"
-          onClick={() => setColorMode(mode)}
+          onClick={() => handleSelect(mode)}
           className={cn(
             "flex h-8 w-full items-center gap-2 rounded-sm px-2.5 text-left text-sm text-text transition-colors",
             "hover:bg-surface-muted focus-visible:outline-none focus-visible:bg-surface-muted",

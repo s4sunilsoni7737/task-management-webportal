@@ -36,6 +36,18 @@ export const tasksService = {
     return request<Task>({ url: API_ENDPOINTS.TASKS.ROOT, method: "POST", data: input });
   },
 
+  addResource(id: string, input: { name: string; url: string }): Promise<Task> {
+    return request<Task>({ url: API_ENDPOINTS.TASKS.RESOURCES(id), method: "POST", data: input });
+  },
+
+  watch(id: string): Promise<void> {
+    return request<void>({ url: API_ENDPOINTS.TASKS.WATCH(id), method: "POST" });
+  },
+
+  unwatch(id: string): Promise<void> {
+    return request<void>({ url: API_ENDPOINTS.TASKS.WATCH(id), method: "DELETE" });
+  },
+
   update(id: string, input: UpdateTaskInput): Promise<Task> {
     return request<Task>({ url: API_ENDPOINTS.TASKS.DETAIL(id), method: "PATCH", data: input });
   },
@@ -65,6 +77,21 @@ export const tasksService = {
       url: API_ENDPOINTS.TASKS.COMMENTS(id),
       method: "POST",
       data: { body },
+    });
+  },
+
+  updateComment(id: string, commentId: string, body: string): Promise<Comment> {
+    return request<Comment>({
+      url: API_ENDPOINTS.TASKS.COMMENT_DETAIL(id, commentId),
+      method: "PATCH",
+      data: { body },
+    });
+  },
+
+  removeComment(id: string, commentId: string): Promise<void> {
+    return request<void>({
+      url: API_ENDPOINTS.TASKS.COMMENT_DETAIL(id, commentId),
+      method: "DELETE",
     });
   },
 

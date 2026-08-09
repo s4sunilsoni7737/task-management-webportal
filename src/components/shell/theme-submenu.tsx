@@ -4,6 +4,8 @@ import { Moon, Sun } from "lucide-react";
 import { Popover } from "../ui/popover";
 import { MenuItem } from "../ui/menu-item";
 import { useUiStore } from "../../store/uiStore";
+import { usersService } from "../../services/users/users.service";
+import { toast } from "../../store/toastStore";
 import type { ThemeMode } from "../../lib/types";
 
 const OPTIONS: { value: ThemeMode; label: string; icon: typeof Sun }[] = [
@@ -21,6 +23,15 @@ interface ThemeSubmenuProps {
 export function ThemeSubmenu({ open, onClose, anchorRef }: ThemeSubmenuProps) {
   const theme = useUiStore((s) => s.theme);
   const setTheme = useUiStore((s) => s.setTheme);
+  const colorMode = useUiStore((s) => s.colorMode);
+
+  function handleSelect(value: ThemeMode) {
+    setTheme(value);
+    // Persist to backend so the choice survives across sessions (guest or OAuth).
+    usersService.updatePreferences({ theme: value, colorMode }).catch(() => {
+      toast.error("Couldn't save theme preference");
+    });
+  }
 
   return (
     <Popover
@@ -38,7 +49,7 @@ export function ThemeSubmenu({ open, onClose, anchorRef }: ThemeSubmenuProps) {
           icon={option.icon}
           label={option.label}
           selected={theme === option.value}
-          onClick={() => setTheme(option.value)}
+          onClick={() => handleSelect(option.value)}
         />
       ))}
     </Popover>

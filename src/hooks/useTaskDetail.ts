@@ -30,6 +30,30 @@ export function useAddComment(taskId: string) {
   });
 }
 
+export function useUpdateComment(taskId: string, commentId: string) {
+  const queryClient = useQueryClient();
+  return useApiMutation({
+    mutationFn: (body: string) => tasksService.updateComment(taskId, commentId, body),
+    successMessage: "Comment updated",
+    errorMessage: "Couldn't update comment",
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tasks", taskId, "comments"] });
+    },
+  });
+}
+
+export function useDeleteComment(taskId: string, commentId: string) {
+  const queryClient = useQueryClient();
+  return useApiMutation({
+    mutationFn: () => tasksService.removeComment(taskId, commentId),
+    successMessage: "Comment deleted",
+    errorMessage: "Couldn't delete comment",
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tasks", taskId, "comments"] });
+    },
+  });
+}
+
 export function useAddSubtask(taskId: string) {
   const queryClient = useQueryClient();
   return useApiMutation({
