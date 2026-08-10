@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import { Check, Moon, Palette, Settings, Sun } from "lucide-react";
 import { Popover } from "../ui/popover";
-import { MenuItem } from "../ui/menu-item";
+import { MenuItem } from "../ui/menu";
 import { Avatar } from "../ui/avatar";
 import { useAuthStore } from "../../store/authStore";
 import { useUiStore } from "../../store/uiStore";

@@ -1,9 +1,9 @@
-"use client";
+﻿"use client";
 
 import { useRef, useState } from "react";
 import { Filter } from "lucide-react";
-import { Button } from "./button";
-import { Popover } from "./popover";
+import { Button } from "../ui/button";
+import { Popover } from "../ui/popover";
 import { PRIORITY_CONFIG } from "../../lib/utils/enum-utils";
 import type { Label, Member, Priority } from "../../lib/types";
 import { PRIORITIES } from "../../lib/types";
@@ -25,7 +25,7 @@ interface FilterPopoverProps {
 const activeFilterCount = (f: TaskFilters) =>
   Number(!!f.memberId) + Number(!!f.labelId) + Number(!!f.priority);
 
-/** "Filter" toolbar control — narrows visible tasks by member, label, or priority. */
+/** "Filter" toolbar control â€” narrows visible tasks by member, label, or priority. */
 export function FilterPopover({ members, labels, filters, onChange }: FilterPopoverProps) {
   const [open, setOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null!);

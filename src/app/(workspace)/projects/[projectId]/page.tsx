@@ -1,11 +1,9 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { useParams } from "next/navigation";
-import { Search } from "lucide-react";
-import { TopBar } from "../../../../components/shell/top-bar";
-import { PageHeader } from "../../../../components/shell/page-header";
-import { Breadcrumbs } from "../../../../components/shell/breadcrumbs";
+import Link from "next/link";
+import { ChevronRight, Search } from "lucide-react";
 import { TasksToolbar } from "../../../../components/tasks/tasks-toolbar";
 import { TaskGroup } from "../../../../components/tasks/task-group";
 import { TasksBoard } from "../../../../components/tasks/tasks-board";
@@ -23,7 +21,7 @@ import {
   DEFAULT_TASK_FIELDS,
   type TaskFieldVisibility,
 } from "../../../../components/tasks/task-fields";
-import type { TaskFilters } from "../../../../components/ui/filter-popover";
+import type { TaskFilters } from "../../../../components/tasks/filter-popover";
 import { routes } from "../../../../lib/routeBuilder";
 import { TASK_STATUSES } from "../../../../lib/types";
 
@@ -31,8 +29,8 @@ const EMPTY_FILTERS: TaskFilters = { memberId: null, labelId: null, priority: nu
 
 /**
  * Project-scoped Tasks view. Reuses the exact Tasks module UI (toolbar,
- * grouping, fields) — all search/filter criteria are SERVER-side params via
- * `GET /tasks?projectId=<id>&groupByStatus=true`, per design_break_down.md §5.
+ * grouping, fields) â€” all search/filter criteria are SERVER-side params via
+ * `GET /tasks?projectId=<id>&groupByStatus=true`, per design_break_down.md Â§5.
  */
 export default function ProjectTasksPage() {
   const { projectId } = useParams<{ projectId: string }>();
@@ -84,40 +82,40 @@ export default function ProjectTasksPage() {
   }
 
   if (!project) {
-    return (
-      <>
-        <TopBar />
-        <main className="flex-1 p-6">
-          <EmptyState title="Project not found" description="It may have been deleted." />
-        </main>
-      </>
-    );
+    return <EmptyState title="Project not found" description="It may have been deleted." />;
   }
 
   return (
     <>
-      <TopBar left={<Breadcrumbs items={[{ label: "Projects", href: routes.projects() }, { label: project.name }]} />} />
-      <main className="flex-1 overflow-y-auto scrollbar-thin p-4 sm:p-6">
-        <PageHeader
-          title="Tasks"
-          toolbar={
-            <TasksToolbar
-              search={search}
-              onSearchChange={setSearch}
-              visibleFields={visibleFields}
-              onToggleField={toggleField}
-              filters={filters}
-              onFiltersChange={setFilters}
-              members={members}
-              labels={labels}
-              view={view}
-              onViewChange={setView}
-              onAddTask={() => setAddModalOpen(true)}
-            />
-          }
-        />
+      <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <nav aria-label="Breadcrumb" className="flex min-w-0 items-center gap-1 text-sm">
+            <Link href={routes.projects()} className="truncate text-text-muted hover:text-text">
+              Projects
+            </Link>
+            <ChevronRight className="h-3 w-3 shrink-0 text-text-subtle" />
+            <span className="truncate font-medium text-text">{project.name}</span>
+          </nav>
+          <h1 className="text-xl font-bold text-text">Tasks</h1>
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <TasksToolbar
+            search={search}
+            onSearchChange={setSearch}
+            visibleFields={visibleFields}
+            onToggleField={toggleField}
+            filters={filters}
+            onFiltersChange={setFilters}
+            members={members}
+            labels={labels}
+            view={view}
+            onViewChange={setView}
+            onAddTask={() => setAddModalOpen(true)}
+          />
+        </div>
+      </div>
 
-        {tasksLoading ? (
+      {tasksLoading ? (
           <div>
             <Skeleton className="h-48 rounded-md" />
           </div>
@@ -144,7 +142,6 @@ export default function ProjectTasksPage() {
             ))}
           </div>
         )}
-      </main>
 
       <AddTaskModal
         open={addModalOpen}

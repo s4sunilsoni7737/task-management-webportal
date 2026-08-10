@@ -2,8 +2,6 @@
 
 import { useState } from "react";
 import { Search } from "lucide-react";
-import { TopBar } from "../../../components/shell/top-bar";
-import { PageHeader } from "../../../components/shell/page-header";
 import { TasksToolbar } from "../../../components/tasks/tasks-toolbar";
 import { TaskGroup } from "../../../components/tasks/task-group";
 import { TasksBoard } from "../../../components/tasks/tasks-board";
@@ -16,7 +14,7 @@ import { useMembers, useLabels } from "../../../hooks/useLookups";
 import { useDebouncedValue } from "../../../hooks/useDebouncedValue";
 import { useUiStore } from "../../../store/uiStore";
 import { DEFAULT_TASK_FIELDS, type TaskFieldVisibility } from "../../../components/tasks/task-fields";
-import type { TaskFilters } from "../../../components/ui/filter-popover";
+import type { TaskFilters } from "../../../components/tasks/filter-popover";
 import { TASK_STATUSES } from "../../../lib/types";
 
 const EMPTY_FILTERS: TaskFilters = { memberId: null, labelId: null, priority: null };
@@ -61,56 +59,53 @@ export default function TasksPage() {
 
   return (
     <>
-      <TopBar />
-      <main className="flex-1 overflow-y-auto scrollbar-thin p-4 sm:p-6">
-        <PageHeader
-          title="Tasks"
-          toolbar={
-            <TasksToolbar
-              search={search}
-              onSearchChange={setSearch}
-              visibleFields={visibleFields}
-              onToggleField={toggleField}
-              filters={filters}
-              onFiltersChange={setFilters}
-              members={members}
-              labels={labels}
-              view={view}
-              onViewChange={setView}
-              onAddTask={() => setAddModalOpen(true)}
-            />
-          }
-        />
-
-        {isLoading ? (
-          <div className="space-y-3">
-            {[1, 2, 3].map((i) => (
-              <Skeleton key={i} className="h-32 rounded-md" />
-            ))}
-          </div>
-        ) : isError ? (
-          <QueryErrorCard error={error} onRetry={() => refetch()} />
-        ) : total === 0 ? (
-          <EmptyState
-            icon={Search}
-            title="No tasks found"
-            description="Try adjusting your search or filters."
+      <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+        <h1 className="text-xl font-bold text-text">Tasks</h1>
+        <div className="flex flex-wrap items-center gap-2">
+          <TasksToolbar
+            search={search}
+            onSearchChange={setSearch}
+            visibleFields={visibleFields}
+            onToggleField={toggleField}
+            filters={filters}
+            onFiltersChange={setFilters}
+            members={members}
+            labels={labels}
+            view={view}
+            onViewChange={setView}
+            onAddTask={() => setAddModalOpen(true)}
           />
-        ) : view === "board" ? (
-          <TasksBoard tasks={allTasks} />
-        ) : (
-          <div className="flex flex-col gap-5">
-            {TASK_STATUSES.map((status) => (
-              <TaskGroup
-                key={status}
-                status={status}
-                tasks={grouped[status] ?? []}
-                visibleFields={visibleFields}
-              />
-            ))}
-          </div>
-        )}
-      </main>
+        </div>
+      </div>
+
+      {isLoading ? (
+        <div className="space-y-3">
+          {[1, 2, 3].map((i) => (
+            <Skeleton key={i} className="h-32 rounded-md" />
+          ))}
+        </div>
+      ) : isError ? (
+        <QueryErrorCard error={error} onRetry={() => refetch()} />
+      ) : total === 0 ? (
+        <EmptyState
+          icon={Search}
+          title="No tasks found"
+          description="Try adjusting your search or filters."
+        />
+      ) : view === "board" ? (
+        <TasksBoard tasks={allTasks} />
+      ) : (
+        <div className="flex flex-col gap-5">
+          {TASK_STATUSES.map((status) => (
+            <TaskGroup
+              key={status}
+              status={status}
+              tasks={grouped[status] ?? []}
+              visibleFields={visibleFields}
+            />
+          ))}
+        </div>
+      )}
 
       <AddTaskModal open={addModalOpen} onClose={() => setAddModalOpen(false)} />
     </>

@@ -2,11 +2,10 @@
 
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { DateChip } from "../ui/date-chip";
-import { OverflowMenu } from "../ui/overflow-menu";
-import { PriorityBadge } from "../ui/priority-badge";
-import { AvatarStack } from "../ui/avatar-stack";
+import { AvatarStack } from "../ui/avatar";
+import { DateChip, PriorityBadge } from "../ui/badge";
 import { MemberPicker } from "../ui/member-picker";
+import { OverflowMenu } from "../ui/menu";
 import { PriorityPopover } from "./priority-popover";
 import { useMediaQuery, BREAKPOINTS } from "../../hooks/useMediaQuery";
 import { useMembers } from "../../hooks/useLookups";

@@ -1,4 +1,4 @@
-import type { FieldOption } from "../ui/fields-popover";
+import type { FieldOption } from "./fields-popover";
 
 export interface TaskFieldVisibility {
   priority: boolean;

@@ -1,7 +1,7 @@
 "use client";
 
 import { Popover } from "../ui/popover";
-import { MenuItem } from "../ui/menu-item";
+import { MenuItem } from "../ui/menu";
 import { PRIORITY_CONFIG } from "../../lib/utils/enum-utils";
 import { PRIORITIES, type Priority } from "../../lib/types";
 

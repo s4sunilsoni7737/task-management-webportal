@@ -1,9 +1,9 @@
-"use client";
+﻿"use client";
 
 import { useRef, useState } from "react";
 import { Check, Columns3 } from "lucide-react";
-import { Button } from "./button";
-import { Popover } from "./popover";
+import { Button } from "../ui/button";
+import { Popover } from "../ui/popover";
 
 export interface FieldOption {
   key: string;
@@ -17,9 +17,9 @@ interface FieldsPopoverProps {
 }
 
 /**
- * "Fields" toolbar control — checklist popover to show/hide table columns
+ * "Fields" toolbar control â€” checklist popover to show/hide table columns
  * (Priority, Members, Due Date, Labels, Status, Reporter), per Scope of
- * Work §3.4.
+ * Work Â§3.4.
  */
 export function FieldsPopover({ options, visible, onToggle }: FieldsPopoverProps) {
   const [open, setOpen] = useState(false);
