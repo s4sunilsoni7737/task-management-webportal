@@ -1,10 +1,10 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { Plus, Search as SearchIcon, X } from "lucide-react";
 import { TopBar } from "../../../components/shell/top-bar";
 import { PageHeader } from "../../../components/shell/page-header";
-import { ProjectsTable } from "../../../components/projects/projects-table";
+import { ProjectsTable } from "./projects-table";
 import { Button } from "../../../components/ui/button";
 import { SearchInput } from "../../../components/ui/search-input";
 import { EmptyState } from "../../../components/ui/empty-state";
@@ -16,7 +16,7 @@ import { useDebouncedValue } from "../../../hooks/useDebouncedValue";
 import { PROJECT_PRIORITIES, type ProjectPriority } from "../../../lib/types";
 
 /**
- * Projects list — fully server-driven: `search` (debounced), `page`,
+ * Projects list â€” fully server-driven: `search` (debounced), `page`,
  * `pageSize`, `sortBy`/`sortOrder` go straight to `GET /projects`, and the
  * compact Pagination footer drives page navigation. No more `limit:1000`.
  */
@@ -167,7 +167,7 @@ export default function ProjectsPage() {
                 onClick={handleAddProject}
                 disabled={!name.trim() || createProject.isPending}
               >
-                {createProject.isPending ? "Creating…" : "Create"}
+                {createProject.isPending ? "Creatingâ€¦" : "Create"}
               </Button>
             </div>
           </div>

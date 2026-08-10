@@ -1,14 +1,14 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
-import type { Task, UpdateTaskInput } from "../../lib/types";
+import type { Task, UpdateTaskInput } from "../../../../lib/types";
 
 interface TaskHeaderProps {
   task: Task;
   onSave: (input: UpdateTaskInput) => void;
 }
 
-/** Editable task title + description, per design_break_down.md §6 "Task header". */
+/** Editable task title + description, per design_break_down.md Â§6 "Task header". */
 export function TaskHeader({ task, onSave }: TaskHeaderProps) {
   const [title, setTitle] = useState(task.title);
   const [description, setDescription] = useState(task.description);

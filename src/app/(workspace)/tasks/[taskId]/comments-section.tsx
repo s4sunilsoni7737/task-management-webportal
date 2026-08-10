@@ -1,13 +1,13 @@
-"use client";
+﻿"use client";
 
-import { CollapsiblePanel } from "../ui/collapsible-panel";
+import { CollapsiblePanel } from "../../../../components/ui/collapsible-panel";
 import { CommentItem } from "./comment-item";
 import { CommentComposer } from "./comment-composer";
-import { EmptyState } from "../ui/empty-state";
-import { useComments, useAddComment } from "../../hooks/useTaskDetail";
+import { EmptyState } from "../../../../components/ui/empty-state";
+import { useComments, useAddComment } from "../../../../hooks/useTaskDetail";
 import { MessageSquare } from "lucide-react";
 
-/** Comments/discussion area — list, inline reply row, and the primary composer, per design_break_down.md §6. */
+/** Comments/discussion area â€” list, inline reply row, and the primary composer, per design_break_down.md Â§6. */
 export function CommentsSection({ taskId }: { taskId: string }) {
   const { data: comments = [], isLoading } = useComments(taskId);
   const addComment = useAddComment(taskId);

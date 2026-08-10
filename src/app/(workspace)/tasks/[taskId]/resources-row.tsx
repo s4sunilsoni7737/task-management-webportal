@@ -1,12 +1,12 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { Paperclip, X } from "lucide-react";
-import { tasksService } from "../../services/tasks/tasks.service";
-import { toast } from "../../store/toastStore";
+import { tasksService } from "../../../../services/tasks/tasks.service";
+import { toast } from "../../../../store/toastStore";
 
 /**
- * "Resources" row per design_break_down.md §6. Lets the user attach a
+ * "Resources" row per design_break_down.md Â§6. Lets the user attach a
  * document/link by name + URL, wired to POST /tasks/:id/resources.
  */
 export function ResourcesRow({ taskId }: { taskId: string }) {
@@ -74,7 +74,7 @@ export function ResourcesRow({ taskId }: { taskId: string }) {
               disabled={pending || !name.trim() || !url.trim()}
               className="h-8 rounded-sm bg-accent px-3 text-sm font-medium text-white transition-opacity disabled:opacity-50"
             >
-              {pending ? "Adding…" : "Add"}
+              {pending ? "Addingâ€¦" : "Add"}
             </button>
           </div>
         </div>

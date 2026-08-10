@@ -1,9 +1,9 @@
-"use client";
+﻿"use client";
 
-import { Popover } from "../ui/popover";
-import { MenuItem } from "../ui/menu-item";
-import { STATUS_CONFIG } from "../../lib/utils/enum-utils";
-import { TASK_STATUSES, type TaskStatus } from "../../lib/types";
+import { Popover } from "../../../../components/ui/popover";
+import { MenuItem } from "../../../../components/ui/menu-item";
+import { STATUS_CONFIG } from "../../../../lib/utils/enum-utils";
+import { TASK_STATUSES, type TaskStatus } from "../../../../lib/types";
 
 interface StatusPopoverProps {
   open: boolean;
@@ -13,7 +13,7 @@ interface StatusPopoverProps {
   onChange: (status: TaskStatus) => void;
 }
 
-/** Status selector popover — To Do, Doing, Completed, On Hold — for the Details panel Status field. */
+/** Status selector popover â€” To Do, Doing, Completed, On Hold â€” for the Details panel Status field. */
 export function StatusPopover({ open, onClose, anchorRef, value, onChange }: StatusPopoverProps) {
   return (
     <Popover open={open} onClose={onClose} anchorRef={anchorRef} align="start" className="w-[170px] p-1">

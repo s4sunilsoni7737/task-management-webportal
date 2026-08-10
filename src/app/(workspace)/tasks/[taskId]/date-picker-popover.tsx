@@ -1,9 +1,9 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { parseISO } from "date-fns";
-import { Popover } from "../ui/popover";
-import { Calendar } from "../ui/calendar";
+import { Popover } from "../../../../components/ui/popover";
+import { Calendar } from "../../../../components/ui/calendar";
 
 interface DatePickerPopoverProps {
   open: boolean;
@@ -16,7 +16,7 @@ interface DatePickerPopoverProps {
 
 /**
  * Date range popover for the Details panel Dates field, per
- * design_break_down.md §7. First click sets the range start; a second
+ * design_break_down.md Â§7. First click sets the range start; a second
  * click on a later date sets the end and closes the picker (matching
  * "close on selection" from the interaction requirements).
  */

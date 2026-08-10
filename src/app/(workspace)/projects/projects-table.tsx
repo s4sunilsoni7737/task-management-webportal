@@ -1,18 +1,18 @@
-"use client";
+﻿"use client";
 
 import { useRouter } from "next/navigation";
-import { Avatar } from "../ui/avatar";
-import { DateChip } from "../ui/date-chip";
-import { OverflowMenu } from "../ui/overflow-menu";
-import { PriorityBadge } from "../ui/priority-badge";
-import { useMediaQuery, BREAKPOINTS } from "../../hooks/useMediaQuery";
-import { useDeleteProject } from "../../hooks/useProjects";
-import { routes } from "../../lib/routeBuilder";
-import type { Project } from "../../lib/types";
+import { Avatar } from "../../../components/ui/avatar";
+import { DateChip } from "../../../components/ui/date-chip";
+import { OverflowMenu } from "../../../components/ui/overflow-menu";
+import { PriorityBadge } from "../../../components/ui/priority-badge";
+import { useMediaQuery, BREAKPOINTS } from "../../../hooks/useMediaQuery";
+import { useDeleteProject } from "../../../hooks/useProjects";
+import { routes } from "../../../lib/routeBuilder";
+import type { Project } from "../../../lib/types";
 
 /**
- * Projects table — dense bordered table on ≥700px, stacked cards below
- * (design_break_down.md §14). Always keep the name visible first.
+ * Projects table â€” dense bordered table on â‰¥700px, stacked cards below
+ * (design_break_down.md Â§14). Always keep the name visible first.
  */
 export function ProjectsTable({ projects }: { projects: Project[] }) {
   const isMobile = useMediaQuery(BREAKPOINTS.mobile);

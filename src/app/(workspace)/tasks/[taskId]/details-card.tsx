@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useRef, useState } from "react";
 import {
@@ -13,20 +13,20 @@ import {
   Users,
 } from "lucide-react";
 import { DetailRow } from "./detail-row";
-import { StatusBadge } from "../ui/status-badge";
-import { PriorityBadge } from "../ui/priority-badge";
-import { LabelChip } from "../ui/label-chip";
-import { DateChip } from "../ui/date-chip";
-import { Avatar } from "../ui/avatar";
-import { AvatarStack } from "../ui/avatar-stack";
+import { StatusBadge } from "../../../../components/ui/status-badge";
+import { PriorityBadge } from "../../../../components/ui/priority-badge";
+import { LabelChip } from "../../../../components/ui/label-chip";
+import { DateChip } from "../../../../components/ui/date-chip";
+import { Avatar } from "../../../../components/ui/avatar";
+import { AvatarStack } from "../../../../components/ui/avatar-stack";
 import { StatusPopover } from "./status-popover";
-import { PriorityPopover } from "../tasks/priority-popover";
-import { MemberPicker } from "../ui/member-picker";
+import { PriorityPopover } from "../../../../components/tasks/priority-popover";
+import { MemberPicker } from "../../../../components/ui/member-picker";
 import { LabelPicker } from "./label-picker";
 import { ReporterPicker } from "./reporter-picker";
 import { DatePickerPopover } from "./date-picker-popover";
-import { useMembers, useLabels } from "../../hooks/useLookups";
-import type { Task, UpdateTaskInput } from "../../lib/types";
+import { useMembers, useLabels } from "../../../../hooks/useLookups";
+import type { Task, UpdateTaskInput } from "../../../../lib/types";
 
 type FieldKey = "status" | "priority" | "members" | "dates" | "labels" | "reporter" | null;
 
@@ -36,8 +36,8 @@ interface DetailsCardProps {
 }
 
 /**
- * Right-panel "Details" card — Status, Priority, Members, Dates, Labels,
- * Teams, and Reporter fields, per design_break_down.md §7.
+ * Right-panel "Details" card â€” Status, Priority, Members, Dates, Labels,
+ * Teams, and Reporter fields, per design_break_down.md Â§7.
  */
 export function DetailsCard({ task, onSave }: DetailsCardProps) {
   const { data: members = [] } = useMembers();

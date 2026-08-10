@@ -1,8 +1,8 @@
-"use client";
+﻿"use client";
 
 import { Check } from "lucide-react";
-import { Popover } from "../ui/popover";
-import type { Label } from "../../lib/types";
+import { Popover } from "../../../../components/ui/popover";
+import type { Label } from "../../../../lib/types";
 
 interface LabelPickerProps {
   open: boolean;

@@ -1,14 +1,14 @@
-"use client";
+﻿"use client";
 
-import { CollapsiblePanel } from "../ui/collapsible-panel";
-import { TaskTable } from "../tasks/task-table";
-import { InlineAddTaskRow } from "../tasks/inline-add-task-row";
-import { EmptyState } from "../ui/empty-state";
-import { useSubtasks } from "../../hooks/useTasks";
-import { useAddSubtask } from "../../hooks/useTaskDetail";
-import { DEFAULT_TASK_FIELDS } from "../tasks/task-fields";
+import { CollapsiblePanel } from "../../../../components/ui/collapsible-panel";
+import { TaskTable } from "../../../../components/tasks/task-table";
+import { InlineAddTaskRow } from "../../../../components/tasks/inline-add-task-row";
+import { EmptyState } from "../../../../components/ui/empty-state";
+import { useSubtasks } from "../../../../hooks/useTasks";
+import { useAddSubtask } from "../../../../hooks/useTaskDetail";
+import { DEFAULT_TASK_FIELDS } from "../../../../components/tasks/task-fields";
 
-/** "Subtasks" table — Task/Priority/Members/Due Date/Actions, per design_break_down.md §6. */
+/** "Subtasks" table â€” Task/Priority/Members/Due Date/Actions, per design_break_down.md Â§6. */
 export function SubtasksSection({ taskId }: { taskId: string }) {
   const { data: subtasks = [], isLoading } = useSubtasks(taskId);
   const addSubtask = useAddSubtask(taskId);

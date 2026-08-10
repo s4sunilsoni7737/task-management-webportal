@@ -1,12 +1,12 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { Smile } from "lucide-react";
-import { Avatar } from "../ui/avatar";
-import { OverflowMenu } from "../ui/overflow-menu";
-import { formatRelativeTime } from "../../lib/utils/formatters";
-import { useUpdateComment, useDeleteComment } from "../../hooks/useTaskDetail";
-import type { Comment } from "../../lib/types";
+import { Avatar } from "../../../../components/ui/avatar";
+import { OverflowMenu } from "../../../../components/ui/overflow-menu";
+import { formatRelativeTime } from "../../../../lib/utils/formatters";
+import { useUpdateComment, useDeleteComment } from "../../../../hooks/useTaskDetail";
+import type { Comment } from "../../../../lib/types";
 
 interface CommentItemProps {
   comment: Comment;
@@ -14,8 +14,8 @@ interface CommentItemProps {
 }
 
 /**
- * Single comment card — avatar, author, relative timestamp, body, and a
- * reaction/overflow affordance, per design_break_down.md §6.
+ * Single comment card â€” avatar, author, relative timestamp, body, and a
+ * reaction/overflow affordance, per design_break_down.md Â§6.
  * Edit/Delete are wired to the backend via useUpdateComment/useDeleteComment.
  */
 export function CommentItem({ comment, taskId }: CommentItemProps) {

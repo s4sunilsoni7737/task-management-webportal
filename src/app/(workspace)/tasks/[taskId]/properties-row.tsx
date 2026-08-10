@@ -1,6 +1,6 @@
-import { Avatar } from "../ui/avatar";
-import { DateChip } from "../ui/date-chip";
-import type { Task } from "../../lib/types";
+﻿import { Avatar } from "../../../../components/ui/avatar";
+import { DateChip } from "../../../../components/ui/date-chip";
+import type { Task } from "../../../../lib/types";
 
 interface PropertiesRowProps {
   task: Task;
@@ -8,7 +8,7 @@ interface PropertiesRowProps {
   dateAnchorRef: React.RefObject<HTMLDivElement>;
 }
 
-/** "Properties" row — reporter identity + due-date chip, per design_break_down.md §6. */
+/** "Properties" row â€” reporter identity + due-date chip, per design_break_down.md Â§6. */
 export function PropertiesRow({ task, onOpenDatePicker, dateAnchorRef }: PropertiesRowProps) {
   return (
     <div className="mb-4">

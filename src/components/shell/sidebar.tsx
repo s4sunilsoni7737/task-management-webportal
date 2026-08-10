@@ -1,13 +1,15 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { ChevronDown, ChevronRight, ClipboardList, Briefcase } from "lucide-react";
-import { WorkspaceSwitcher } from "./workspace-switcher";
-import { SidebarNavItem } from "./sidebar-nav-item";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import type { ComponentType } from "react";
+import { Briefcase, ChevronDown, ChevronRight, ChevronsUpDown, ClipboardList } from "lucide-react";
 import { WorkspaceMenu } from "./workspace-menu";
 import { Avatar } from "../ui/avatar";
 import { useAuthStore } from "../../store/authStore";
 import { useUiStore } from "../../store/uiStore";
+import { useWorkspaces } from "../../hooks/useWorkspaces";
 import { routes } from "../../lib/routeBuilder";
 import { cn } from "../../lib/utils";
 import { DEFAULT_WORKSPACE_NAME } from "../../../constants";
@@ -128,3 +130,49 @@ export function Sidebar({ variant }: SidebarProps) {
     </aside>
   );
 }
+
+interface SidebarNavItemProps {
+  href: string;
+  icon: ComponentType<{ className?: string }>;
+  label: string;
+  onNavigate?: () => void;
+}
+
+/** A single Tasks/Projects row in the sidebar, with active-state highlight. */
+function SidebarNavItem({ href, icon: Icon, label, onNavigate }: SidebarNavItemProps) {
+  const pathname = usePathname();
+  const active = pathname === href || pathname.startsWith(`${href}/`);
+
+  return (
+    <Link
+      href={href}
+      onClick={onNavigate}
+      aria-current={active ? "page" : undefined}
+      className={cn(
+        "flex h-9 items-center gap-2.5 rounded-sm px-2.5 text-sm font-medium transition-colors",
+        active ? "bg-surface-muted text-text" : "text-text-muted hover:bg-surface-muted hover:text-text",
+      )}
+    >
+      <Icon className="h-4 w-4 shrink-0" />
+      <span className="truncate">{label}</span>
+    </Link>
+  );
+}
+
+/** Top-of-sidebar workspace identity row: avatar + workspace name + chevron. */
+function WorkspaceSwitcher() {
+  const { data: workspaces, isLoading } = useWorkspaces();
+
+  const activeWorkspace = workspaces?.[0];
+  const displayName = activeWorkspace?.name || DEFAULT_WORKSPACE_NAME;
+  const avatarUrl = activeWorkspace?.avatarUrl;
+
+  return (
+    <button type="button" className="flex h-12 w-full items-center gap-2 px-4 text-left transition-colors hover:bg-surface-muted">
+      <Avatar name={displayName} src={avatarUrl} size="sm" className="rounded-md" />
+      <span className="flex-1 truncate text-sm font-semibold text-text">{isLoading ? "Loading..." : displayName}</span>
+      <ChevronsUpDown className="h-3.5 w-3.5 shrink-0 text-text-subtle" />
+    </button>
+  );
+}
+

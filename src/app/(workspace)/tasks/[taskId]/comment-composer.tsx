@@ -1,10 +1,10 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { Paperclip, SendHorizontal } from "lucide-react";
-import { Avatar } from "../ui/avatar";
-import { useAuthStore } from "../../store/authStore";
-import { DEFAULT_WORKSPACE_NAME } from "../../../constants";
+import { Avatar } from "../../../../components/ui/avatar";
+import { useAuthStore } from "../../../../store/authStore";
+import { DEFAULT_WORKSPACE_NAME } from "../../../../../constants";
 
 interface CommentComposerProps {
   onSubmit: (body: string) => void;
@@ -15,7 +15,7 @@ interface CommentComposerProps {
 
 /**
  * Full-width bordered comment input with attachment + send icons, ~52px
- * tall, per design_break_down.md §6. Used both as the primary composer and
+ * tall, per design_break_down.md Â§6. Used both as the primary composer and
  * (in compact mode) as the inline reply row.
  */
 export function CommentComposer({

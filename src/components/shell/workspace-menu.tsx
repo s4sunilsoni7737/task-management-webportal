@@ -1,13 +1,15 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Palette, Settings, Sun } from "lucide-react";
+import { Check, Moon, Palette, Settings, Sun } from "lucide-react";
 import { Popover } from "../ui/popover";
 import { MenuItem } from "../ui/menu-item";
 import { Avatar } from "../ui/avatar";
-import { ThemeSubmenu } from "./theme-submenu";
-import { ColorModeSubmenu } from "./color-mode-submenu";
 import { useAuthStore } from "../../store/authStore";
+import { useUiStore } from "../../store/uiStore";
+import { useUpdatePreferences } from "../../hooks/useUsers";
+import { COLOR_MODES, type ColorMode, type ThemeMode } from "../../lib/types";
+import { cn } from "../../lib/utils";
 import { DEFAULT_WORKSPACE_NAME } from "../../../constants";
 
 interface WorkspaceMenuProps {
@@ -99,3 +101,79 @@ export function WorkspaceMenu({ open, onClose, anchorRef }: WorkspaceMenuProps) 
     </>
   );
 }
+
+const THEME_OPTIONS: { value: ThemeMode; label: string; icon: typeof Sun }[] = [
+  { value: "light", label: "Light", icon: Sun },
+  { value: "dark", label: "Dark", icon: Moon },
+];
+
+interface ThemeSubmenuProps {
+  open: boolean;
+  onClose: () => void;
+  anchorRef: React.RefObject<HTMLElement>;
+}
+
+/** Light/Dark submenu opened from the "Change Theme" row in WorkspaceMenu. */
+function ThemeSubmenu({ open, onClose, anchorRef }: ThemeSubmenuProps) {
+  const theme = useUiStore((s) => s.theme);
+  const colorMode = useUiStore((s) => s.colorMode);
+  const setTheme = useUiStore((s) => s.setTheme);
+  const updatePreferences = useUpdatePreferences();
+  const user = useAuthStore((s) => s.user);
+
+  function handleSelect(value: ThemeMode) {
+    setTheme(value); // optimistic DOM + store update
+    onClose();
+    // Persist to the backend — the source of truth for this preference.
+    updatePreferences.mutate({ theme: value, colorMode: colorMode || user?.preferences?.colorMode || "blue" });
+  }
+
+  return (
+    <Popover open={open} onClose={onClose} anchorRef={anchorRef} side="right" align="start" offset={4} className="w-[150px] p-1">
+      {THEME_OPTIONS.map((option) => (
+        <MenuItem key={option.value} icon={option.icon} label={option.label} selected={theme === option.value} onClick={() => handleSelect(option.value)} />
+      ))}
+    </Popover>
+  );
+}
+
+const SWATCHES: Record<ColorMode, string> = {
+  amber: "#F59E0B", blue: "#6D5DF5", pink: "#EC4899", rose: "#F43F5E", emerald: "#0F9F6E", black: "#111111",
+};
+const LABELS: Record<ColorMode, string> = {
+  amber: "Amber", blue: "Blue", pink: "Pink", rose: "Rose", emerald: "Emerald", black: "Black",
+};
+
+interface ColorModeSubmenuProps {
+  open: boolean;
+  onClose: () => void;
+  anchorRef: React.RefObject<HTMLElement>;
+}
+
+/** Color mode submenu opened from the "Color Mode" row in WorkspaceMenu. */
+function ColorModeSubmenu({ open, onClose, anchorRef }: ColorModeSubmenuProps) {
+  const colorMode = useUiStore((s) => s.colorMode);
+  const setColorMode = useUiStore((s) => s.setColorMode);
+  const theme = useUiStore((s) => s.theme);
+  const updatePreferences = useUpdatePreferences();
+  const user = useAuthStore((s) => s.user);
+
+  function handleSelect(mode: ColorMode) {
+    setColorMode(mode); // optimistic DOM + store update
+    onClose();
+    updatePreferences.mutate({ theme: theme || user?.preferences?.theme || "light", colorMode: mode });
+  }
+
+  return (
+    <Popover open={open} onClose={onClose} anchorRef={anchorRef} side="right" align="start" offset={4} className="w-[150px] p-1">
+      {COLOR_MODES.map((mode) => (
+        <button key={mode} type="button" role="menuitem" onClick={() => handleSelect(mode)} className={cn("flex h-8 w-full items-center gap-2 rounded-sm px-2.5 text-left text-sm text-text transition-colors", "hover:bg-surface-muted focus-visible:outline-none focus-visible:bg-surface-muted")}>
+          <span className="h-2.5 w-2.5 shrink-0 rounded-[3px]" style={{ backgroundColor: SWATCHES[mode] }} />
+          <span className="flex-1 truncate">{LABELS[mode]}</span>
+          {colorMode === mode && <Check className="h-3.5 w-3.5 shrink-0 text-accent" />}
+        </button>
+      ))}
+    </Popover>
+  );
+}
+

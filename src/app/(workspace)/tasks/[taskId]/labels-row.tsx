@@ -1,18 +1,18 @@
-"use client";
+﻿"use client";
 
 import { useRef, useState } from "react";
 import { Plus } from "lucide-react";
-import { LabelChip } from "../ui/label-chip";
+import { LabelChip } from "../../../../components/ui/label-chip";
 import { LabelPicker } from "./label-picker";
-import { useLabels } from "../../hooks/useLookups";
-import type { Task } from "../../lib/types";
+import { useLabels } from "../../../../hooks/useLookups";
+import type { Task } from "../../../../lib/types";
 
 interface LabelsRowProps {
   task: Task;
   onChange: (labelIds: string[]) => void;
 }
 
-/** "Labels" row — pill-style labels with an add/remove picker, per design_break_down.md §6. */
+/** "Labels" row â€” pill-style labels with an add/remove picker, per design_break_down.md Â§6. */
 export function LabelsRow({ task, onChange }: LabelsRowProps) {
   const { data: allLabels = [] } = useLabels();
   const [open, setOpen] = useState(false);

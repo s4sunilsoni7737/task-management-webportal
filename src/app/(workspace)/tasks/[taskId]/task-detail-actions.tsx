@@ -1,13 +1,13 @@
-"use client";
+﻿"use client";
 
 import { Eye, Lock, LockOpen, MoreHorizontal, PanelRight, Share2, Trash2 } from "lucide-react";
 import { useRef, useState } from "react";
-import { IconButton } from "../ui/icon-button";
-import { Popover } from "../ui/popover";
-import { MenuItem } from "../ui/menu-item";
-import { toast } from "../../store/toastStore";
-import { tasksService } from "../../services/tasks/tasks.service";
-import type { Task } from "../../lib/types";
+import { IconButton } from "../../../../components/ui/icon-button";
+import { Popover } from "../../../../components/ui/popover";
+import { MenuItem } from "../../../../components/ui/menu-item";
+import { toast } from "../../../../store/toastStore";
+import { tasksService } from "../../../../services/tasks/tasks.service";
+import type { Task } from "../../../../lib/types";
 
 interface TaskDetailActionsProps {
   task: Task;
@@ -17,7 +17,7 @@ interface TaskDetailActionsProps {
   onTogglePanel: () => void;
 }
 
-/** Right-aligned Task Detail top-bar actions — Lock, watcher count, Share, Overflow, Panel toggle. */
+/** Right-aligned Task Detail top-bar actions â€” Lock, watcher count, Share, Overflow, Panel toggle. */
 export function TaskDetailActions({
   task,
   onToggleLock,

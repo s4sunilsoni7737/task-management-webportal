@@ -1,4 +1,4 @@
-import type { ComponentType, ReactNode } from "react";
+﻿import type { ComponentType, ReactNode } from "react";
 
 interface DetailRowProps {
   icon: ComponentType<{ className?: string }>;

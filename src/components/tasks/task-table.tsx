@@ -1,14 +1,18 @@
 "use client";
 
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { DateChip } from "../ui/date-chip";
 import { OverflowMenu } from "../ui/overflow-menu";
+import { PriorityBadge } from "../ui/priority-badge";
+import { AvatarStack } from "../ui/avatar-stack";
+import { MemberPicker } from "../ui/member-picker";
+import { PriorityPopover } from "./priority-popover";
 import { useMediaQuery, BREAKPOINTS } from "../../hooks/useMediaQuery";
+import { useMembers } from "../../hooks/useLookups";
 import { routes } from "../../lib/routeBuilder";
-import { TaskPriorityCell } from "./task-priority-cell";
-import { TaskMembersCell } from "./task-members-cell";
 import { useDeleteTask, useUpdateTask } from "../../hooks/useTasks";
-import type { Task } from "../../lib/types";
+import type { Member, Priority, Task } from "../../lib/types";
 import type { TaskFieldVisibility } from "./task-fields";
 
 interface TaskTableProps {
@@ -130,3 +134,64 @@ function TaskMobileCard({ task, visibleFields }: { task: Task; visibleFields: Ta
     </div>
   );
 }
+
+interface TaskPriorityCellProps {
+  value: Priority;
+  /** When omitted, renders read-only (used by mobile row cards). */
+  onChange?: (priority: Priority) => void;
+  showLabel?: boolean;
+}
+
+function TaskPriorityCell({ value, onChange, showLabel = true }: TaskPriorityCellProps) {
+  const [open, setOpen] = useState(false);
+  const anchorRef = useRef<HTMLButtonElement>(null!);
+
+  if (onChange) {
+    return (
+      <>
+        <button ref={anchorRef} type="button" onClick={(e) => { e.stopPropagation(); setOpen((v) => !v); }} className="rounded-sm px-1.5 py-1 transition-colors hover:bg-surface-muted">
+          <PriorityBadge priority={value} showLabel={showLabel} />
+        </button>
+        <PriorityPopover open={open} onClose={() => setOpen(false)} anchorRef={anchorRef} value={value} onChange={onChange} />
+      </>
+    );
+  }
+
+  return <PriorityBadge priority={value} showLabel={showLabel} />;
+}
+
+interface TaskMembersCellProps {
+  members: Member[];
+  /** When omitted, renders read-only (used by mobile row cards). */
+  onChange?: (memberIds: string[]) => void;
+  size?: "xs" | "sm" | "md";
+}
+
+function TaskMembersCell({ members = [], onChange, size = "sm" }: TaskMembersCellProps) {
+  const { data: allMembers = [] } = useMembers();
+  const [open, setOpen] = useState(false);
+  const anchorRef = useRef<HTMLDivElement>(null!);
+
+  if (!onChange) {
+    return (
+      <div onClick={(e) => e.stopPropagation()}>
+        <AvatarStack members={members} size={size} />
+      </div>
+    );
+  }
+
+  const handleChange = onChange;
+
+  function toggle(memberId: string) {
+    const ids = members.map((m) => m.id);
+    handleChange(ids.includes(memberId) ? ids.filter((id) => id !== memberId) : [...ids, memberId]);
+  }
+
+  return (
+    <div ref={anchorRef} onClick={(e) => e.stopPropagation()}>
+      <AvatarStack members={members} size={size} onAdd={() => setOpen(true)} />
+      <MemberPicker open={open} onClose={() => setOpen(false)} anchorRef={anchorRef} members={allMembers} selectedIds={members.map((m) => m.id)} onToggle={toggle} />
+    </div>
+  );
+}
+

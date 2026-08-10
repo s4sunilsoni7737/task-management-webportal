@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import {
@@ -13,9 +13,9 @@ import {
   Tag,
   UserPlus,
 } from "lucide-react";
-import { useActivity } from "../../hooks/useTaskDetail";
-import { formatRelativeTime } from "../../lib/utils/formatters";
-import type { ActivityLogEntry, ActivityType } from "../../lib/types";
+import { useActivity } from "../../../../hooks/useTaskDetail";
+import { formatRelativeTime } from "../../../../lib/utils/formatters";
+import type { ActivityLogEntry, ActivityType } from "../../../../lib/types";
 
 const ACTIVITY_ICONS: Record<ActivityType, typeof Flag> = {
   created: Sparkles,
@@ -59,7 +59,7 @@ function describeActivity(entry: ActivityLogEntry): string {
   }
 }
 
-/** Right-panel "Updates" card — chronological activity feed, per design_break_down.md §12. */
+/** Right-panel "Updates" card â€” chronological activity feed, per design_break_down.md Â§12. */
 export function UpdatesCard({ taskId }: { taskId: string }) {
   const { data: activity = [], isLoading } = useActivity(taskId);
   const [collapsed, setCollapsed] = useState(false);

@@ -1,10 +1,10 @@
-import { Plus } from "lucide-react";
+import { List, LayoutGrid, Plus } from "lucide-react";
 import { Button } from "../ui/button";
 import { SearchInput } from "../ui/search-input";
 import { FieldsPopover } from "../ui/fields-popover";
 import { FilterPopover, type TaskFilters } from "../ui/filter-popover";
-import { ViewToggle } from "./view-toggle";
 import { TASK_FIELD_OPTIONS, type TaskFieldVisibility } from "./task-fields";
+import { cn } from "../../lib/utils";
 import type { Label, Member } from "../../lib/types";
 
 interface TasksToolbarProps {
@@ -52,3 +52,23 @@ export function TasksToolbar({
     </>
   );
 }
+
+interface ViewToggleProps {
+  value: "list" | "board";
+  onChange: (value: "list" | "board") => void;
+}
+
+/** List ↔ Board segmented toggle. */
+function ViewToggle({ value, onChange }: ViewToggleProps) {
+  return (
+    <div className="flex h-8 items-center rounded-sm border border-border bg-surface p-0.5">
+      {([{ key: "list", label: "List", icon: List }, { key: "board", label: "Board", icon: LayoutGrid }] as const).map((opt) => (
+        <button key={opt.key} type="button" onClick={() => onChange(opt.key)} className={cn("flex h-full items-center gap-1.5 rounded-[4px] px-2.5 text-sm font-medium transition-colors", value === opt.key ? "bg-surface-muted text-text" : "text-text-muted hover:text-text")}>
+          <opt.icon className="h-3.5 w-3.5" />
+          {opt.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+

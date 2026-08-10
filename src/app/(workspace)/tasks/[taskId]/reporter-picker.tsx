@@ -1,9 +1,9 @@
-"use client";
+﻿"use client";
 
 import { Check } from "lucide-react";
-import { Popover } from "../ui/popover";
-import { Avatar } from "../ui/avatar";
-import type { Member } from "../../lib/types";
+import { Popover } from "../../../../components/ui/popover";
+import { Avatar } from "../../../../components/ui/avatar";
+import type { Member } from "../../../../lib/types";
 
 interface ReporterPickerProps {
   open: boolean;
