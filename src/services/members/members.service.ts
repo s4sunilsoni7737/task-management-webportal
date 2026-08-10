@@ -1,6 +1,6 @@
-import { request } from "../api/api-handler";
-import { API_ENDPOINTS } from "../api/endpoints";
-import type { Member } from "../../lib/types";
+import { request } from "@/services/api/api-handler";
+import { API_ENDPOINTS } from "@/services/api/endpoints";
+import type { Member } from "@/lib/types";
 
 export const membersService = {
   getAll(): Promise<Member[]> {

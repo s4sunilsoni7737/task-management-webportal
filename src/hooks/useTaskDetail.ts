@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { tasksService } from "../services/tasks/tasks.service";
-import { useApiMutation } from "./useApiMutation";
+import { tasksService } from "@/services/tasks/tasks.service";
+import { useApiMutation } from "@/hooks/useApiMutation";
 
 export function useComments(taskId: string | undefined) {
   return useQuery({

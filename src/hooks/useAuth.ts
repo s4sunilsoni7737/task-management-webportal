@@ -1,9 +1,9 @@
 import { useRouter } from "next/navigation";
-import { authService } from "../services/auth/auth.service";
-import { useApiMutation } from "./useApiMutation";
-import { useAuthStore } from "../store/authStore";
-import { useUiStore } from "../store/uiStore";
-import { routes } from "../lib/routeBuilder";
+import { authService } from "@/services/auth/auth.service";
+import { useApiMutation } from "@/hooks/useApiMutation";
+import { useAuthStore } from "@/store/authStore";
+import { useUiStore } from "@/store/uiStore";
+import { routes } from "@/lib/routeBuilder";
 
 /**
  * Encapsulates the guest-login flow: create session, hydrate stores, navigate.

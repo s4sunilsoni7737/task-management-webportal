@@ -2,11 +2,11 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { AppShell } from "../../components/admin/app-shell";
-import { GlobalLoader } from "../../components/ui/global-loader";
-import { useAuthStore } from "../../store/authStore";
-import { useMembers, useLabels } from "../../hooks/useLookups";
-import { routes } from "../../lib/routeBuilder";
+import { AppShell } from "@/components/admin/app-shell";
+import { GlobalLoader } from "@/components/ui/global-loader";
+import { useAuthStore } from "@/store/authStore";
+import { useMembers, useLabels } from "@/hooks/useLookups";
+import { routes } from "@/lib/routeBuilder";
 
 /**
  * Layout for all authenticated workspace routes (Tasks, Projects, Task

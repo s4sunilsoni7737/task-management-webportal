@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { getErrorMessage } from "../services/api/api-error-handler";
+import { getErrorMessage } from "@/services/api/api-error-handler";
 
 export interface ToastItem {
   id: string;

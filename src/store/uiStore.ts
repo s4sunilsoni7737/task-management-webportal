@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { ColorMode, ThemeMode, UserPreferences } from "../lib/types";
+import type { ColorMode, ThemeMode, UserPreferences } from "@/lib/types";
 
 interface UiState {
   theme: ThemeMode;

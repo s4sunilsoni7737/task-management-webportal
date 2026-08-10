@@ -5,14 +5,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ComponentType } from "react";
 import { Briefcase, ChevronDown, ChevronRight, ChevronsUpDown, ClipboardList } from "lucide-react";
-import { WorkspaceMenu } from "./workspace-menu";
-import { Avatar } from "../ui/avatar";
-import { useAuthStore } from "../../store/authStore";
-import { useUiStore } from "../../store/uiStore";
-import { useWorkspaces } from "../../hooks/useWorkspaces";
-import { routes } from "../../lib/routeBuilder";
-import { cn } from "../../lib/utils";
-import { DEFAULT_WORKSPACE_NAME } from "../../../constants";
+import { WorkspaceMenu } from "@/components/admin/workspace-menu";
+import { Avatar } from "@/components/ui/avatar";
+import { useAuthStore } from "@/store/authStore";
+import { useUiStore } from "@/store/uiStore";
+import { useWorkspaces } from "@/hooks/useWorkspaces";
+import { routes } from "@/lib/routeBuilder";
+import { cn } from "@/lib/utils";
+import { DEFAULT_WORKSPACE_NAME } from "@/constants";
 
 interface SidebarProps {
   /** True on mobile/tablet — renders as an overlay drawer instead of an inline rail. */

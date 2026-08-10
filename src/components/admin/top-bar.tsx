@@ -2,9 +2,9 @@
 
 import type { ReactNode } from "react";
 import { PanelLeft } from "lucide-react";
-import { IconButton } from "../ui/icon-button";
-import { useUiStore } from "../../store/uiStore";
-import { useMediaQuery, BREAKPOINTS } from "../../hooks/useMediaQuery";
+import { IconButton } from "@/components/ui/icon-button";
+import { useUiStore } from "@/store/uiStore";
+import { useMediaQuery, BREAKPOINTS } from "@/hooks/useMediaQuery";
 
 interface TopBarProps {
   /** Breadcrumbs or page context — only present on nested pages like Task Detail. */

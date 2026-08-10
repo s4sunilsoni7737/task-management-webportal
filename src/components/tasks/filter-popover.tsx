@@ -2,12 +2,12 @@
 
 import { useRef, useState } from "react";
 import { Filter } from "lucide-react";
-import { Button } from "../ui/button";
-import { Popover } from "../ui/popover";
-import { PRIORITY_CONFIG } from "../../lib/utils/enum-utils";
-import type { Label, Member, Priority } from "../../lib/types";
-import { PRIORITIES } from "../../lib/types";
-import { cn } from "../../lib/utils";
+import { Button } from "@/components/ui/button";
+import { Popover } from "@/components/ui/popover";
+import { PRIORITY_CONFIG } from "@/lib/utils/enum-utils";
+import type { Label, Member, Priority } from "@/lib/types";
+import { PRIORITIES } from "@/lib/types";
+import { cn } from "@/lib/utils";
 
 export interface TaskFilters {
   memberId: string | null;

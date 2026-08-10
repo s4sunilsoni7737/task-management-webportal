@@ -1,5 +1,5 @@
-import type { ProjectPriority } from "./enums";
-import type { Member } from "./user";
+import type { ProjectPriority } from "@/lib/types/enums";
+import type { Member } from "@/lib/types/user";
 
 export interface Project {
   id: string;

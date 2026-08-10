@@ -3,14 +3,14 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
-import { InlineAddTaskRow } from "./inline-add-task-row";
-import { AvatarStack } from "../ui/avatar";
-import { DateChip, LabelChip, PriorityBadge } from "../ui/badge";
-import { STATUS_CONFIG } from "../../lib/utils/enum-utils";
-import { useCreateTask } from "../../hooks/useTasks";
-import { cn } from "../../lib/utils";
-import { routes } from "../../lib/routeBuilder";
-import type { Task, TaskStatus } from "../../lib/types";
+import { InlineAddTaskRow } from "@/components/tasks/inline-add-task-row";
+import { AvatarStack } from "@/components/ui/avatar";
+import { DateChip, LabelChip, PriorityBadge } from "@/components/ui/badge";
+import { STATUS_CONFIG } from "@/lib/utils/enum-utils";
+import { useCreateTask } from "@/hooks/useTasks";
+import { cn } from "@/lib/utils";
+import { routes } from "@/lib/routeBuilder";
+import type { Task, TaskStatus } from "@/lib/types";
 
 interface KanbanColumnProps {
   status: TaskStatus;
@@ -44,7 +44,7 @@ export function KanbanColumn({
     e.preventDefault();
     setIsDragOver(false);
     if (!draggingTaskId) return;
-    const { tasksService } = await import("../../services/tasks/tasks.service");
+    const { tasksService } = await import("@/services/tasks/tasks.service");
     await tasksService.update(draggingTaskId, { status });
     queryClient.invalidateQueries({ queryKey: ["tasks"] });
     onDropped();

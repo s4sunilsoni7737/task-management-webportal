@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { membersService } from "../services/members/members.service";
-import { labelsService } from "../services/labels/labels.service";
+import { membersService } from "@/services/members/members.service";
+import { labelsService } from "@/services/labels/labels.service";
 
 export function useMembers() {
   return useQuery({

@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { Button } from "../../../components/ui/button";
-import { GoogleIcon } from "../../../components/ui/icons/google-icon";
-import { PyramidMark } from "../../../components/ui/icons/pyramid-mark";
-import { useGuestLogin } from "../../../hooks/useAuth";
-import { authService } from "../../../services/auth/auth.service";
+import { Button } from "@/components/ui/button";
+import { GoogleIcon } from "@/components/ui/icons/google-icon";
+import { PyramidMark } from "@/components/ui/icons/pyramid-mark";
+import { useGuestLogin } from "@/hooks/useAuth";
+import { authService } from "@/services/auth/auth.service";
 
 export default function LoginPage() {
   const guestLogin = useGuestLogin();

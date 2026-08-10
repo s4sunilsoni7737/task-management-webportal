@@ -1,7 +1,7 @@
-import { request } from "../api/api-handler";
-import { API_ENDPOINTS } from "../api/endpoints";
-import { normalizeUser } from "../../lib/utils/normalize";
-import type { User, UserPreferences } from "../../lib/types";
+import { request } from "@/services/api/api-handler";
+import { API_ENDPOINTS } from "@/services/api/endpoints";
+import { normalizeUser } from "@/lib/utils/normalize";
+import type { User, UserPreferences } from "@/lib/types";
 
 export const usersService = {
   /**

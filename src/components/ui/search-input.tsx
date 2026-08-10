@@ -2,8 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Search, X } from "lucide-react";
-import { IconButton } from "./icon-button";
-import { cn } from "../../lib/utils";
+import { IconButton } from "@/components/ui/icon-button";
+import { cn } from "@/lib/utils";
 
 interface SearchInputProps {
   value: string;

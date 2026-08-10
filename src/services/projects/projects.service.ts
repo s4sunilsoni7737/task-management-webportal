@@ -1,8 +1,8 @@
-import { request } from "../api/api-handler";
-import { API_ENDPOINTS } from "../api/endpoints";
-import { toPaginatedResponse, type PaginatedResponse } from "../api/api-response";
-import { normalizeProject, normalizeProjectList } from "../../lib/utils/normalize";
-import type { CreateProjectInput, Project, ProjectQueryParams, UpdateProjectInput } from "../../lib/types";
+import { request } from "@/services/api/api-handler";
+import { API_ENDPOINTS } from "@/services/api/endpoints";
+import { toPaginatedResponse, type PaginatedResponse } from "@/services/api/api-response";
+import { normalizeProject, normalizeProjectList } from "@/lib/utils/normalize";
+import type { CreateProjectInput, Project, ProjectQueryParams, UpdateProjectInput } from "@/lib/types";
 
 interface RawProjectListResponse {
   list: unknown[];

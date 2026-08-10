@@ -1,8 +1,8 @@
 import type { AxiosRequestConfig, Method } from "axios";
 import "./api-interceptors"; // registers interceptors as a side effect on first import
-import { apiClient } from "./api-client";
-import { normalizeApiError } from "./api-error-handler";
-import { unwrapEnvelope, type ApiEnvelope } from "./api-response";
+import { apiClient } from "@/services/api/api-client";
+import { normalizeApiError } from "@/services/api/api-error-handler";
+import { unwrapEnvelope, type ApiEnvelope } from "@/services/api/api-response";
 
 export type RequestConfig = AxiosRequestConfig;
 

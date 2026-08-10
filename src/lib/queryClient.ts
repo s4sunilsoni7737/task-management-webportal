@@ -1,6 +1,6 @@
 import { QueryClient, QueryCache } from "@tanstack/react-query";
-import { useToastStore } from "../store/toastStore";
-import { getErrorMessage } from "../services/api/api-error-handler";
+import { useToastStore } from "@/store/toastStore";
+import { getErrorMessage } from "@/services/api/api-error-handler";
 
 /**
  * One QueryClient per browser session (created lazily in providers.tsx so it

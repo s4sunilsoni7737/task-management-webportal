@@ -1,11 +1,11 @@
 import { List, LayoutGrid, Plus } from "lucide-react";
-import { Button } from "../ui/button";
-import { SearchInput } from "../ui/search-input";
-import { FieldsPopover } from "./fields-popover";
-import { FilterPopover, type TaskFilters } from "./filter-popover";
-import { TASK_FIELD_OPTIONS, type TaskFieldVisibility } from "./task-fields";
-import { cn } from "../../lib/utils";
-import type { Label, Member } from "../../lib/types";
+import { Button } from "@/components/ui/button";
+import { SearchInput } from "@/components/ui/search-input";
+import { FieldsPopover } from "@/components/tasks/fields-popover";
+import { FilterPopover, type TaskFilters } from "@/components/tasks/filter-popover";
+import { TASK_FIELD_OPTIONS, type TaskFieldVisibility } from "@/components/tasks/task-fields";
+import { cn } from "@/lib/utils";
+import type { Label, Member } from "@/lib/types";
 
 interface TasksToolbarProps {
   search: string;

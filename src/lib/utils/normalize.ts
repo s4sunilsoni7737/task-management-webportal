@@ -21,7 +21,7 @@ import type {
   Project,
   Task,
   User,
-} from "../types";
+} from "@/lib/types";
 
 type Raw = Record<string, unknown>;
 

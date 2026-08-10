@@ -1,6 +1,6 @@
 import type { InternalAxiosRequestConfig } from "axios";
-import { apiClient } from "./api-client";
-import { getAccessTokenSnapshot, useAuthStore } from "../../store/authStore";
+import { apiClient } from "@/services/api/api-client";
+import { getAccessTokenSnapshot, useAuthStore } from "@/store/authStore";
 
 /**
  * Request interceptor — injects the Bearer token (guest session token or

@@ -2,17 +2,17 @@
 
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { AvatarStack } from "../ui/avatar";
-import { DateChip, PriorityBadge } from "../ui/badge";
-import { MemberPicker } from "../ui/member-picker";
-import { OverflowMenu } from "../ui/menu";
-import { PriorityPopover } from "./priority-popover";
-import { useMediaQuery, BREAKPOINTS } from "../../hooks/useMediaQuery";
-import { useMembers } from "../../hooks/useLookups";
-import { routes } from "../../lib/routeBuilder";
-import { useDeleteTask, useUpdateTask } from "../../hooks/useTasks";
-import type { Member, Priority, Task } from "../../lib/types";
-import type { TaskFieldVisibility } from "./task-fields";
+import { AvatarStack } from "@/components/ui/avatar";
+import { DateChip, PriorityBadge } from "@/components/ui/badge";
+import { MemberPicker } from "@/components/ui/member-picker";
+import { OverflowMenu } from "@/components/ui/menu";
+import { PriorityPopover } from "@/components/tasks/priority-popover";
+import { useMediaQuery, BREAKPOINTS } from "@/hooks/useMediaQuery";
+import { useMembers } from "@/hooks/useLookups";
+import { routes } from "@/lib/routeBuilder";
+import { useDeleteTask, useUpdateTask } from "@/hooks/useTasks";
+import type { Member, Priority, Task } from "@/lib/types";
+import type { TaskFieldVisibility } from "@/components/tasks/task-fields";
 
 interface TaskTableProps {
   tasks: Task[];

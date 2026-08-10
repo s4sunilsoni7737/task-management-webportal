@@ -1,7 +1,7 @@
 "use client";
 
 import { AlertCircle, RefreshCw } from "lucide-react";
-import { getErrorMessage } from "../../services/api/api-error-handler";
+import { getErrorMessage } from "@/services/api/api-error-handler";
 
 interface QueryErrorCardProps {
   error: unknown;

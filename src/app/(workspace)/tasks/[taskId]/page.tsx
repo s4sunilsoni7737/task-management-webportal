@@ -38,24 +38,24 @@ import {
   Users,
   X,
 } from "lucide-react";
-import { Avatar, AvatarStack } from "../../../../components/ui/avatar";
-import { DateChip, LabelChip, PriorityBadge, StatusBadge } from "../../../../components/ui/badge";
-import { Calendar } from "../../../../components/ui/calendar";
-import { CollapsiblePanel } from "../../../../components/ui/collapsible-panel";
-import { EmptyState } from "../../../../components/ui/empty-state";
-import { GlobalLoader } from "../../../../components/ui/global-loader";
-import { IconButton } from "../../../../components/ui/icon-button";
-import { MemberPicker } from "../../../../components/ui/member-picker";
-import { MenuItem, OverflowMenu } from "../../../../components/ui/menu";
-import { Popover } from "../../../../components/ui/popover";
-import { QueryErrorCard } from "../../../../components/ui/query-error-card";
-import { InlineAddTaskRow } from "../../../../components/tasks/inline-add-task-row";
-import { PriorityPopover } from "../../../../components/tasks/priority-popover";
-import { TaskTable } from "../../../../components/tasks/task-table";
-import { DEFAULT_TASK_FIELDS } from "../../../../components/tasks/task-fields";
-import { useAuthStore } from "../../../../store/authStore";
-import { toast } from "../../../../store/toastStore";
-import { useLabels, useMembers } from "../../../../hooks/useLookups";
+import { Avatar, AvatarStack } from "@/components/ui/avatar";
+import { DateChip, LabelChip, PriorityBadge, StatusBadge } from "@/components/ui/badge";
+import { Calendar } from "@/components/ui/calendar";
+import { CollapsiblePanel } from "@/components/ui/collapsible-panel";
+import { EmptyState } from "@/components/ui/empty-state";
+import { GlobalLoader } from "@/components/ui/global-loader";
+import { IconButton } from "@/components/ui/icon-button";
+import { MemberPicker } from "@/components/ui/member-picker";
+import { MenuItem, OverflowMenu } from "@/components/ui/menu";
+import { Popover } from "@/components/ui/popover";
+import { QueryErrorCard } from "@/components/ui/query-error-card";
+import { InlineAddTaskRow } from "@/components/tasks/inline-add-task-row";
+import { PriorityPopover } from "@/components/tasks/priority-popover";
+import { TaskTable } from "@/components/tasks/task-table";
+import { DEFAULT_TASK_FIELDS } from "@/components/tasks/task-fields";
+import { useAuthStore } from "@/store/authStore";
+import { toast } from "@/store/toastStore";
+import { useLabels, useMembers } from "@/hooks/useLookups";
 import {
   useAddComment,
   useAddSubtask,
@@ -63,15 +63,15 @@ import {
   useComments,
   useDeleteComment,
   useUpdateComment,
-} from "../../../../hooks/useTaskDetail";
-import { useDeleteTask, useSubtasks, useTask, useUpdateTask } from "../../../../hooks/useTasks";
-import { tasksService } from "../../../../services/tasks/tasks.service";
-import { routes } from "../../../../lib/routeBuilder";
-import { cn } from "../../../../lib/utils";
-import { STATUS_CONFIG } from "../../../../lib/utils/enum-utils";
-import { formatRelativeTime } from "../../../../lib/utils/formatters";
-import { DEFAULT_WORKSPACE_NAME } from "../../../../../constants";
-import { TASK_STATUSES } from "../../../../lib/types";
+} from "@/hooks/useTaskDetail";
+import { useDeleteTask, useSubtasks, useTask, useUpdateTask } from "@/hooks/useTasks";
+import { tasksService } from "@/services/tasks/tasks.service";
+import { routes } from "@/lib/routeBuilder";
+import { cn } from "@/lib/utils";
+import { STATUS_CONFIG } from "@/lib/utils/enum-utils";
+import { formatRelativeTime } from "@/lib/utils/formatters";
+import { DEFAULT_WORKSPACE_NAME } from "@/constants";
+import { TASK_STATUSES } from "@/lib/types";
 import type {
   ActivityLogEntry,
   ActivityType,
@@ -81,7 +81,7 @@ import type {
   Task,
   TaskStatus,
   UpdateTaskInput,
-} from "../../../../lib/types";
+} from "@/lib/types";
 type FieldKey = "status" | "priority" | "members" | "dates" | "labels" | "reporter" | null;
 
 const ACTIVITY_ICONS: Record<ActivityType, typeof Flag> = {

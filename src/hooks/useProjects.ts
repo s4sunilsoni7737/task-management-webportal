@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { projectsService } from "../services/projects/projects.service";
-import { useApiMutation } from "./useApiMutation";
-import type { CreateProjectInput, ProjectQueryParams, UpdateProjectInput } from "../lib/types";
+import { projectsService } from "@/services/projects/projects.service";
+import { useApiMutation } from "@/hooks/useApiMutation";
+import type { CreateProjectInput, ProjectQueryParams, UpdateProjectInput } from "@/lib/types";
 
 export function useProjects(params: ProjectQueryParams = {}) {
   return useQuery({

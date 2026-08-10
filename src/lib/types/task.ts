@@ -1,6 +1,6 @@
-import type { Priority, TaskStatus } from "./enums";
-import type { Label } from "./label";
-import type { Member } from "./user";
+import type { Priority, TaskStatus } from "@/lib/types/enums";
+import type { Label } from "@/lib/types/label";
+import type { Member } from "@/lib/types/user";
 
 /**
  * UI-facing Task shape. The backend doctrine persists `_id`, `memberIds`,
@@ -103,7 +103,7 @@ export interface ActivityLogEntry {
   id: string;
   taskId: string;
   actor: Member | null;
-  type: import("./enums").ActivityType;
+  type: import("@/lib/types/enums").ActivityType;
   fromValue: string | null;
   toValue: string | null;
   message: string;

@@ -2,15 +2,15 @@
 
 import { useRef, useState } from "react";
 import { Check, Moon, Palette, Settings, Sun } from "lucide-react";
-import { Popover } from "../ui/popover";
-import { MenuItem } from "../ui/menu";
-import { Avatar } from "../ui/avatar";
-import { useAuthStore } from "../../store/authStore";
-import { useUiStore } from "../../store/uiStore";
-import { useUpdatePreferences } from "../../hooks/useUsers";
-import { COLOR_MODES, type ColorMode, type ThemeMode } from "../../lib/types";
-import { cn } from "../../lib/utils";
-import { DEFAULT_WORKSPACE_NAME } from "../../../constants";
+import { Popover } from "@/components/ui/popover";
+import { MenuItem } from "@/components/ui/menu";
+import { Avatar } from "@/components/ui/avatar";
+import { useAuthStore } from "@/store/authStore";
+import { useUiStore } from "@/store/uiStore";
+import { useUpdatePreferences } from "@/hooks/useUsers";
+import { COLOR_MODES, type ColorMode, type ThemeMode } from "@/lib/types";
+import { cn } from "@/lib/utils";
+import { DEFAULT_WORKSPACE_NAME } from "@/constants";
 
 interface WorkspaceMenuProps {
   open: boolean;

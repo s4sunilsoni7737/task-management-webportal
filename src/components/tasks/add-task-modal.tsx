@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import { X } from "lucide-react";
-import { Button } from "../ui/button";
-import { useCreateTask } from "../../hooks/useTasks";
-import { TASK_STATUSES, PRIORITIES, type Priority, type TaskStatus } from "../../lib/types";
+import { Button } from "@/components/ui/button";
+import { useCreateTask } from "@/hooks/useTasks";
+import { TASK_STATUSES, PRIORITIES, type Priority, type TaskStatus } from "@/lib/types";
 
 interface AddTaskModalProps {
   open: boolean;

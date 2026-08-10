@@ -3,20 +3,20 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Plus, Search as SearchIcon, X } from "lucide-react";
-import { Button } from "../../../components/ui/button";
-import { SearchInput } from "../../../components/ui/search-input";
-import { EmptyState } from "../../../components/ui/empty-state";
-import { QueryErrorCard } from "../../../components/ui/query-error-card";
-import { Skeleton } from "../../../components/ui/skeleton";
-import { Pagination } from "../../../components/ui/pagination";
-import { Avatar } from "../../../components/ui/avatar";
-import { DateChip, PriorityBadge } from "../../../components/ui/badge";
-import { OverflowMenu } from "../../../components/ui/menu";
-import { useMediaQuery, BREAKPOINTS } from "../../../hooks/useMediaQuery";
-import { useCreateProject, useDeleteProject, useProjects } from "../../../hooks/useProjects";
-import { useDebouncedValue } from "../../../hooks/useDebouncedValue";
-import { routes } from "../../../lib/routeBuilder";
-import { PROJECT_PRIORITIES, type Project, type ProjectPriority } from "../../../lib/types";
+import { Button } from "@/components/ui/button";
+import { SearchInput } from "@/components/ui/search-input";
+import { EmptyState } from "@/components/ui/empty-state";
+import { QueryErrorCard } from "@/components/ui/query-error-card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Pagination } from "@/components/ui/pagination";
+import { Avatar } from "@/components/ui/avatar";
+import { DateChip, PriorityBadge } from "@/components/ui/badge";
+import { OverflowMenu } from "@/components/ui/menu";
+import { useMediaQuery, BREAKPOINTS } from "@/hooks/useMediaQuery";
+import { useCreateProject, useDeleteProject, useProjects } from "@/hooks/useProjects";
+import { useDebouncedValue } from "@/hooks/useDebouncedValue";
+import { routes } from "@/lib/routeBuilder";
+import { PROJECT_PRIORITIES, type Project, type ProjectPriority } from "@/lib/types";
 
 /**
  * Projects table — dense bordered table on ≥700px, stacked cards below

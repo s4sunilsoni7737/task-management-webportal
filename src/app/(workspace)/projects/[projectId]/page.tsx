@@ -4,26 +4,26 @@ import { useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { ChevronRight, Search } from "lucide-react";
-import { TasksToolbar } from "../../../../components/tasks/tasks-toolbar";
-import { TaskGroup } from "../../../../components/tasks/task-group";
-import { TasksBoard } from "../../../../components/tasks/tasks-board";
-import { EmptyState } from "../../../../components/ui/empty-state";
-import { QueryErrorCard } from "../../../../components/ui/query-error-card";
-import { Skeleton } from "../../../../components/ui/skeleton";
-import { GlobalLoader } from "../../../../components/ui/global-loader";
-import { AddTaskModal } from "../../../../components/tasks/add-task-modal";
-import { useProject } from "../../../../hooks/useProjects";
-import { useGroupedTasks } from "../../../../hooks/useTasks";
-import { useMembers, useLabels } from "../../../../hooks/useLookups";
-import { useDebouncedValue } from "../../../../hooks/useDebouncedValue";
-import { useUiStore } from "../../../../store/uiStore";
+import { TasksToolbar } from "@/components/tasks/tasks-toolbar";
+import { TaskGroup } from "@/components/tasks/task-group";
+import { TasksBoard } from "@/components/tasks/tasks-board";
+import { EmptyState } from "@/components/ui/empty-state";
+import { QueryErrorCard } from "@/components/ui/query-error-card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { GlobalLoader } from "@/components/ui/global-loader";
+import { AddTaskModal } from "@/components/tasks/add-task-modal";
+import { useProject } from "@/hooks/useProjects";
+import { useGroupedTasks } from "@/hooks/useTasks";
+import { useMembers, useLabels } from "@/hooks/useLookups";
+import { useDebouncedValue } from "@/hooks/useDebouncedValue";
+import { useUiStore } from "@/store/uiStore";
 import {
   DEFAULT_TASK_FIELDS,
   type TaskFieldVisibility,
-} from "../../../../components/tasks/task-fields";
-import type { TaskFilters } from "../../../../components/tasks/filter-popover";
-import { routes } from "../../../../lib/routeBuilder";
-import { TASK_STATUSES } from "../../../../lib/types";
+} from "@/components/tasks/task-fields";
+import type { TaskFilters } from "@/components/tasks/filter-popover";
+import { routes } from "@/lib/routeBuilder";
+import { TASK_STATUSES } from "@/lib/types";
 
 const EMPTY_FILTERS: TaskFilters = { memberId: null, labelId: null, priority: null };
 

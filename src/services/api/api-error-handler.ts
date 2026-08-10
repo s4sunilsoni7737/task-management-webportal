@@ -1,5 +1,5 @@
 import { AxiosError } from "axios";
-import { ApiError, type ApiFieldError } from "./api-error";
+import { ApiError, type ApiFieldError } from "@/services/api/api-error";
 
 interface BackendErrorBody {
   statusCode?: number;

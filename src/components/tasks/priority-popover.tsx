@@ -1,9 +1,9 @@
 "use client";
 
-import { Popover } from "../ui/popover";
-import { MenuItem } from "../ui/menu";
-import { PRIORITY_CONFIG } from "../../lib/utils/enum-utils";
-import { PRIORITIES, type Priority } from "../../lib/types";
+import { Popover } from "@/components/ui/popover";
+import { MenuItem } from "@/components/ui/menu";
+import { PRIORITY_CONFIG } from "@/lib/utils/enum-utils";
+import { PRIORITIES, type Priority } from "@/lib/types";
 
 interface PriorityPopoverProps {
   open: boolean;

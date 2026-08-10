@@ -2,8 +2,8 @@
 
 import { useEffect } from "react";
 import { CheckCircle2, X, XCircle, Info } from "lucide-react";
-import { cn } from "../../lib/utils";
-import { useToastStore, type ToastItem } from "../../store/toastStore";
+import { cn } from "@/lib/utils";
+import { useToastStore, type ToastItem } from "@/store/toastStore";
 
 const ICONS: Record<ToastItem["variant"], React.ElementType> = {
   success: CheckCircle2,

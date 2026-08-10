@@ -2,9 +2,9 @@
 
 import { Suspense, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useAuthStore } from "../../../../store/authStore";
-import { GlobalLoader } from "../../../../components/ui/global-loader";
-import { routes } from "../../../../lib/routeBuilder";
+import { useAuthStore } from "@/store/authStore";
+import { GlobalLoader } from "@/components/ui/global-loader";
+import { routes } from "@/lib/routeBuilder";
 
 /**
  * Handles the redirect back from Google OAuth. The backend issues a JWT

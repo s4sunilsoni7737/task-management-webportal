@@ -1,6 +1,6 @@
-import { request } from "../api/api-handler";
-import { API_ENDPOINTS } from "../api/endpoints";
-import type { Label } from "../../lib/types";
+import { request } from "@/services/api/api-handler";
+import { API_ENDPOINTS } from "@/services/api/endpoints";
+import type { Label } from "@/lib/types";
 
 export const labelsService = {
   getAll(): Promise<Label[]> {

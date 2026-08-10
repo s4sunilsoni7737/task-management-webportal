@@ -2,9 +2,9 @@
 
 import { useLayoutEffect, useRef, useState, type ReactNode, type RefObject } from "react";
 import { createPortal } from "react-dom";
-import { useClickOutside } from "../../hooks/useClickOutside";
-import { useEscapeKey } from "../../hooks/useEscapeKey";
-import { cn } from "../../lib/utils";
+import { useClickOutside } from "@/hooks/useClickOutside";
+import { useEscapeKey } from "@/hooks/useEscapeKey";
+import { cn } from "@/lib/utils";
 
 type Side = "bottom" | "top" | "right" | "left";
 type Align = "start" | "end" | "center";

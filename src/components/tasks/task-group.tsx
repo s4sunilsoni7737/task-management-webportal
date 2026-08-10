@@ -1,14 +1,14 @@
 "use client";
 
 import { useQueryClient } from "@tanstack/react-query";
-import { CollapsiblePanel } from "../ui/collapsible-panel";
-import { EmptyState } from "../ui/empty-state";
-import { TaskTable } from "./task-table";
-import { InlineAddTaskRow } from "./inline-add-task-row";
-import { useCreateTask } from "../../hooks/useTasks";
-import { STATUS_CONFIG } from "../../lib/utils/enum-utils";
-import type { Task, TaskStatus } from "../../lib/types";
-import type { TaskFieldVisibility } from "./task-fields";
+import { CollapsiblePanel } from "@/components/ui/collapsible-panel";
+import { EmptyState } from "@/components/ui/empty-state";
+import { TaskTable } from "@/components/tasks/task-table";
+import { InlineAddTaskRow } from "@/components/tasks/inline-add-task-row";
+import { useCreateTask } from "@/hooks/useTasks";
+import { STATUS_CONFIG } from "@/lib/utils/enum-utils";
+import type { Task, TaskStatus } from "@/lib/types";
+import type { TaskFieldVisibility } from "@/components/tasks/task-fields";
 
 interface TaskGroupProps {
   status: TaskStatus;

@@ -1,5 +1,5 @@
 import { forwardRef, type ButtonHTMLAttributes } from "react";
-import { cn } from "../../lib/utils";
+import { cn } from "@/lib/utils";
 
 type ButtonVariant = "black" | "outline" | "ghost" | "accent";
 type ButtonSize = "sm" | "md";

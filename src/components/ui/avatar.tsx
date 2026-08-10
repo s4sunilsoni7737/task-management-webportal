@@ -1,7 +1,7 @@
 import { Plus } from "lucide-react";
-import type { Member } from "../../lib/types";
-import { cn } from "../../lib/utils";
-import { getInitials } from "../../lib/utils/formatters";
+import type { Member } from "@/lib/types";
+import { cn } from "@/lib/utils";
+import { getInitials } from "@/lib/utils/formatters";
 
 type AvatarSize = "xs" | "sm" | "md" | "lg";
 

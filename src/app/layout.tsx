@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Providers } from "./providers";
+import { Providers } from "@/app/providers";
 import "./globals.css";
 
 // NOTE: Using the system font stack (see globals.css `body { font-family }`)

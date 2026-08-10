@@ -2,8 +2,8 @@
 
 import { useRef, useState } from "react";
 import { Check, Columns3 } from "lucide-react";
-import { Button } from "../ui/button";
-import { Popover } from "../ui/popover";
+import { Button } from "@/components/ui/button";
+import { Popover } from "@/components/ui/popover";
 
 export interface FieldOption {
   key: string;

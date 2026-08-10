@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import { usersService } from "../services/users/users.service";
-import { useApiMutation } from "./useApiMutation";
-import { useAuthStore } from "../store/authStore";
-import { useUiStore } from "../store/uiStore";
-import type { UserPreferences } from "../lib/types";
+import { usersService } from "@/services/users/users.service";
+import { useApiMutation } from "@/hooks/useApiMutation";
+import { useAuthStore } from "@/store/authStore";
+import { useUiStore } from "@/store/uiStore";
+import type { UserPreferences } from "@/lib/types";
 
 /** User profile query — refreshed whenever theme/colorMode change so the store stays server-true. */
 export function useMe(enabled = true) {

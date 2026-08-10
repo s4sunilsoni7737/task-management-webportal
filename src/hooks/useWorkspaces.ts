@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { workspacesService } from "../services/workspaces/workspaces.service";
+import { workspacesService } from "@/services/workspaces/workspaces.service";
 
 export function useWorkspaces() {
   return useQuery({

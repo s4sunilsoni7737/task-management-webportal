@@ -1,8 +1,8 @@
 import { CalendarDays, X } from "lucide-react";
-import { PRIORITY_CONFIG, STATUS_CONFIG } from "../../lib/utils/enum-utils";
-import { formatDate, formatDateShort } from "../../lib/utils/formatters";
-import { cn } from "../../lib/utils";
-import type { Label, Priority, TaskStatus } from "../../lib/types";
+import { PRIORITY_CONFIG, STATUS_CONFIG } from "@/lib/utils/enum-utils";
+import { formatDate, formatDateShort } from "@/lib/utils/formatters";
+import { cn } from "@/lib/utils";
+import type { Label, Priority, TaskStatus } from "@/lib/types";
 
 interface StatusBadgeProps {
   status: TaskStatus;

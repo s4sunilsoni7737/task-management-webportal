@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import { Check } from "lucide-react";
-import { Popover } from "./popover";
-import { Avatar } from "./avatar";
-import type { Member } from "../../lib/types";
+import { Popover } from "@/components/ui/popover";
+import { Avatar } from "@/components/ui/avatar";
+import type { Member } from "@/lib/types";
 
 interface MemberPickerProps {
   open: boolean;

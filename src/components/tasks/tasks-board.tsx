@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { KanbanColumn } from "./kanban-column";
-import { TASK_STATUSES, type Task } from "../../lib/types";
+import { KanbanColumn } from "@/components/tasks/kanban-column";
+import { TASK_STATUSES, type Task } from "@/lib/types";
 
 interface TasksBoardProps {
   tasks: Task[];

@@ -3,9 +3,9 @@
 import { useRef, useState } from "react";
 import type { ComponentType, ReactNode } from "react";
 import { Check, ChevronRight, Copy, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
-import { IconButton } from "./icon-button";
-import { Popover } from "./popover";
-import { cn } from "../../lib/utils";
+import { IconButton } from "@/components/ui/icon-button";
+import { Popover } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 
 interface MenuItemProps {
   icon?: ComponentType<{ className?: string }>;

@@ -12,7 +12,7 @@ import {
   Minus,
   SignalLow,
 } from "lucide-react";
-import type { Priority, TaskStatus } from "../types/enums";
+import type { Priority, TaskStatus } from "@/lib/types/enums";
 
 export interface PriorityConfig {
   label: string;

@@ -1,12 +1,12 @@
-import { request } from "../api/api-handler";
-import { API_ENDPOINTS } from "../api/endpoints";
-import { toPaginatedResponse, type GroupedResponse, type PaginatedResponse } from "../api/api-response";
+import { request } from "@/services/api/api-handler";
+import { API_ENDPOINTS } from "@/services/api/endpoints";
+import { toPaginatedResponse, type GroupedResponse, type PaginatedResponse } from "@/services/api/api-response";
 import {
   normalizeActivityLogEntry,
   normalizeComment,
   normalizeTask,
   normalizeTaskList,
-} from "../../lib/utils/normalize";
+} from "@/lib/utils/normalize";
 import type {
   ActivityLogEntry,
   Comment,
@@ -15,7 +15,7 @@ import type {
   Task,
   TaskQueryParams,
   UpdateTaskInput,
-} from "../../lib/types";
+} from "@/lib/types";
 
 interface RawTaskListResponse {
   list: unknown[];

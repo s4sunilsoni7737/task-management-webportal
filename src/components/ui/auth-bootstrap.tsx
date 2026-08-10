@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { useAuthStore } from "../../store/authStore";
-import { useUiStore, applyDocumentTheme } from "../../store/uiStore";
-import { usersService } from "../../services/users/users.service";
-import { GlobalLoader } from "./global-loader";
+import { useAuthStore } from "@/store/authStore";
+import { useUiStore, applyDocumentTheme } from "@/store/uiStore";
+import { usersService } from "@/services/users/users.service";
+import { GlobalLoader } from "@/components/ui/global-loader";
 
 /**
  * Waits for the persisted auth store to rehydrate from localStorage before

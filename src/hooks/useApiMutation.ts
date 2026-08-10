@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient, type QueryKey } from "@tanstack/react-query";
-import { toast } from "../store/toastStore";
+import { toast } from "@/store/toastStore";
 
 interface UseApiMutationOptions<TData, TVariables> {
   mutationFn: (variables: TVariables) => Promise<TData>;

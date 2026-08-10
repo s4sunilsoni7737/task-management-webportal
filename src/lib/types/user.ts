@@ -1,4 +1,4 @@
-import type { ColorMode, ThemeMode } from "./enums";
+import type { ColorMode, ThemeMode } from "@/lib/types/enums";
 
 export interface UserPreferences {
   theme: ThemeMode;

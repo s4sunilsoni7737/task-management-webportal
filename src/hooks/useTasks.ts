@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { tasksService } from "../services/tasks/tasks.service";
-import { useApiMutation } from "./useApiMutation";
-import type { CreateTaskInput, TaskQueryParams, UpdateTaskInput } from "../lib/types";
+import { tasksService } from "@/services/tasks/tasks.service";
+import { useApiMutation } from "@/hooks/useApiMutation";
+import type { CreateTaskInput, TaskQueryParams, UpdateTaskInput } from "@/lib/types";
 
 export function useTasks(params: TaskQueryParams = {}) {
   return useQuery({

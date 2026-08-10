@@ -1,8 +1,8 @@
 "use client";
 
-import { Sidebar } from "./sidebar";
-import { TopBar } from "./top-bar";
-import { useMediaQuery, BREAKPOINTS } from "../../hooks/useMediaQuery";
+import { Sidebar } from "@/components/admin/sidebar";
+import { TopBar } from "@/components/admin/top-bar";
+import { useMediaQuery, BREAKPOINTS } from "@/hooks/useMediaQuery";
 
 /**
  * Top-level shell (senior adminportal pattern): renders the sidebar (inline
