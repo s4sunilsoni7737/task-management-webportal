@@ -24,7 +24,7 @@ export function TaskGroup({ status, tasks, visibleFields, projectId }: TaskGroup
   const config = STATUS_CONFIG[status];
 
   function addTask(title: string) {
-    createTask.mutate(
+    return createTask.mutateAsync(
       { title, status, projectId: projectId ?? null },
       { onSuccess: () => queryClient.invalidateQueries({ queryKey: ["tasks"] }) },
     );
@@ -40,10 +40,7 @@ export function TaskGroup({ status, tasks, visibleFields, projectId }: TaskGroup
           </div>
         </div>
       ) : (
-        <div className="flex flex-col gap-1.5">
-          <TaskTable tasks={tasks} visibleFields={visibleFields} />
-          <InlineAddTaskRow onAdd={addTask} pending={createTask.isPending} />
-        </div>
+        <TaskTable tasks={tasks} visibleFields={visibleFields} onAddTask={addTask} isAddingTask={createTask.isPending} />
       )}
     </CollapsiblePanel>
   );

@@ -54,24 +54,25 @@ the Scope of Work (`AuthModule`, `TasksModule`, `ProjectsModule`, `CommentsModul
 
 ```
 src/
-  app/                    # App Router routes
-    (auth)/login/         # Public login route
-    (workspace)/          # Authenticated shell: Tasks, Projects, Task Detail
-    api/                  # Mock backend (Next.js Route Handlers)
+  app/                        # App Router routes
+    (auth)/login/             # Public login route
+    (auth)/auth/callback/     # OAuth callback handler
+    (workspace)/              # Authenticated area (layout provides Sidebar + TopBar + main)
+      tasks/                  # Tasks list page
+      tasks/[taskId]/         # Task detail — single page.tsx with page code inlined
+      projects/               # Projects list page
+      projects/[projectId]/   # Project-scoped tasks page
+    page.tsx / layout.tsx / providers.tsx
   components/
-    ui/                   # Design-system primitives (Button, Popover, Avatar, ...)
-    shell/                # App shell (Sidebar, TopBar, WorkspaceMenu, ...)
-    tasks/                # Tasks module (List, Board, toolbar, cells)
-    projects/             # Projects module
-    task-detail/          # Task Detail page components
-  hooks/                  # React Query hooks + reusable UI hooks
+    admin/                    # App shell, provided by the layout (AppShell, Sidebar, TopBar, WorkspaceMenu)
+    ui/                       # Design-system primitives (Button, Popover, Avatar, ...)
+    tasks/                    # Shared tasks module — reused by Tasks + Project pages (toolbar, board, table, ...)
+  hooks/                      # React Query hooks + reusable UI hooks
   lib/
-    types/                # Shared domain types (mirrors future backend DTOs)
-    utils/                # Formatters, enum → icon/color config, cn()
-    mock/                 # In-memory seed data + mock API helpers
-  services/               # Domain service layer (auth, tasks, projects, labels, members, users)
-    api/                  # Axios client, interceptors, error normalization, endpoints
-  store/                  # Zustand stores (auth, ui/theme, toasts)
+    types/                    # Shared domain types (mirrors future backend DTOs)
+    utils/                    # Formatters, enum → icon/color config, cn()
+  services/                   # Domain service layer (api client, auth, tasks, projects, labels, members, users)
+  store/                      # Zustand stores (auth, ui/theme, toasts)
 ```
 
 **Service layer.** Components never call `axios`/`fetch` directly. They call a domain

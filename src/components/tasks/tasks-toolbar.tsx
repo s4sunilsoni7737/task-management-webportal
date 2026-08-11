@@ -16,12 +16,11 @@ interface TasksToolbarProps {
   onFiltersChange: (filters: TaskFilters) => void;
   members: Member[];
   labels: Label[];
-  view: "list" | "board";
-  onViewChange: (view: "list" | "board") => void;
+  view?: "list" | "board";
+  onViewChange?: (view: "list" | "board") => void;
   onAddTask: () => void;
 }
 
-/** Shared toolbar for both List and Board views, per Scope of Work §3.4. */
 export function TasksToolbar({
   search,
   onSearchChange,
@@ -36,20 +35,21 @@ export function TasksToolbar({
   onAddTask,
 }: TasksToolbarProps) {
   return (
-    <>
+    <div className="flex flex-wrap items-center gap-2">
       <SearchInput value={search} onChange={onSearchChange} placeholder="Search tasks..." />
       <FieldsPopover
         options={TASK_FIELD_OPTIONS}
         visible={visibleFields as unknown as Record<string, boolean>}
         onToggle={onToggleField}
+        view={view}
+        onViewChange={onViewChange}
       />
       <FilterPopover members={members} labels={labels} filters={filters} onChange={onFiltersChange} />
-      <ViewToggle value={view} onChange={onViewChange} />
-      <Button variant="black" size="sm" onClick={onAddTask}>
-        <Plus className="h-3.5 w-3.5" />
+      <Button variant="black" size="sm" onClick={onAddTask} className="h-8 rounded-md px-3 font-medium ml-1 mr-4">
+        <Plus className="h-4 w-4 mr-1.5" />
         Add Task
       </Button>
-    </>
+    </div>
   );
 }
 

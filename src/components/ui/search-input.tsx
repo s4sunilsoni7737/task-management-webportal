@@ -34,9 +34,14 @@ export function SearchInput({ value, onChange, placeholder = "Search..." }: Sear
 
   if (!expanded && !value) {
     return (
-      <IconButton aria-label="Search (Ctrl+F)" onClick={() => setExpanded(true)}>
+      <button
+        type="button"
+        aria-label="Search (Ctrl+F)"
+        onClick={() => setExpanded(true)}
+        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-border bg-surface text-text hover:bg-surface-muted transition-colors"
+      >
         <Search className="h-4 w-4" />
-      </IconButton>
+      </button>
     );
   }
 

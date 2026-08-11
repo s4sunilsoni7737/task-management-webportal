@@ -18,7 +18,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <Sidebar variant={isTablet ? "drawer" : "rail"} />
       <div className="flex min-w-0 flex-1 flex-col">
         <TopBar />
-        <main className="flex-1 overflow-y-auto scrollbar-thin p-4 sm:p-6">{children}</main>
+        <main className="flex-1 overflow-y-auto scrollbar-thin pt-4 pr-0 pb-4 pl-4">{children}</main>
       </div>
     </div>
   );

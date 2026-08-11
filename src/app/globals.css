@@ -16,6 +16,7 @@
   --color-accent-soft: var(--dx-accent-soft);
   --color-black-action: var(--dx-black-action);
   --color-black-action-hover: var(--dx-black-action-hover);
+  --color-black-action-fg: var(--dx-black-action-fg);
   --color-priority-high: var(--dx-priority-high);
   --color-priority-medium: var(--dx-priority-medium);
   --color-priority-low: var(--dx-priority-low);

@@ -7,9 +7,10 @@ import {
   CircleDashed,
   CircleDot,
   CirclePause,
-  ChevronsUp,
-  ChevronUp,
   Minus,
+  Signal,
+  SignalHigh,
+  SignalMedium,
   SignalLow,
 } from "lucide-react";
 import type { Priority, TaskStatus } from "@/lib/types/enums";
@@ -22,9 +23,9 @@ export interface PriorityConfig {
 
 export const PRIORITY_CONFIG: Record<Priority, PriorityConfig> = {
   no_priority: { label: "No Priority", icon: Minus, colorVar: "--dx-text-subtle" },
-  urgent: { label: "Urgent", icon: ChevronsUp, colorVar: "--dx-priority-urgent" },
-  high: { label: "High", icon: BarChart2, colorVar: "--dx-priority-high" },
-  medium: { label: "Medium", icon: ChevronUp, colorVar: "--dx-priority-medium" },
+  urgent: { label: "Urgent", icon: Signal, colorVar: "--dx-priority-urgent" },
+  high: { label: "High", icon: SignalHigh, colorVar: "--dx-priority-high" },
+  medium: { label: "Medium", icon: SignalMedium, colorVar: "--dx-priority-medium" },
   low: { label: "Low", icon: SignalLow, colorVar: "--dx-priority-low" },
 };
 

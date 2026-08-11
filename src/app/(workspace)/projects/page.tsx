@@ -175,7 +175,7 @@ export default function ProjectsPage() {
 
   return (
     <>
-      <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+      <div className="mb-5 flex min-h-8 flex-wrap items-center justify-between gap-2">
         <h1 className="text-xl font-bold text-text">Projects</h1>
         <div className="flex flex-wrap items-center gap-2">
           <SearchInput value={search} onChange={changeSearch} placeholder="Search projects..." />

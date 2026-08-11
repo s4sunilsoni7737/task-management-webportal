@@ -2,11 +2,12 @@
 
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { AvatarStack } from "@/components/ui/avatar";
-import { DateChip, PriorityBadge } from "@/components/ui/badge";
+import { AvatarStack, Avatar } from "@/components/ui/avatar";
+import { DateChip, PriorityBadge, LabelChip, StatusBadge } from "@/components/ui/badge";
 import { MemberPicker } from "@/components/ui/member-picker";
 import { OverflowMenu } from "@/components/ui/menu";
 import { PriorityPopover } from "@/components/tasks/priority-popover";
+import { InlineAddTaskRow } from "@/components/tasks/inline-add-task-row";
 import { useMediaQuery, BREAKPOINTS } from "@/hooks/useMediaQuery";
 import { useMembers } from "@/hooks/useLookups";
 import { routes } from "@/lib/routeBuilder";
@@ -17,6 +18,8 @@ import type { TaskFieldVisibility } from "@/components/tasks/task-fields";
 interface TaskTableProps {
   tasks: Task[];
   visibleFields: TaskFieldVisibility;
+  onAddTask?: (title: string) => Promise<any>;
+  isAddingTask?: boolean;
 }
 
 /**
@@ -25,7 +28,7 @@ interface TaskTableProps {
  * that it switches to stacked row cards (design_break_down.md §14) so names
  * stay readable without horizontal scrolling.
  */
-export function TaskTable({ tasks, visibleFields }: TaskTableProps) {
+export function TaskTable({ tasks, visibleFields, onAddTask, isAddingTask }: TaskTableProps) {
   const isMobile = useMediaQuery(BREAKPOINTS.mobile);
 
   if (isMobile) {
@@ -34,26 +37,41 @@ export function TaskTable({ tasks, visibleFields }: TaskTableProps) {
         {tasks.map((task) => (
           <TaskMobileCard key={task.id} task={task} visibleFields={visibleFields} />
         ))}
+        {onAddTask && (
+          <div className="rounded-md border border-border px-1 py-1 bg-surface">
+            <InlineAddTaskRow onAdd={onAddTask} pending={isAddingTask} />
+          </div>
+        )}
       </div>
     );
   }
 
   return (
     <div className="overflow-x-auto rounded-md border border-border">
-      <table className="w-full min-w-[560px] border-collapse">
+      <table className="w-full min-w-[700px] table-fixed border-collapse">
         <thead>
           <tr className="border-b border-border bg-surface-muted text-left text-xs font-medium text-text-muted">
-            <th className="px-3 py-2 font-medium">Task</th>
-            {visibleFields.priority && <th className="px-3 py-2 font-medium">Priority</th>}
-            {visibleFields.members && <th className="px-3 py-2 font-medium">Members</th>}
-            {visibleFields.dueDate && <th className="px-3 py-2 font-medium">Due Date</th>}
-            <th className="w-10 px-2 py-2" />
+            <th className="w-full px-3 py-2 font-medium">Task</th>
+            {visibleFields.priority && <th className="w-32 px-3 py-2 font-medium">Priority</th>}
+            {visibleFields.members && <th className="w-28 px-3 py-2 font-medium">Members</th>}
+            {visibleFields.dueDate && <th className="w-32 px-3 py-2 font-medium">Due Date</th>}
+            {visibleFields.labels && <th className="w-40 px-3 py-2 font-medium">Labels</th>}
+            {visibleFields.status && <th className="w-28 px-3 py-2 font-medium">Status</th>}
+            {visibleFields.reporter && <th className="w-32 px-3 py-2 font-medium">Reporter</th>}
+            <th className="w-20 px-2 py-2 font-medium text-right">Actions</th>
           </tr>
         </thead>
         <tbody>
           {tasks.map((task) => (
             <TaskDesktopRow key={task.id} task={task} visibleFields={visibleFields} />
           ))}
+          {onAddTask && (
+            <tr className="border-t border-border">
+              <td colSpan={100} className="px-1 py-1">
+                <InlineAddTaskRow onAdd={onAddTask} pending={isAddingTask} />
+              </td>
+            </tr>
+          )}
         </tbody>
       </table>
     </div>
@@ -94,7 +112,29 @@ function TaskDesktopRow({
           <DateChip date={task.dueDate} short />
         </td>
       )}
-      <td className="w-10 px-2 py-2 text-right" onClick={(e) => e.stopPropagation()}>
+      {visibleFields.labels && (
+        <td className="px-3 py-2">
+          <div className="flex flex-wrap gap-1">
+            {task.labels.map(l => <LabelChip key={l.id} label={l} />)}
+          </div>
+        </td>
+      )}
+      {visibleFields.status && (
+        <td className="px-3 py-2">
+          <StatusBadge status={task.status} />
+        </td>
+      )}
+      {visibleFields.reporter && (
+        <td className="px-3 py-2">
+          {task.reporter ? (
+            <div className="flex items-center gap-1.5">
+              <Avatar name={task.reporter.name} src={task.reporter.avatarUrl} size="sm" />
+              <span className="text-xs text-text-muted">{task.reporter.name}</span>
+            </div>
+          ) : <span className="text-xs text-text-muted">Unknown</span>}
+        </td>
+      )}
+      <td className="px-2 py-2 text-right" onClick={(e) => e.stopPropagation()}>
         <OverflowMenu
           label={`Actions for ${task.title}`}
           onEdit={() => router.push(routes.taskDetail(task.id))}
@@ -129,6 +169,7 @@ function TaskMobileCard({ task, visibleFields }: { task: Task; visibleFields: Ta
         {visibleFields.priority && <TaskPriorityCell value={task.priority} />}
         {visibleFields.dueDate && <DateChip date={task.dueDate} short />}
         {visibleFields.members && <TaskMembersCell members={task.members} size="xs" />}
+        {visibleFields.status && <StatusBadge status={task.status} />}
       </div>
     </div>
   );

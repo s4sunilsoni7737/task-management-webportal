@@ -24,7 +24,7 @@ export function TopBar({ left, right }: TopBarProps) {
   const isTablet = useMediaQuery(BREAKPOINTS.tablet);
 
   return (
-    <header className="sticky top-0 z-sticky flex h-[52px] shrink-0 items-center gap-3 border-b border-border bg-surface px-3">
+    <header className="sticky top-0 z-sticky flex h-16 shrink-0 items-center gap-3 border-b border-border bg-surface px-4">
       <IconButton
         aria-label={isTablet ? "Open sidebar" : "Toggle sidebar"}
         onClick={() => (isTablet ? setMobileSidebarOpen(true) : toggleSidebar())}

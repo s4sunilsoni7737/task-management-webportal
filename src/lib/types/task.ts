@@ -81,6 +81,9 @@ export interface TaskQueryParams {
   priority?: Priority;
   memberId?: string;
   labelId?: string;
+  reporterId?: string;
+  teamId?: string;
+  dueDate?: string;
   topLevelOnly?: boolean;
 }
 

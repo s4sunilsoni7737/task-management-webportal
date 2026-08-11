@@ -40,15 +40,15 @@ export function useApiMutation<TData, TVariables = void>({
 
   return useMutation({
     mutationFn,
-    onSuccess: (data, variables) => {
+    onSuccess: async (data, variables) => {
       if (successMessage) {
         const message =
           typeof successMessage === "function" ? successMessage(data, variables) : successMessage;
         toast.success(message);
       }
-      invalidateQueries.forEach((key) => {
-        queryClient.invalidateQueries({ queryKey: key });
-      });
+      await Promise.all(
+        invalidateQueries.map((key) => queryClient.invalidateQueries({ queryKey: key }))
+      );
       onSuccess?.(data, variables);
     },
     onError: (error, variables) => {

@@ -1064,7 +1064,7 @@ export default function TaskDetailPage() {
 
   return (
     <>
-      <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+      <div className="mb-5 flex min-h-8 flex-wrap items-center justify-between gap-2">
         <nav aria-label="Breadcrumb" className="flex min-w-0 items-center gap-1 text-sm">
           {breadcrumbItems.map((item, index) => (
             <span key={`${item.label}-${index}`} className="flex min-w-0 items-center gap-1">
@@ -1101,8 +1101,8 @@ export default function TaskDetailPage() {
         </div>
       </div>
 
-      <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
-        <div className="min-w-0 flex-1 lg:max-w-[560px]">
+      <div className="flex flex-col gap-5 lg:flex-row lg:items-start">
+        <div className="min-w-0 flex-1 lg:max-w-[633px]">
           <TaskHeader task={task} onSave={save} />
           <PropertiesRow
             task={task}
@@ -1124,7 +1124,7 @@ export default function TaskDetailPage() {
         </div>
 
         {panelOpen && (
-          <aside className="flex w-full shrink-0 flex-col gap-4 lg:w-[280px]">
+          <aside className="flex w-full shrink-0 flex-col gap-4 lg:w-[323px]">
             <DetailsCard task={task} onSave={save} />
             <UpdatesCard taskId={task.id} />
           </aside>

@@ -11,7 +11,11 @@ export function useClickOutside<T extends HTMLElement>(
 
     function onPointerDown(event: MouseEvent | TouchEvent) {
       const target = event.target as Node;
-      if (ref.current && !ref.current.contains(target)) {
+      if (
+        ref.current && 
+        !ref.current.contains(target) &&
+        !(target instanceof Element && target.closest(".ignore-click-outside"))
+      ) {
         handler();
       }
     }

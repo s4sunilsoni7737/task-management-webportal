@@ -17,11 +17,19 @@ import { DEFAULT_TASK_FIELDS, type TaskFieldVisibility } from "@/components/task
 import type { TaskFilters } from "@/components/tasks/filter-popover";
 import { TASK_STATUSES } from "@/lib/types";
 
-const EMPTY_FILTERS: TaskFilters = { memberId: null, labelId: null, priority: null };
+const EMPTY_FILTERS: TaskFilters = { 
+  memberId: null, 
+  labelId: null, 
+  priority: null, 
+  status: null, 
+  dueDate: null, 
+  teamId: null, 
+  reporterId: null 
+};
 
 /**
  * Tasks home page. All search/filter criteria are SERVER-side query params
- * (`q`, `memberId`, `labelId`, `priority`) consumed by `GET /tasks?groupByStatus=true`,
+ * (`q`, `memberId`, `labelId`, `priority`, etc) consumed by `GET /tasks?groupByStatus=true`,
  * which returns tasks pre-grouped into status buckets — powering the List
  * view's collapsible sections and the Board's Kanban columns. No client-side
  * filtering happens here (the old `limit:1000` + `.filter()` bug is gone).
@@ -44,6 +52,10 @@ export default function TasksPage() {
     memberId: filters.memberId ?? undefined,
     labelId: filters.labelId ?? undefined,
     priority: filters.priority ?? undefined,
+    status: filters.status ?? undefined,
+    dueDate: filters.dueDate ?? undefined,
+    teamId: filters.teamId ?? undefined,
+    reporterId: filters.reporterId ?? undefined,
   });
 
   const grouped = data?.grouped ?? {};
@@ -59,7 +71,7 @@ export default function TasksPage() {
 
   return (
     <>
-      <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+      <div className="mb-5 flex min-h-8 flex-wrap items-center justify-between gap-2">
         <h1 className="text-xl font-bold text-text">Tasks</h1>
         <div className="flex flex-wrap items-center gap-2">
           <TasksToolbar
@@ -93,10 +105,10 @@ export default function TasksPage() {
           description="Try adjusting your search or filters."
         />
       ) : view === "board" ? (
-        <TasksBoard tasks={allTasks} />
+        <TasksBoard tasks={allTasks} statusFilter={filters.status} />
       ) : (
-        <div className="flex flex-col gap-5">
-          {TASK_STATUSES.map((status) => (
+        <div className="flex flex-col gap-2">
+          {TASK_STATUSES.filter((status) => !filters.status || filters.status === status).map((status) => (
             <TaskGroup
               key={status}
               status={status}

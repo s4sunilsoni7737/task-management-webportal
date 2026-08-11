@@ -123,7 +123,7 @@ export function Sidebar({ variant }: SidebarProps) {
     <aside
       className={cn(
         "hidden shrink-0 border-r border-border transition-[width] duration-150 md:block",
-        isIconRail ? "w-14" : "w-[210px]",
+        isIconRail ? "w-14" : "w-64",
       )}
     >
       {content}

@@ -87,7 +87,7 @@ export default function ProjectTasksPage() {
 
   return (
     <>
-      <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+      <div className="mb-5 flex min-h-8 flex-wrap items-center justify-between gap-2">
         <div>
           <nav aria-label="Breadcrumb" className="flex min-w-0 items-center gap-1 text-sm">
             <Link href={routes.projects()} className="truncate text-text-muted hover:text-text">
@@ -130,7 +130,7 @@ export default function ProjectTasksPage() {
         ) : view === "board" ? (
           <TasksBoard tasks={allTasks} projectId={projectId} />
         ) : (
-          <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-2">
             {TASK_STATUSES.map((status) => (
               <TaskGroup
                 key={status}
