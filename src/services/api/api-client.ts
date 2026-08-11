@@ -1,5 +1,5 @@
 import axios from "axios";
-import { API_BASE_URL } from "../../../constants";
+import { API_BASE_URL } from "@/constants";
 
 /**
  * Single shared Axios instance for the whole app.

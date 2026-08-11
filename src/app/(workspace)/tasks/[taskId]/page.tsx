@@ -860,7 +860,6 @@ function DetailsCard({ task, onSave }: DetailsCardProps) {
 
           <DetailRow icon={Tag} label="Labels">
             <div className="flex flex-wrap items-center gap-1">
-              {task.labels.length === 0 && <span className="text-xs text-text-subtle">Add labels...</span>}
               {task.labels.map((label) => (
                 <LabelChip key={label.id} label={label} onRemove={() => toggleLabel(label.id)} />
               ))}
@@ -869,9 +868,13 @@ function DetailsCard({ task, onSave }: DetailsCardProps) {
                 type="button"
                 onClick={() => setOpenField("labels")}
                 aria-label="Add label"
-                className="flex h-[20px] w-[20px] items-center justify-center rounded-full border border-dashed border-border-strong text-text-subtle hover:border-accent hover:text-accent"
+                className={
+                  task.labels.length === 0
+                    ? "text-xs text-text-subtle hover:text-text cursor-pointer transition-colors"
+                    : "flex h-[20px] w-[20px] items-center justify-center rounded-full border border-dashed border-border-strong text-text-subtle hover:border-accent hover:text-accent"
+                }
               >
-                <Plus className="h-2.5 w-2.5" />
+                {task.labels.length === 0 ? "Add labels..." : <Plus className="h-2.5 w-2.5" />}
               </button>
             </div>
             <LabelPicker
