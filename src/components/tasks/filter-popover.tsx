@@ -120,6 +120,17 @@ export function FilterPopover({ members, labels, filters, onChange }: FilterPopo
         className="w-[180px] p-1.5 ignore-click-outside"
       >
         <div className="flex flex-col gap-0.5">
+          <div className="px-2.5 py-1 text-xs text-text-muted">Priority</div>
+          <button
+            onClick={() => onChange({ ...filters, priority: null })}
+            className="flex items-center gap-2 rounded-sm px-2.5 py-1.5 text-sm hover:bg-surface-muted transition-colors text-text"
+          >
+            <div className="flex h-4 w-4 items-center justify-center shrink-0">
+              <div className="h-1.5 w-1.5 rounded-full border border-text-subtle" />
+            </div>
+            <span className="flex-1 text-left text-text">No Priority</span>
+            {filters.priority === null && <Check className="h-4 w-4 text-text shrink-0" />}
+          </button>
           {PRIORITIES.map((p) => {
             const config = PRIORITY_CONFIG[p];
             const Icon = config.icon;
@@ -131,7 +142,7 @@ export function FilterPopover({ members, labels, filters, onChange }: FilterPopo
                 className="flex items-center gap-2 rounded-sm px-2.5 py-1.5 text-sm hover:bg-surface-muted transition-colors text-text"
               >
                 <Icon className="h-4 w-4 shrink-0" style={{ color: `var(${config.colorVar})` }} />
-                <span className="flex-1 text-left">{config.label}</span>
+                <span className="flex-1 text-left" style={{ color: `var(${config.colorVar})` }}>{config.label}</span>
                 {isSelected && <Check className="h-4 w-4 text-text shrink-0" />}
               </button>
             );
@@ -151,6 +162,17 @@ export function FilterPopover({ members, labels, filters, onChange }: FilterPopo
         className="w-[180px] p-1.5 ignore-click-outside"
       >
         <div className="flex flex-col gap-0.5">
+          <div className="px-2.5 py-1 text-xs text-text-muted">Status</div>
+          <button
+            onClick={() => onChange({ ...filters, status: null })}
+            className="flex items-center gap-2 rounded-sm px-2.5 py-1.5 text-sm hover:bg-surface-muted transition-colors text-text"
+          >
+            <div className="flex h-4 w-4 items-center justify-center shrink-0">
+              <div className="h-1.5 w-1.5 rounded-full border border-text-subtle" />
+            </div>
+            <span className="flex-1 text-left text-text">No Status</span>
+            {filters.status === null && <Check className="h-4 w-4 text-text shrink-0" />}
+          </button>
           {TASK_STATUSES.map((s) => {
             const config = STATUS_CONFIG[s];
             const Icon = config.icon;

@@ -24,7 +24,7 @@ const EMPTY_FILTERS: TaskFilters = {
   status: null, 
   dueDate: null, 
   teamId: null, 
-  reporterId: null 
+  reporterId: null
 };
 
 /**

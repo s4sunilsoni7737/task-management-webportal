@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import { useParams } from "next/navigation";
@@ -25,7 +25,7 @@ import type { TaskFilters } from "@/components/tasks/filter-popover";
 import { routes } from "@/lib/routeBuilder";
 import { TASK_STATUSES } from "@/lib/types";
 
-const EMPTY_FILTERS: TaskFilters = { memberId: null, labelId: null, priority: null };
+const EMPTY_FILTERS: TaskFilters = { memberId: null, labelId: null, priority: null, status: null, dueDate: null, teamId: null, reporterId: null };
 
 /**
  * Project-scoped Tasks view. Reuses the exact Tasks module UI (toolbar,
