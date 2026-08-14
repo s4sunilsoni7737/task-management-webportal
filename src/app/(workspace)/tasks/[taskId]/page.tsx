@@ -160,28 +160,29 @@ interface StatusPopoverProps {
 /** Status selector popover — To Do, Doing, Completed, On Hold — for the Details panel Status field. */
 function StatusPopover({ open, onClose, anchorRef, value, onChange }: StatusPopoverProps) {
   return (
-    <Popover open={open} onClose={onClose} anchorRef={anchorRef} align="start" className="w-[170px] p-1">
-      <p className="px-2.5 py-1.5 text-xs font-medium text-text-subtle">Status</p>
-      {TASK_STATUSES.map((status) => {
-        const config = STATUS_CONFIG[status];
-        return (
-          <MenuItem
-            key={status}
-            iconNode={
-              <config.icon
-                className="h-3.5 w-3.5 shrink-0"
-                style={{ color: `var(${config.colorVar})` }}
-              />
-            }
-            label={config.label}
-            selected={value === status}
-            onClick={() => {
-              onChange(status);
-              onClose();
-            }}
-          />
-        );
-      })}
+    <Popover open={open} onClose={onClose} anchorRef={anchorRef} align="start" className="w-[180px] p-1.5">
+      <div className="flex flex-col gap-0.5">
+        <div className="px-2.5 py-1 text-xs text-text-muted">Status</div>
+        {TASK_STATUSES.map((status) => {
+          const config = STATUS_CONFIG[status];
+          const Icon = config.icon;
+          const isSelected = value === status;
+          return (
+            <button
+              key={status}
+              onClick={() => {
+                onChange(status);
+                onClose();
+              }}
+              className="flex items-center gap-2 rounded-sm px-2.5 py-1.5 text-sm hover:bg-surface-muted transition-colors text-text"
+            >
+              <Icon className="h-4 w-4 shrink-0" style={{ color: `var(${config.colorVar})` }} />
+              <span className="flex-1 text-left">{config.label}</span>
+              {isSelected && <Check className="h-4 w-4 text-text shrink-0" />}
+            </button>
+          );
+        })}
+      </div>
     </Popover>
   );
 }
@@ -317,7 +318,7 @@ function TaskHeader({ task, onSave }: TaskHeaderProps) {
           if (title.trim() && title !== task.title) onSave({ title: title.trim() });
           else setTitle(task.title);
         }}
-        className="w-full resize-none overflow-hidden border-none bg-transparent text-xl font-bold text-text outline-none"
+        className="w-full resize-none overflow-hidden border-none bg-transparent text-2xl font-bold text-text outline-none"
       />
       <textarea
         value={description}
@@ -342,12 +343,12 @@ interface PropertiesRowProps {
 /** "Properties" row — reporter identity + due-date chip. */
 function PropertiesRow({ task, onOpenDatePicker, dateAnchorRef }: PropertiesRowProps) {
   return (
-    <div className="mb-4">
-      <p className="mb-1.5 text-xs font-medium text-text-subtle">Properties</p>
-      <div className="flex flex-wrap items-center gap-2">
+    <div className="mb-4 flex items-start gap-4">
+      <div className="w-24 shrink-0 pt-1 text-sm font-semibold text-text">Properties</div>
+      <div className="flex flex-wrap items-center gap-3">
         {task.reporter && (
-          <div className="flex items-center gap-1.5 rounded-sm bg-surface-muted px-2 py-1 text-xs text-text-muted">
-            <Avatar name={task.reporter.name} size="xs" />
+          <div className="flex items-center gap-1.5 text-[12px] font-medium text-text">
+            <Avatar name={task.reporter.name} size="xs" className="text-text-muted bg-surface-muted" />
             {task.reporter.name}
           </div>
         )}
@@ -375,8 +376,8 @@ function LabelsRow({ task, onChange }: LabelsRowProps) {
   }
 
   return (
-    <div className="mb-4">
-      <p className="mb-1.5 text-xs font-medium text-text-subtle">Labels</p>
+    <div className="mb-4 flex items-start gap-4">
+      <div className="w-24 shrink-0 pt-1 text-sm font-semibold text-text">Labels</div>
       <div className="flex flex-wrap items-center gap-1.5">
         {task.labels.map((label) => (
           <LabelChip key={label.id} label={label} onRemove={() => toggle(label.id)} />
@@ -428,8 +429,9 @@ function ResourcesRow({ taskId }: { taskId: string }) {
   }
 
   return (
-    <div className="mb-5">
-      <p className="mb-1.5 text-xs font-medium text-text-subtle">Resources</p>
+    <div className="mb-8 flex items-start gap-4">
+      <div className="w-24 shrink-0 pt-1 text-sm font-semibold text-text">Resources</div>
+      <div className="min-w-0 flex-1">
       {adding ? (
         <div className="flex flex-col gap-2 rounded-sm border border-border p-2">
           <div className="flex items-center gap-2">
@@ -477,12 +479,13 @@ function ResourcesRow({ taskId }: { taskId: string }) {
         <button
           type="button"
           onClick={() => setAdding(true)}
-          className="flex h-9 w-full items-center gap-2 rounded-sm border border-dashed border-border px-2.5 text-left text-sm text-text-subtle transition-colors hover:border-accent hover:text-accent"
+          className="flex items-center gap-1.5 text-[12px] text-text-muted hover:text-text transition-colors"
         >
           <Paperclip className="h-3.5 w-3.5" />
           Add document or link...
         </button>
       )}
+      </div>
     </div>
   );
 }
@@ -618,7 +621,8 @@ function CommentsSection({ taskId }: { taskId: string }) {
   const addComment = useAddComment(taskId);
 
   return (
-    <CollapsiblePanel title="Comments" count={comments.length} defaultOpen>
+    <div className="mt-8">
+      <h2 className="mb-4 text-base font-semibold text-text">Comments</h2>
       {isLoading ? (
         <div className="h-24 animate-pulse rounded-md bg-surface-muted" />
       ) : (
@@ -646,7 +650,7 @@ function CommentsSection({ taskId }: { taskId: string }) {
       <div className="mt-3">
         <CommentComposer pending={addComment.isPending} onSubmit={(body) => addComment.mutate(body)} />
       </div>
-    </CollapsiblePanel>
+    </div>
   );
 }
 
@@ -1102,7 +1106,7 @@ export default function TaskDetailPage() {
       </div>
 
       <div className="flex flex-col gap-5 lg:flex-row lg:items-start">
-        <div className="min-w-0 flex-1 lg:max-w-[633px]">
+        <div className="min-w-0 flex-1">
           <TaskHeader task={task} onSave={save} />
           <PropertiesRow
             task={task}
@@ -1124,7 +1128,7 @@ export default function TaskDetailPage() {
         </div>
 
         {panelOpen && (
-          <aside className="flex w-full shrink-0 flex-col gap-4 lg:w-[323px]">
+          <aside className="flex w-full shrink-0 flex-col gap-4 lg:w-[340px]">
             <DetailsCard task={task} onSave={save} />
             <UpdatesCard taskId={task.id} />
           </aside>

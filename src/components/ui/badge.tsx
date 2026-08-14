@@ -1,4 +1,4 @@
-import { CalendarDays, X } from "lucide-react";
+import { CalendarDays, X, Tag } from "lucide-react";
 import { PRIORITY_CONFIG, STATUS_CONFIG } from "@/lib/utils/enum-utils";
 import { formatDate, formatDateShort } from "@/lib/utils/formatters";
 import { cn } from "@/lib/utils";
@@ -58,20 +58,20 @@ export function LabelChip({ label, onRemove, className }: LabelChipProps) {
   return (
     <span
       className={cn(
-        "inline-flex h-[22px] items-center gap-1 rounded-full bg-surface-muted px-2 text-xs text-text-muted",
+        "inline-flex h-[24px] items-center gap-1.5 rounded-full bg-surface-muted px-2.5 text-[11px] font-medium text-text",
         className,
       )}
     >
-      <span className="h-1.5 w-1.5 shrink-0 rounded-full" style={{ backgroundColor: label.color }} />
+      <Tag className="h-3 w-3 shrink-0 text-text-muted" />
       {label.name}
       {onRemove && (
         <button
           type="button"
           onClick={onRemove}
           aria-label={`Remove ${label.name} label`}
-          className="ml-0.5 rounded-full hover:text-text"
+          className="ml-0.5 rounded-full text-text-muted hover:text-text transition-colors"
         >
-          <X className="h-2.5 w-2.5" />
+          <X className="h-3 w-3" />
         </button>
       )}
     </span>
@@ -93,11 +93,11 @@ export function DateChip({ date, short, onClick, className }: DateChipProps) {
         type="button"
         onClick={onClick}
         className={cn(
-          "inline-flex items-center gap-1.5 rounded-sm border border-dashed border-border-strong px-2 py-1 text-xs text-text-subtle transition-colors hover:border-accent hover:text-accent",
+          "inline-flex h-[24px] items-center gap-1.5 rounded-full border border-dashed border-border px-2.5 text-[11px] font-medium text-text-muted transition-colors hover:border-accent hover:text-accent",
           className,
         )}
       >
-        <CalendarDays className="h-3 w-3" />
+        <CalendarDays className="h-3 w-3 shrink-0" />
         Set date
       </button>
     );
@@ -111,12 +111,12 @@ export function DateChip({ date, short, onClick, className }: DateChipProps) {
       type="button"
       onClick={onClick}
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-sm px-2 py-1 text-xs font-medium transition-opacity hover:opacity-80",
-        isOverdue ? "bg-danger-soft text-danger" : "bg-surface-muted text-text-muted",
+        "inline-flex h-[24px] items-center gap-1.5 rounded-full px-2.5 text-[11px] font-medium transition-opacity hover:opacity-80",
+        isOverdue ? "bg-red-50 text-red-600" : "bg-surface-muted text-text-muted",
         className,
       )}
     >
-      <CalendarDays className="h-3 w-3" />
+      <CalendarDays className="h-3 w-3 shrink-0" />
       {label}
     </button>
   );
