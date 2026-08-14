@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import type { ComponentType, ReactNode } from "react";
+import Link from "next/link";
 import { Check, ChevronRight, Copy, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import { IconButton } from "@/components/ui/icon-button";
 import { Popover } from "@/components/ui/popover";
@@ -16,6 +17,7 @@ interface MenuItemProps {
   hasSubmenu?: boolean;
   destructive?: boolean;
   className?: string;
+  href?: string;
 }
 
 /** A single row inside any popover menu — used by WorkspaceMenu, PriorityPopover, OverflowMenu, StatusPopover. */
@@ -28,24 +30,41 @@ export function MenuItem({
   hasSubmenu,
   destructive,
   className,
+  href,
 }: MenuItemProps) {
-  return (
-    <button
-      type="button"
-      role="menuitem"
-      onClick={onClick}
-      className={cn(
-        "flex h-8 w-full items-center gap-2 rounded-sm px-2.5 text-left text-sm transition-colors",
-        "hover:bg-surface-muted focus-visible:outline-none focus-visible:bg-surface-muted",
-        destructive ? "text-priority-high" : "text-text",
-        className,
-      )}
-    >
+  const content = (
+    <>
       {iconNode}
       {Icon && <Icon className="h-3.5 w-3.5 shrink-0 text-text-muted" />}
       <span className="flex-1 truncate">{label}</span>
       {selected && <Check className="h-3.5 w-3.5 shrink-0 text-accent" />}
       {hasSubmenu && <ChevronRight className="h-3.5 w-3.5 shrink-0 text-text-subtle" />}
+    </>
+  );
+
+  const classes = cn(
+    "flex h-8 w-full items-center gap-2 rounded-sm px-2.5 text-left text-sm transition-colors",
+    "hover:bg-surface-muted focus-visible:outline-none focus-visible:bg-surface-muted",
+    destructive ? "text-priority-high" : "text-text",
+    className,
+  );
+
+  if (href) {
+    return (
+      <Link href={href} onClick={onClick} className={classes} role="menuitem">
+        {content}
+      </Link>
+    );
+  }
+
+  return (
+    <button
+      type="button"
+      role="menuitem"
+      onClick={onClick}
+      className={classes}
+    >
+      {content}
     </button>
   );
 }

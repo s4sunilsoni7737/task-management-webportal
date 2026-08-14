@@ -1,5 +1,6 @@
 import { request } from "@/services/api/api-handler";
 import { API_ENDPOINTS } from "@/services/api/endpoints";
+import { API_BASE_URL } from "@/constants";
 import { normalizeUser } from "@/lib/utils/normalize";
 import type { User, Workspace } from "@/lib/types";
 
@@ -25,6 +26,6 @@ export const authService = {
    * `/auth/callback?token=...` on this app.
    */
   loginWithGoogle(): void {
-    window.location.href = API_ENDPOINTS.AUTH.GOOGLE;
+    window.location.href = `${API_BASE_URL}${API_ENDPOINTS.AUTH.GOOGLE}`;
   },
 };

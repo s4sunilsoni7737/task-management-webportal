@@ -405,7 +405,7 @@ function LabelsRow({ task, onChange }: LabelsRowProps) {
 }
 
 /** "Resources" row — lets the user attach a document/link by name + URL. */
-function ResourcesRow({ taskId }: { taskId: string }) {
+function ResourcesRow({ task }: { task: Task }) {
   const [adding, setAdding] = useState(false);
   const [name, setName] = useState("");
   const [url, setUrl] = useState("");
@@ -417,7 +417,7 @@ function ResourcesRow({ taskId }: { taskId: string }) {
     if (!trimmedName || !trimmedUrl) return;
     setPending(true);
     tasksService
-      .addResource(taskId, { name: trimmedName, url: trimmedUrl })
+      .addResource(task.id, { name: trimmedName, url: trimmedUrl })
       .then(() => {
         toast.success("Resource attached");
         setName("");
@@ -431,7 +431,23 @@ function ResourcesRow({ taskId }: { taskId: string }) {
   return (
     <div className="mb-8 flex items-start gap-4">
       <div className="w-24 shrink-0 pt-1 text-sm font-semibold text-text">Resources</div>
-      <div className="min-w-0 flex-1">
+      <div className="min-w-0 flex-1 flex flex-col gap-2">
+      {task.resources && task.resources.length > 0 && (
+        <div className="flex flex-col gap-2">
+          {task.resources.map((res) => (
+            <a
+              key={res.id}
+              href={res.url}
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center gap-2 text-sm text-text hover:text-accent transition-colors"
+            >
+              <Paperclip className="h-3.5 w-3.5 text-text-subtle" />
+              <span className="truncate">{res.name}</span>
+            </a>
+          ))}
+        </div>
+      )}
       {adding ? (
         <div className="flex flex-col gap-2 rounded-sm border border-border p-2">
           <div className="flex items-center gap-2">
@@ -1122,7 +1138,7 @@ export default function TaskDetailPage() {
             onChange={(range) => save(range)}
           />
           <LabelsRow task={task} onChange={(labelIds) => save({ labelIds })} />
-          <ResourcesRow taskId={task.id} />
+          <ResourcesRow task={task} />
           <SubtasksSection taskId={task.id} />
           <CommentsSection taskId={task.id} />
         </div>

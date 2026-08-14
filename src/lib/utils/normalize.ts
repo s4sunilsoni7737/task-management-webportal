@@ -78,6 +78,8 @@ export function normalizeUser(raw: unknown): User {
       theme:
         (typeof prefs.theme === "string" && (prefs.theme === "dark" || prefs.theme === "light")
           ? prefs.theme
+          : typeof obj.theme === "string" && (obj.theme === "dark" || obj.theme === "light")
+          ? obj.theme
           : "light"),
       colorMode: (() => {
         const mode = prefs.colorMode ?? obj.colorMode;
@@ -106,6 +108,14 @@ export function normalizeTask(raw: unknown): Task {
     dueDate: strOpt(obj.dueDate ?? obj.endDate),
     createdAt: str(obj.createdAt),
     updatedAt: str(obj.updatedAt),
+    resources: Array.isArray(obj.resources)
+      ? (obj.resources as { _id?: unknown; id?: unknown; name?: unknown; url?: unknown; addedAt?: unknown }[]).map((r) => ({
+          id: idOf(r.id ?? r._id),
+          name: str(r.name),
+          url: str(r.url),
+          addedAt: str(r.addedAt),
+        }))
+      : [],
     subtaskCount: num(obj.subtaskCount),
     commentCount: num(obj.commentCount),
     isLocked: bool(obj.isLocked),

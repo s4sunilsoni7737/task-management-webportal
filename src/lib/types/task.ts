@@ -25,6 +25,7 @@ export interface Task {
   dueDate: string | null; // ISO date (backend `dueDate`/`endDate`)
   createdAt: string;
   updatedAt: string;
+  resources: { id: string; name: string; url: string; addedAt: string }[];
   subtaskCount: number;
   commentCount: number;
   isLocked: boolean;

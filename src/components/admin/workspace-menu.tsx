@@ -1,10 +1,11 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Check, Moon, Palette, Settings, Sun } from "lucide-react";
+import { Check, Moon, Palette, Settings, Sun, LogOut } from "lucide-react";
 import { Popover } from "@/components/ui/popover";
 import { MenuItem } from "@/components/ui/menu";
 import { Avatar } from "@/components/ui/avatar";
+import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/authStore";
 import { useUiStore } from "@/store/uiStore";
 import { useUpdatePreferences } from "@/hooks/useUsers";
@@ -27,6 +28,7 @@ type SubmenuKey = "theme" | "colorMode" | null;
  */
 export function WorkspaceMenu({ open, onClose, anchorRef }: WorkspaceMenuProps) {
   const user = useAuthStore((s) => s.user);
+  const router = useRouter();
   const [submenu, setSubmenu] = useState<SubmenuKey>(null);
   const themeRowRef = useRef<HTMLDivElement>(null!);
   const colorModeRowRef = useRef<HTMLDivElement>(null!);
@@ -78,11 +80,18 @@ export function WorkspaceMenu({ open, onClose, anchorRef }: WorkspaceMenuProps) 
           <MenuItem
             icon={Settings}
             label="Settings"
+            href="/settings/profile"
+            onClick={closeAll}
+          />
+        </div>
+        <div className="border-t border-border mt-1 pt-1">
+          <MenuItem
+            icon={LogOut}
+            label="Log out"
+            destructive
             onClick={() => {
-              // TODO(settings): no dedicated Settings page is in scope for
-              // this assessment; Change Theme / Color Mode above cover the
-              // graded theming requirement.
-              closeAll();
+              useAuthStore.getState().clear();
+              router.push("/login");
             }}
           />
         </div>
