@@ -32,6 +32,7 @@ import { useLabels, useMembers } from "@/hooks/useLookups";
 import { useActivity } from "@/hooks/useTaskDetail";
 import { STATUS_CONFIG } from "@/lib/utils/enum-utils";
 import { formatRelativeTime } from "@/lib/utils/formatters";
+import { cn } from "@/lib/utils";
 import { TASK_STATUSES } from "@/lib/types";
 import type {
   ActivityLogEntry,
@@ -305,9 +306,10 @@ export function UpdatesCard({ taskId }: { taskId: string }) {
 interface DetailsCardProps {
   task: Task;
   onSave: (input: UpdateTaskInput) => void;
+  isEditing?: boolean;
 }
 
-export function DetailsCard({ task, onSave }: DetailsCardProps) {
+export function DetailsCard({ task, onSave, isEditing }: DetailsCardProps) {
   const { data: members = [] } = useMembers();
   const { data: labels = [] } = useLabels();
   const [collapsed, setCollapsed] = useState(false);
@@ -344,22 +346,24 @@ export function DetailsCard({ task, onSave }: DetailsCardProps) {
           <ChevronDown className={`h-3.5 w-3.5 text-text-subtle transition-transform ${collapsed ? "-rotate-90" : ""}`} />
           Details
         </button>
-        <div className="ml-auto flex items-center gap-0.5">
-          <button
-            type="button"
-            aria-label="Add field"
-            className="flex h-6 w-6 items-center justify-center rounded-sm text-text-subtle hover:bg-surface-muted hover:text-text"
-          >
-            <Plus className="h-3.5 w-3.5" />
-          </button>
-          <button
-            type="button"
-            aria-label="Details settings"
-            className="flex h-6 w-6 items-center justify-center rounded-sm text-text-subtle hover:bg-surface-muted hover:text-text"
-          >
-            <Settings className="h-3.5 w-3.5" />
-          </button>
-        </div>
+        {isEditing && (
+          <div className="ml-auto flex items-center gap-0.5">
+            <button
+              type="button"
+              aria-label="Add field"
+              className="flex h-6 w-6 items-center justify-center rounded-sm text-text-subtle hover:bg-surface-muted hover:text-text"
+            >
+              <Plus className="h-3.5 w-3.5" />
+            </button>
+            <button
+              type="button"
+              aria-label="Details settings"
+              className="flex h-6 w-6 items-center justify-center rounded-sm text-text-subtle hover:bg-surface-muted hover:text-text"
+            >
+              <Settings className="h-3.5 w-3.5" />
+            </button>
+          </div>
+        )}
       </div>
 
       {!collapsed && (
@@ -368,8 +372,8 @@ export function DetailsCard({ task, onSave }: DetailsCardProps) {
             <button
               ref={statusRef}
               type="button"
-              onClick={() => setOpenField("status")}
-              className="rounded-sm px-1.5 py-1 hover:bg-surface-muted"
+              onClick={() => isEditing && setOpenField("status")}
+              className={cn("rounded-sm px-1.5 py-1", isEditing ? "hover:bg-surface-muted" : "cursor-default")}
             >
               <StatusBadge status={task.status} />
             </button>
@@ -386,8 +390,8 @@ export function DetailsCard({ task, onSave }: DetailsCardProps) {
             <button
               ref={priorityRef}
               type="button"
-              onClick={() => setOpenField("priority")}
-              className="rounded-sm px-1.5 py-1 hover:bg-surface-muted"
+              onClick={() => isEditing && setOpenField("priority")}
+              className={cn("rounded-sm px-1.5 py-1", isEditing ? "hover:bg-surface-muted" : "cursor-default")}
             >
               <PriorityBadge priority={task.priority} />
             </button>
@@ -402,7 +406,7 @@ export function DetailsCard({ task, onSave }: DetailsCardProps) {
 
           <DetailRow icon={Users} label="Members">
             <div ref={membersRef}>
-              <AvatarStack members={task.members} size="xs" onAdd={() => setOpenField("members")} />
+              <AvatarStack members={task.members} size="xs" onAdd={() => isEditing && setOpenField("members")} />
             </div>
             <MemberPicker
               open={openField === "members"}
@@ -414,8 +418,12 @@ export function DetailsCard({ task, onSave }: DetailsCardProps) {
             />
           </DetailRow>
           <DetailRow icon={CalendarDays} label="Dates">
-            <div ref={datesRef}>
-              <DateChip date={task.dueDate} onClick={() => setOpenField("dates")} />
+            <div
+              ref={datesRef}
+              onClick={() => isEditing && setOpenField("dates")}
+              className={cn("w-fit", isEditing && "cursor-pointer")}
+            >
+              <DateChip date={task.dueDate} />
             </div>
             <DatePickerPopover
               open={openField === "dates"}
@@ -435,7 +443,7 @@ export function DetailsCard({ task, onSave }: DetailsCardProps) {
               <button
                 ref={labelsRef}
                 type="button"
-                onClick={() => setOpenField("labels")}
+                onClick={() => isEditing && setOpenField("labels")}
                 aria-label="Add label"
                 className={
                   task.labels.length === 0
@@ -457,23 +465,27 @@ export function DetailsCard({ task, onSave }: DetailsCardProps) {
           </DetailRow>
 
           <DetailRow icon={UserCircle} label="Teams">
-            <input
-              value={team}
-              onChange={(e) => setTeam(e.target.value)}
-              onBlur={() => {
-                if (team !== (task.team ?? "")) onSave({ team: team || null });
-              }}
-              placeholder="Add team..."
-              className="w-full bg-transparent text-sm text-text outline-none placeholder:text-text-subtle"
-            />
+            {isEditing ? (
+              <input
+                value={team}
+                onChange={(e) => setTeam(e.target.value)}
+                onBlur={() => {
+                  if (team !== (task.team ?? "")) onSave({ team: team || null });
+                }}
+                placeholder="Add team..."
+                className="w-full bg-transparent text-sm text-text outline-none placeholder:text-text-subtle focus:ring-1 focus:ring-accent rounded-sm px-1"
+              />
+            ) : (
+              <span className="text-sm text-text px-1">{task.team || <span className="text-text-subtle">None</span>}</span>
+            )}
           </DetailRow>
 
           <DetailRow icon={UserCircle} label="Reporter">
             <button
               ref={reporterRef}
               type="button"
-              onClick={() => setOpenField("reporter")}
-              className="flex items-center gap-1.5 rounded-sm px-1.5 py-1 hover:bg-surface-muted"
+              onClick={() => isEditing && setOpenField("reporter")}
+              className={cn("flex items-center gap-1.5 rounded-sm px-1.5 py-1", isEditing ? "hover:bg-surface-muted" : "cursor-default")}
             >
               {task.reporter ? (
                 <>

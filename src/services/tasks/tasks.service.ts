@@ -79,7 +79,18 @@ export const tasksService = {
   },
 
   addResource(id: string, input: { name: string; url: string }): Promise<Task> {
-    return request<Task>({ url: API_ENDPOINTS.TASKS.RESOURCES(id), method: "POST", body: input }).then(normalizeTask);
+    return request<Task>({
+      url: API_ENDPOINTS.TASKS.RESOURCES(id),
+      method: "POST",
+      body: input,
+    }).then(normalizeTask);
+  },
+
+  removeResource(id: string, resourceId: string): Promise<void> {
+    return request<void>({
+      url: `${API_ENDPOINTS.TASKS.RESOURCES(id)}/${resourceId}`,
+      method: "DELETE",
+    });
   },
 
   watch(id: string): Promise<void> {

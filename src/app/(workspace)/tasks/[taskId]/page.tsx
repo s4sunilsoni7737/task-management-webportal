@@ -28,6 +28,8 @@ interface TaskDetailActionsProps {
   onDelete: () => void;
   panelOpen: boolean;
   onTogglePanel: () => void;
+  isEditing: boolean;
+  setEditing: (editing: boolean) => void;
 }
 
 function TaskDetailActions({
@@ -36,6 +38,8 @@ function TaskDetailActions({
   onDelete,
   panelOpen,
   onTogglePanel,
+  isEditing,
+  setEditing,
 }: TaskDetailActionsProps) {
   const [overflowOpen, setOverflowOpen] = useState(false);
   const [watching, setWatching] = useState(false);
@@ -94,6 +98,16 @@ function TaskDetailActions({
         align="end"
         className="w-[150px] p-1"
       >
+        {!isEditing && (
+          <MenuItem
+            icon={LockOpen} // Just a placeholder icon for edit
+            label="Edit task"
+            onClick={() => {
+              setEditing(true);
+              setOverflowOpen(false);
+            }}
+          />
+        )}
         <MenuItem
           icon={Trash2}
           label="Delete task"
@@ -108,6 +122,16 @@ function TaskDetailActions({
       <IconButton aria-label="Toggle details panel" active={panelOpen} onClick={onTogglePanel}>
         <PanelRight className="h-4 w-4" />
       </IconButton>
+
+      {isEditing && (
+        <button
+          type="button"
+          onClick={() => setEditing(false)}
+          className="ml-2 flex h-8 items-center justify-center rounded-sm bg-accent px-3 text-xs font-semibold text-accent-fg hover:bg-accent-hover transition-colors"
+        >
+          Done Editing
+        </button>
+      )}
     </>
   );
 }
@@ -122,6 +146,7 @@ export default function TaskDetailPage() {
   const deleteTask = useDeleteTask();
 
   const [panelOpen, setPanelOpen] = useState(true);
+  const [isEditing, setIsEditing] = useState(false);
   const [datePickerOpen, setDatePickerOpen] = useState(false);
   const dateAnchorRef = useRef<HTMLDivElement>(null!);
 
@@ -190,37 +215,44 @@ export default function TaskDetailPage() {
             }}
             panelOpen={panelOpen}
             onTogglePanel={() => setPanelOpen((v) => !v)}
+            isEditing={isEditing}
+            setEditing={setIsEditing}
           />
         </div>
       </div>
 
-      <div className="flex flex-col gap-5 lg:flex-row lg:items-start">
-        <div className="min-w-0 flex-1">
-          <TaskHeader task={task} onSave={save} />
-          <PropertiesRow
-            task={task}
-            dateAnchorRef={dateAnchorRef}
-            onOpenDatePicker={() => setDatePickerOpen((v) => !v)}
-          />
-          <DatePickerPopover
-            open={datePickerOpen}
-            onClose={() => setDatePickerOpen(false)}
-            anchorRef={dateAnchorRef}
-            startDate={task.startDate}
-            endDate={task.dueDate}
-            onChange={(range) => save(range)}
-          />
-          <LabelsRow task={task} onChange={(labelIds) => save({ labelIds })} />
-          <ResourcesRow task={task} />
-          <SubtasksSection taskId={task.id} />
-          <CommentsSection taskId={task.id} />
+      <div className="flex flex-1 overflow-hidden">
+        <div className="flex-1 overflow-y-auto px-6 py-6 md:px-10 lg:px-14">
+          <div className="mx-auto max-w-4xl pb-20">
+            <TaskHeader task={task} onSave={save} isEditing={isEditing} />
+
+            <div className="mb-10">
+              <PropertiesRow task={task} onOpenDatePicker={() => isEditing && setDatePickerOpen(true)} dateAnchorRef={dateAnchorRef} />
+              <LabelsRow task={task} onChange={(labelIds) => save({ labelIds })} isEditing={isEditing} />
+            </div>
+
+            <DatePickerPopover
+              open={datePickerOpen}
+              onClose={() => setDatePickerOpen(false)}
+              anchorRef={dateAnchorRef}
+              startDate={task.startDate}
+              endDate={task.dueDate}
+              onChange={(range) => save(range)}
+            />
+
+            <SubtasksSection task={task} isEditing={isEditing} />
+            <ResourcesRow task={task} isEditing={isEditing} />
+            <CommentsSection taskId={task.id} />
+          </div>
         </div>
 
         {panelOpen && (
-          <aside className="flex w-full shrink-0 flex-col gap-4 lg:w-[340px]">
-            <DetailsCard task={task} onSave={save} />
-            <UpdatesCard taskId={task.id} />
-          </aside>
+          <div className="w-[340px] shrink-0 border-l border-border bg-bg overflow-y-auto hidden md:block">
+            <div className="flex flex-col gap-5 p-5">
+              <DetailsCard task={task} onSave={save} isEditing={isEditing} />
+              <UpdatesCard taskId={task.id} />
+            </div>
+          </div>
         )}
       </div>
     </>

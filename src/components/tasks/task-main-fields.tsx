@@ -22,34 +22,46 @@ import { Check } from "lucide-react";
 interface TaskHeaderProps {
   task: Task;
   onSave: (input: UpdateTaskInput) => void;
+  isEditing?: boolean;
 }
 
-export function TaskHeader({ task, onSave }: TaskHeaderProps) {
+export function TaskHeader({ task, onSave, isEditing }: TaskHeaderProps) {
   const [title, setTitle] = useState(task.title);
   const [description, setDescription] = useState(task.description);
 
   return (
     <div className="mb-5">
-      <textarea
-        value={title}
-        rows={1}
-        onChange={(e) => setTitle(e.target.value)}
-        onBlur={() => {
-          if (title.trim() && title !== task.title) onSave({ title: title.trim() });
-          else setTitle(task.title);
-        }}
-        className="w-full resize-none overflow-hidden border-none bg-transparent text-2xl font-bold text-text outline-none"
-      />
-      <textarea
-        value={description}
-        rows={2}
-        placeholder="Add a description..."
-        onChange={(e) => setDescription(e.target.value)}
-        onBlur={() => {
-          if (description !== task.description) onSave({ description });
-        }}
-        className="mt-1 w-full resize-none border-none bg-transparent text-sm leading-relaxed text-text-muted outline-none placeholder:text-text-subtle"
-      />
+      {isEditing ? (
+        <textarea
+          value={title}
+          rows={1}
+          onChange={(e) => setTitle(e.target.value)}
+          onBlur={() => {
+            if (title.trim() && title !== task.title) onSave({ title: title.trim() });
+            else setTitle(task.title);
+          }}
+          className="w-full resize-none overflow-hidden border-none bg-transparent text-2xl font-bold text-text outline-none focus:ring-1 focus:ring-accent rounded-sm px-1"
+        />
+      ) : (
+        <h1 className="text-2xl font-bold text-text px-1 whitespace-pre-wrap">{task.title}</h1>
+      )}
+
+      {isEditing ? (
+        <textarea
+          value={description}
+          rows={2}
+          placeholder="Add a description..."
+          onChange={(e) => setDescription(e.target.value)}
+          onBlur={() => {
+            if (description !== task.description) onSave({ description });
+          }}
+          className="mt-1 w-full resize-none border-none bg-transparent text-sm leading-relaxed text-text-muted outline-none placeholder:text-text-subtle focus:ring-1 focus:ring-accent rounded-sm px-1"
+        />
+      ) : (
+        <div className="mt-1 text-sm leading-relaxed text-text-muted px-1 whitespace-pre-wrap">
+          {task.description || <span className="text-text-subtle italic">No description provided.</span>}
+        </div>
+      )}
     </div>
   );
 }
@@ -114,9 +126,10 @@ function LabelPicker({ open, onClose, anchorRef, labels, selectedIds, onToggle }
 interface LabelsRowProps {
   task: Task;
   onChange: (labelIds: string[]) => void;
+  isEditing?: boolean;
 }
 
-export function LabelsRow({ task, onChange }: LabelsRowProps) {
+export function LabelsRow({ task, onChange, isEditing }: LabelsRowProps) {
   const { data: allLabels = [] } = useLabels();
   const [open, setOpen] = useState(false);
   const anchorRef = useRef<HTMLButtonElement>(null!);
@@ -131,21 +144,23 @@ export function LabelsRow({ task, onChange }: LabelsRowProps) {
       <div className="w-24 shrink-0 pt-1 text-sm font-semibold text-text">Labels</div>
       <div className="flex flex-wrap items-center gap-1.5">
         {task.labels.map((label) => (
-          <LabelChip key={label.id} label={label} onRemove={() => toggle(label.id)} />
+          <LabelChip key={label.id} label={label} onRemove={isEditing ? () => toggle(label.id) : undefined} />
         ))}
-        <button
-          ref={anchorRef}
-          type="button"
-          onClick={() => setOpen((v) => !v)}
-          aria-label="Add label"
-          className={
-            task.labels.length === 0
-              ? "text-xs text-text-subtle hover:text-text cursor-pointer transition-colors"
-              : "flex h-[20px] w-[20px] items-center justify-center rounded-full border border-dashed border-border-strong text-text-subtle hover:border-accent hover:text-accent"
-          }
-        >
-          {task.labels.length === 0 ? "Add labels..." : <Plus className="h-2.5 w-2.5" />}
-        </button>
+        {isEditing && (
+          <button
+            ref={anchorRef}
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            aria-label="Add label"
+            className={
+              task.labels.length === 0
+                ? "text-xs text-text-subtle hover:text-text cursor-pointer transition-colors"
+                : "flex h-[20px] w-[20px] items-center justify-center rounded-full border border-dashed border-border-strong text-text-subtle hover:border-accent hover:text-accent"
+            }
+          >
+            {task.labels.length === 0 ? "Add labels..." : <Plus className="h-2.5 w-2.5" />}
+          </button>
+        )}
       </div>
       <LabelPicker
         open={open}
@@ -159,7 +174,7 @@ export function LabelsRow({ task, onChange }: LabelsRowProps) {
   );
 }
 
-export function ResourcesRow({ task }: { task: Task }) {
+export function ResourcesRow({ task, isEditing }: { task: Task; isEditing?: boolean }) {
   const [adding, setAdding] = useState(false);
   const [name, setName] = useState("");
   const [url, setUrl] = useState("");
@@ -189,80 +204,104 @@ export function ResourcesRow({ task }: { task: Task }) {
       {task.resources && task.resources.length > 0 && (
         <div className="flex flex-col gap-2">
           {task.resources.map((res) => (
-            <a
-              key={res.id}
-              href={res.url}
-              target="_blank"
-              rel="noreferrer"
-              className="flex items-center gap-2 text-sm text-text hover:text-accent transition-colors"
-            >
-              <Paperclip className="h-3.5 w-3.5 text-text-subtle" />
-              <span className="truncate">{res.name}</span>
-            </a>
+            <div key={res.id} className="group flex items-center justify-between gap-2">
+              <a
+                href={res.url}
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center gap-2 text-sm text-text hover:text-accent transition-colors truncate"
+              >
+                <Paperclip className="h-3.5 w-3.5 text-text-subtle" />
+                <span className="truncate">{res.name}</span>
+              </a>
+              {isEditing && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (confirm("Remove this resource?")) {
+                      tasksService
+                        .removeResource(task.id, res.id)
+                        .then(() => toast.success("Resource removed"))
+                        .catch(() => toast.error("Couldn't remove resource"));
+                    }
+                  }}
+                  className="opacity-0 group-hover:opacity-100 p-1 text-text-subtle hover:text-red-500 transition-colors"
+                  aria-label="Remove resource"
+                >
+                  <X className="h-3.5 w-3.5" />
+                </button>
+              )}
+            </div>
           ))}
         </div>
       )}
-      {adding ? (
-        <div className="flex flex-col gap-2 rounded-sm border border-border p-2">
-          <div className="flex items-center gap-2">
-            <input
-              autoFocus
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Name (e.g. Design spec.pdf)"
-              className="h-8 min-w-0 flex-1 rounded-sm border border-border bg-surface px-2 text-sm text-text outline-none placeholder:text-text-subtle"
-            />
+      {isEditing && (
+        <>
+          {!adding ? (
             <button
               type="button"
-              aria-label="Cancel"
-              onClick={() => {
-                setAdding(false);
-                setName("");
-                setUrl("");
-              }}
-              className="flex h-7 w-7 items-center justify-center rounded-sm text-text-subtle hover:bg-surface-muted hover:text-text"
+              onClick={() => setAdding(true)}
+              className="flex items-center gap-1.5 text-[12px] text-text-muted hover:text-text transition-colors"
             >
-              <X className="h-3.5 w-3.5" />
+              <Plus className="h-3.5 w-3.5" />
+              Add document or link...
             </button>
-          </div>
-          <div className="flex items-center gap-2">
-            <input
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") submit();
-              }}
-              placeholder="https://..."
-              className="h-8 min-w-0 flex-1 rounded-sm border border-border bg-surface px-2 text-sm text-text outline-none placeholder:text-text-subtle"
-            />
-            <button
-              type="button"
-              onClick={submit}
-              disabled={pending || !name.trim() || !url.trim()}
-              className="h-8 rounded-sm bg-accent px-3 text-sm font-medium text-white transition-opacity disabled:opacity-50"
-            >
-              {pending ? "Adding…" : "Add"}
-            </button>
-          </div>
-        </div>
-      ) : (
-        <button
-          type="button"
-          onClick={() => setAdding(true)}
-          className="flex items-center gap-1.5 text-[12px] text-text-muted hover:text-text transition-colors"
-        >
-          <Paperclip className="h-3.5 w-3.5" />
-          Add document or link...
-        </button>
+          ) : (
+            <div className="flex flex-col gap-2 rounded-sm border border-border p-2">
+              <div className="flex items-center gap-2">
+                <input
+                  autoFocus
+                  placeholder="Title (e.g. Figma Design)"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="h-8 min-w-0 flex-1 rounded-sm border border-border bg-surface px-2 text-sm text-text outline-none placeholder:text-text-subtle"
+                />
+                <button
+                  type="button"
+                  aria-label="Cancel"
+                  onClick={() => {
+                    setAdding(false);
+                    setName("");
+                    setUrl("");
+                  }}
+                  className="flex h-7 w-7 items-center justify-center rounded-sm text-text-subtle hover:bg-surface-muted hover:text-text"
+                >
+                  <X className="h-3.5 w-3.5" />
+                </button>
+              </div>
+              <div className="flex items-center gap-2">
+                <input
+                  placeholder="URL (https://...)"
+                  value={url}
+                  onChange={(e) => setUrl(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") submit();
+                  }}
+                  className="h-8 min-w-0 flex-1 rounded-sm border border-border bg-surface px-2 text-sm text-text outline-none placeholder:text-text-subtle"
+                />
+                <button
+                  type="button"
+                  onClick={submit}
+                  disabled={pending || !name.trim() || !url.trim()}
+                  className="h-8 rounded-sm bg-accent px-3 text-sm font-medium text-white transition-opacity disabled:opacity-50"
+                >
+                  {pending ? "Adding..." : "Add"}
+                </button>
+              </div>
+            </div>
+          )}
+        </>
       )}
       </div>
     </div>
   );
 }
 
-export function SubtasksSection({ taskId }: { taskId: string }) {
-  const { data: subtasks = [], isLoading } = useSubtasks(taskId);
-  const addSubtask = useAddSubtask(taskId);
+export function SubtasksSection({ task, isEditing }: { task: Task; isEditing?: boolean }) {
+  const { data: subtasks = [], isLoading } = useSubtasks(task.id);
+  const addSubtask = useAddSubtask(task.id);
+
+  if (!isEditing && subtasks.length === 0) return null;
 
   return (
     <CollapsiblePanel title="Subtasks" count={subtasks.length} defaultOpen className="mb-5">
@@ -271,22 +310,26 @@ export function SubtasksSection({ taskId }: { taskId: string }) {
       ) : subtasks.length === 0 ? (
         <div className="rounded-md border border-dashed border-border">
           <EmptyState title="No subtasks yet" />
-          <div className="border-t border-border px-1 py-1">
-            <InlineAddTaskRow
-              label="Add Subtasks"
-              pending={addSubtask.isPending}
-              onAdd={(title) => addSubtask.mutate(title)}
-            />
-          </div>
+          {isEditing && (
+            <div className="border-t border-border px-1 py-1">
+              <InlineAddTaskRow
+                onAdd={(title) => addSubtask.mutate(title)}
+                pending={addSubtask.isPending}
+                label="Add a subtask..."
+              />
+            </div>
+          )}
         </div>
       ) : (
         <div className="flex flex-col gap-1.5">
           <TaskTable tasks={subtasks} visibleFields={DEFAULT_TASK_FIELDS} />
-          <InlineAddTaskRow
-            label="Add Subtasks"
-            pending={addSubtask.isPending}
-            onAdd={(title) => addSubtask.mutate(title)}
-          />
+          {isEditing && (
+            <InlineAddTaskRow
+              onAdd={(title) => addSubtask.mutate(title)}
+              pending={addSubtask.isPending}
+              label="Add a subtask..."
+            />
+          )}
         </div>
       )}
     </CollapsiblePanel>
