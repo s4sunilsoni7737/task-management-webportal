@@ -23,10 +23,20 @@ export const useAuthStore = create<AuthState>()(
       accessToken: null,
       user: null,
       hydrated: false,
-      setSession: (token, user) => set({ accessToken: token, user }),
+      setSession: (token, user) => {
+        if (typeof document !== "undefined") {
+          document.cookie = "dexter-session=1; path=/; max-age=2592000"; // 30 days
+        }
+        set({ accessToken: token, user });
+      },
       updateUser: (patch) =>
         set((state) => ({ user: state.user ? { ...state.user, ...patch } : state.user })),
-      clear: () => set({ accessToken: null, user: null }),
+      clear: () => {
+        if (typeof document !== "undefined") {
+          document.cookie = "dexter-session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        }
+        set({ accessToken: null, user: null });
+      },
       setHydrated: () => set({ hydrated: true }),
     }),
     {
