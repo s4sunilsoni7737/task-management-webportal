@@ -13,8 +13,10 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-bg px-4">
       <div className="w-full max-w-[380px]">
-        <div className="mb-8 flex flex-col items-center gap-3 text-center">
-          <PyramidMark className="h-10 w-10" />
+        <div className="mb-8 flex items-center justify-center gap-2 text-center">
+          <div className="flex h-6 w-6 items-center justify-center rounded-md bg-black text-white">
+            <PyramidMark className="h-4 w-4" />
+          </div>
           <span className="text-lg font-semibold tracking-tight text-text">Pyramid</span>
         </div>
 
