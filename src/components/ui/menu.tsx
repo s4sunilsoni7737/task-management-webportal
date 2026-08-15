@@ -43,9 +43,10 @@ export function MenuItem({
   );
 
   const classes = cn(
-    "flex h-8 w-full items-center gap-2 rounded-sm px-2.5 text-left text-sm transition-colors",
-    "hover:bg-surface-muted focus-visible:outline-none focus-visible:bg-surface-muted",
-    destructive ? "text-priority-high" : "text-text",
+    "flex h-8 w-full items-center gap-2 rounded-sm px-2.5 text-left text-sm text-text transition-colors",
+    "hover:bg-accent-soft hover:text-accent focus-visible:outline-none focus-visible:bg-accent-soft focus-visible:text-accent",
+    destructive && "text-danger hover:bg-danger-soft focus-visible:bg-danger-soft hover:text-danger",
+    selected && "bg-accent-soft text-accent",
     className,
   );
 

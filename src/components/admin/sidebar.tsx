@@ -120,7 +120,7 @@ function SidebarNavItem({ href, icon: Icon, label, onNavigate }: SidebarNavItemP
       aria-current={active ? "page" : undefined}
       className={cn(
         "flex h-9 items-center gap-2.5 rounded-sm px-2.5 text-sm font-medium transition-colors",
-        active ? "bg-surface-muted text-text" : "text-text-muted hover:bg-surface-muted hover:text-text",
+        active ? "bg-accent text-accent-fg" : "text-text-muted hover:bg-accent-soft hover:text-accent",
       )}
     >
       <Icon className="h-4 w-4 shrink-0" />
@@ -145,8 +145,8 @@ function WorkspaceSwitcher({ isIconRail }: { isIconRail: boolean }) {
         type="button"
         onClick={() => setProfileMenuOpen((v) => !v)}
         className={cn(
-          "flex h-11 w-full items-center gap-2 rounded-sm px-1.5 text-left transition-colors hover:bg-surface-muted",
-          profileMenuOpen && "bg-surface-muted"
+          "flex h-11 w-full items-center gap-2 rounded-sm px-1.5 text-left transition-colors hover:bg-accent-soft hover:text-accent",
+          profileMenuOpen && "bg-accent-soft text-accent"
         )}
       >
         <Avatar name={displayName} src={avatarUrl} size="sm" />

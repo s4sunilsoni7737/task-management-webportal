@@ -12,8 +12,8 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 const VARIANT_CLASSES: Record<ButtonVariant, string> = {
   black:
     "bg-black-action text-black-action-fg hover:bg-black-action-hover",
-  outline: "border border-border bg-surface text-text hover:bg-surface-muted",
-  ghost: "text-text hover:bg-surface-muted",
+  outline: "border border-border bg-surface text-text hover:bg-accent-soft hover:text-accent hover:border-accent",
+  ghost: "text-text hover:bg-accent-soft hover:text-accent",
   accent: "bg-accent text-accent-fg hover:bg-accent-hover",
 };
 

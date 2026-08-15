@@ -100,10 +100,10 @@
   --dx-text-muted: #737373;
   --dx-text-subtle: #a3a3a3;
 
-  /* Black action buttons (Add Task / Add Project) */
-  --dx-black-action: #111111;
-  --dx-black-action-hover: #262626;
-  --dx-black-action-fg: #ffffff;
+  /* Black action buttons (Add Task / Add Project) - Mapped to accent for global color mode */
+  --dx-black-action: var(--dx-accent);
+  --dx-black-action-hover: var(--dx-accent-hover);
+  --dx-black-action-fg: var(--dx-accent-fg);
 
   /* Priority */
   --dx-priority-urgent: #dc2626;
@@ -136,9 +136,9 @@
   --dx-text-muted: #a3a3a3;
   --dx-text-subtle: #737373;
 
-  --dx-black-action: #f5f5f5;
-  --dx-black-action-hover: #e5e5e5;
-  --dx-black-action-fg: #111111;
+  --dx-black-action: var(--dx-accent);
+  --dx-black-action-hover: var(--dx-accent-hover);
+  --dx-black-action-fg: var(--dx-accent-fg);
 
   --dx-danger-soft: #3a1414;
 }
