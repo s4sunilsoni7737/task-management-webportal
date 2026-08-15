@@ -38,3 +38,20 @@ export function useUpdatePreferences() {
     },
   });
 }
+
+/**
+ * Updates the user's profile information (name, avatarUrl).
+ */
+export function useUpdateProfile() {
+  const updateUser = useAuthStore((s) => s.updateUser);
+
+  return useApiMutation({
+    mutationFn: (input: { name?: string; avatarUrl?: string | null }) => usersService.updateProfile(input),
+    successMessage: "Profile updated",
+    errorMessage: "Couldn't update profile",
+    invalidateQueries: [["users", "me"]],
+    onSuccess: (user) => {
+      updateUser(user);
+    },
+  });
+}

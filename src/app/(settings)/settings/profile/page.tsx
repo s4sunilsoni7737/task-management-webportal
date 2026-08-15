@@ -1,20 +1,33 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Pencil } from "lucide-react";
 import { Avatar } from "@/components/ui/avatar";
 import { useAuthStore } from "@/store/authStore";
+import { useUpdateProfile } from "@/hooks/useUsers";
 import { DEFAULT_WORKSPACE_NAME } from "@/constants";
 
 export default function ProfileSettingsPage() {
   const user = useAuthStore((s) => s.user);
   const router = useRouter();
+  const updateProfile = useUpdateProfile();
   
   // Local state for the mock fields
   const [fullName, setFullName] = useState(user?.name || DEFAULT_WORKSPACE_NAME);
   const [title, setTitle] = useState("Designer");
   const [username, setUsername] = useState("Dexuser");
+
+  // Sync state if user changes externally
+  useEffect(() => {
+    if (user?.name) setFullName(user.name);
+  }, [user?.name]);
+
+  function handleNameBlur() {
+    if (fullName.trim() && fullName !== user?.name) {
+      updateProfile.mutate({ name: fullName });
+    }
+  }
 
   function handleLeaveWorkspace() {
     // In a real app, this would hit an API endpoint to leave the workspace.
@@ -32,7 +45,7 @@ export default function ProfileSettingsPage() {
           {/* Profile Picture */}
           <div className="flex items-center justify-between border-b border-border p-6">
             <span className="text-sm font-medium text-text">Profile picture</span>
-            <Avatar name={user?.name || DEFAULT_WORKSPACE_NAME} size="lg" className="h-10 w-10" />
+            <Avatar name={user?.name || DEFAULT_WORKSPACE_NAME} src={user?.avatarUrl} size="lg" className="h-10 w-10" />
           </div>
 
           {/* Email */}
@@ -56,7 +69,9 @@ export default function ProfileSettingsPage() {
                 type="text"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                className="h-10 w-full rounded-md border-transparent bg-surface-muted px-4 text-sm text-text outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all"
+                onBlur={handleNameBlur}
+                className="h-10 w-full rounded-md border-transparent bg-surface-muted px-4 text-sm text-text outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all disabled:opacity-50"
+                disabled={updateProfile.isPending}
               />
             </div>
           </div>

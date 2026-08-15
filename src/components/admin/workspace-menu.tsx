@@ -44,14 +44,13 @@ export function WorkspaceMenu({ open, onClose, anchorRef }: WorkspaceMenuProps) 
         open={open}
         onClose={closeAll}
         anchorRef={anchorRef}
-        side="top"
+        side="bottom"
         align="start"
         offset={8}
         className="w-[200px] p-1"
-        disableDismiss={submenu !== null}
       >
         <div className="flex flex-col items-center gap-1.5 border-b border-border px-2 pb-3 pt-2">
-          <Avatar name={user?.name ?? DEFAULT_WORKSPACE_NAME} size="lg" />
+          <Avatar name={user?.name ?? DEFAULT_WORKSPACE_NAME} src={user?.avatarUrl} size="lg" />
           <div className="text-center">
             <p className="text-sm font-semibold text-text">{user?.name ?? DEFAULT_WORKSPACE_NAME}</p>
             <p className="truncate text-xs text-text-subtle">
@@ -99,12 +98,12 @@ export function WorkspaceMenu({ open, onClose, anchorRef }: WorkspaceMenuProps) 
 
       <ThemeSubmenu
         open={open && submenu === "theme"}
-        onClose={closeAll}
+        onClose={() => setSubmenu(null)}
         anchorRef={themeRowRef}
       />
       <ColorModeSubmenu
         open={open && submenu === "colorMode"}
-        onClose={closeAll}
+        onClose={() => setSubmenu(null)}
         anchorRef={colorModeRowRef}
       />
     </>
@@ -138,7 +137,7 @@ function ThemeSubmenu({ open, onClose, anchorRef }: ThemeSubmenuProps) {
   }
 
   return (
-    <Popover open={open} onClose={onClose} anchorRef={anchorRef} side="right" align="start" offset={4} className="w-[150px] p-1">
+    <Popover open={open} onClose={onClose} anchorRef={anchorRef} side="right" align="start" offset={4} className="w-[150px] p-1 ignore-click-outside">
       {THEME_OPTIONS.map((option) => (
         <MenuItem key={option.value} icon={option.icon} label={option.label} selected={theme === option.value} onClick={() => handleSelect(option.value)} />
       ))}
@@ -174,7 +173,7 @@ function ColorModeSubmenu({ open, onClose, anchorRef }: ColorModeSubmenuProps) {
   }
 
   return (
-    <Popover open={open} onClose={onClose} anchorRef={anchorRef} side="right" align="start" offset={4} className="w-[150px] p-1">
+    <Popover open={open} onClose={onClose} anchorRef={anchorRef} side="right" align="start" offset={4} className="w-[150px] p-1 ignore-click-outside">
       {COLOR_MODES.map((mode) => (
         <button key={mode} type="button" role="menuitem" onClick={() => handleSelect(mode)} className={cn("flex h-8 w-full items-center gap-2 rounded-sm px-2.5 text-left text-sm text-text transition-colors", "hover:bg-surface-muted focus-visible:outline-none focus-visible:bg-surface-muted")}>
           <span className="h-2.5 w-2.5 shrink-0 rounded-[3px]" style={{ backgroundColor: SWATCHES[mode] }} />

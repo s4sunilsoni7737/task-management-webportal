@@ -39,7 +39,7 @@ export function Sidebar({ variant }: SidebarProps) {
 
   const content = (
     <div className="flex h-full flex-col bg-sidebar">
-      <WorkspaceSwitcher />
+      <WorkspaceSwitcher isIconRail={isIconRail} />
 
       <nav className="flex-1 overflow-y-auto scrollbar-thin px-2.5 pt-2">
         {!isIconRail && (
@@ -64,36 +64,6 @@ export function Sidebar({ variant }: SidebarProps) {
           </div>
         )}
       </nav>
-
-      <div className="border-t border-border p-2">
-        <button
-          ref={userBlockRef}
-          type="button"
-          onClick={() => setProfileMenuOpen((v) => !v)}
-          className={cn(
-            "flex h-11 w-full items-center gap-2 rounded-sm px-1.5 text-left transition-colors hover:bg-surface-muted",
-            profileMenuOpen && "bg-surface-muted",
-          )}
-        >
-          <Avatar name={user?.name ?? DEFAULT_WORKSPACE_NAME} src={user?.avatarUrl} size="sm" />
-          {!isIconRail && (
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-medium text-text">
-                {user?.name ?? DEFAULT_WORKSPACE_NAME}
-              </p>
-              <p className="truncate text-xs text-text-subtle">
-                {user?.email ?? "Guest session"}
-              </p>
-            </div>
-          )}
-        </button>
-
-        <WorkspaceMenu
-          open={profileMenuOpen}
-          onClose={() => setProfileMenuOpen(false)}
-          anchorRef={userBlockRef}
-        />
-      </div>
     </div>
   );
 
@@ -159,21 +129,41 @@ function SidebarNavItem({ href, icon: Icon, label, onNavigate }: SidebarNavItemP
   );
 }
 
-/** Top-of-sidebar workspace identity row: avatar + workspace name + chevron. */
-function WorkspaceSwitcher() {
-  const { data: workspaces, isLoading } = useWorkspaces();
+/** Top-of-sidebar workspace identity row: avatar + user name + chevron. */
+function WorkspaceSwitcher({ isIconRail }: { isIconRail: boolean }) {
   const user = useAuthStore((s) => s.user);
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const anchorRef = useRef<HTMLButtonElement>(null!);
 
-  const activeWorkspace = workspaces?.[0];
-  const displayName = activeWorkspace?.name || DEFAULT_WORKSPACE_NAME;
-  const avatarUrl = user?.avatarUrl || activeWorkspace?.avatarUrl;
+  const displayName = user?.name || DEFAULT_WORKSPACE_NAME;
+  const avatarUrl = user?.avatarUrl;
 
   return (
-    <button type="button" className="flex h-12 w-full items-center gap-2 px-4 text-left transition-colors hover:bg-surface-muted">
-      <Avatar name={displayName} src={avatarUrl} size="sm" />
-      <span className="flex-1 truncate text-sm font-semibold text-text">{isLoading ? "Loading..." : displayName}</span>
-      <ChevronsUpDown className="h-3.5 w-3.5 shrink-0 text-text-subtle" />
-    </button>
+    <div className="relative border-b border-border p-2">
+      <button
+        ref={anchorRef}
+        type="button"
+        onClick={() => setProfileMenuOpen((v) => !v)}
+        className={cn(
+          "flex h-11 w-full items-center gap-2 rounded-sm px-1.5 text-left transition-colors hover:bg-surface-muted",
+          profileMenuOpen && "bg-surface-muted"
+        )}
+      >
+        <Avatar name={displayName} src={avatarUrl} size="sm" />
+        {!isIconRail && (
+          <>
+            <span className="flex-1 truncate text-sm font-semibold text-text">{displayName}</span>
+            <ChevronsUpDown className="h-3.5 w-3.5 shrink-0 text-text-subtle" />
+          </>
+        )}
+      </button>
+
+      <WorkspaceMenu
+        open={profileMenuOpen}
+        onClose={() => setProfileMenuOpen(false)}
+        anchorRef={anchorRef}
+      />
+    </div>
   );
 }
 
