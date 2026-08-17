@@ -17,19 +17,33 @@ export const workspacesService = {
     });
   },
 
-  create(input: { name: string; avatarUrl?: string | null }): Promise<Workspace> {
+  create(input: { name: string; avatarUrl?: File | string | null }): Promise<Workspace> {
+    const formData = new FormData();
+    formData.append("name", input.name);
+    if (input.avatarUrl instanceof File) {
+      formData.append("avatarUrl", input.avatarUrl);
+    }
+
     return request<Workspace>({
       url: API_ENDPOINTS.WORKSPACES.ROOT,
       method: "POST",
-      body: input,
+      body: formData,
     });
   },
 
-  update(id: string, input: { name?: string; avatarUrl?: string | null }): Promise<Workspace> {
+  update(id: string, input: { name?: string; avatarUrl?: File | string | null }): Promise<Workspace> {
+    const formData = new FormData();
+    if (input.name) formData.append("name", input.name);
+    if (input.avatarUrl instanceof File) {
+      formData.append("avatarUrl", input.avatarUrl);
+    } else if (input.avatarUrl === null) {
+      formData.append("avatarUrl", "");
+    }
+
     return request<Workspace>({
       url: API_ENDPOINTS.WORKSPACES.DETAIL(id),
       method: "PATCH",
-      body: input,
+      body: formData,
     });
   },
 

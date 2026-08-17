@@ -45,7 +45,24 @@ export default function ProfileSettingsPage() {
           {/* Profile Picture */}
           <div className="flex items-center justify-between border-b border-border p-6">
             <span className="text-sm font-medium text-text">Profile picture</span>
-            <Avatar name={user?.name || DEFAULT_WORKSPACE_NAME} src={user?.avatarUrl} size="lg" className="h-10 w-10" />
+            <div className="relative group">
+              <Avatar name={user?.name || DEFAULT_WORKSPACE_NAME} src={user?.avatarUrl} size="lg" className="h-10 w-10 transition-opacity group-hover:opacity-50" />
+              <label className="absolute inset-0 flex cursor-pointer items-center justify-center opacity-0 group-hover:opacity-100">
+                <Pencil className="h-4 w-4 text-white drop-shadow-md" />
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      updateProfile.mutate({ avatarUrl: file });
+                    }
+                  }}
+                  disabled={updateProfile.isPending}
+                />
+              </label>
+            </div>
           </div>
 
           {/* Email */}

@@ -78,11 +78,15 @@ export const tasksService = {
     return request<Task>({ url: API_ENDPOINTS.TASKS.ROOT, method: "POST", body: input }).then(normalizeTask);
   },
 
-  addResource(id: string, input: { name: string; url: string }): Promise<Task> {
+  addResource(id: string, input: { name: string; file: File }): Promise<Task> {
+    const formData = new FormData();
+    formData.append("name", input.name);
+    formData.append("url", input.file); // Backend controller reads 'url' as the file field
+
     return request<Task>({
       url: API_ENDPOINTS.TASKS.RESOURCES(id),
       method: "POST",
-      body: input,
+      body: formData,
     }).then(normalizeTask);
   },
 

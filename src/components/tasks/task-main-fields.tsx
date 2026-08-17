@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Paperclip, Plus, X } from "lucide-react";
+import { Paperclip, Plus, X, ExternalLink } from "lucide-react";
 import { Avatar } from "@/components/ui/avatar";
 import { DateChip, LabelChip } from "@/components/ui/badge";
 import { CollapsiblePanel } from "@/components/ui/collapsible-panel";
@@ -18,6 +18,7 @@ import { toast } from "@/store/toastStore";
 import type { Task, UpdateTaskInput, Label } from "@/lib/types";
 import { Popover } from "@/components/ui/popover";
 import { Check } from "lucide-react";
+import { AttachmentPreviewModal, getFileIcon } from "@/components/tasks/attachment-preview-modal";
 
 interface TaskHeaderProps {
   task: Task;
@@ -177,20 +178,20 @@ export function LabelsRow({ task, onChange, isEditing }: LabelsRowProps) {
 export function ResourcesRow({ task, isEditing }: { task: Task; isEditing?: boolean }) {
   const [adding, setAdding] = useState(false);
   const [name, setName] = useState("");
-  const [url, setUrl] = useState("");
+  const [file, setFile] = useState<File | null>(null);
   const [pending, setPending] = useState(false);
+  const [previewResource, setPreviewResource] = useState<any | null>(null);
 
   function submit() {
     const trimmedName = name.trim();
-    const trimmedUrl = url.trim();
-    if (!trimmedName || !trimmedUrl) return;
+    if (!trimmedName || !file) return;
     setPending(true);
     tasksService
-      .addResource(task.id, { name: trimmedName, url: trimmedUrl })
+      .addResource(task.id, { name: trimmedName, file })
       .then(() => {
         toast.success("Resource attached");
         setName("");
-        setUrl("");
+        setFile(null);
         setAdding(false);
       })
       .catch(() => toast.error("Couldn't attach resource"))
@@ -203,38 +204,55 @@ export function ResourcesRow({ task, isEditing }: { task: Task; isEditing?: bool
       <div className="min-w-0 flex-1 flex flex-col gap-2">
       {task.resources && task.resources.length > 0 && (
         <div className="flex flex-col gap-2">
-          {task.resources.map((res) => (
-            <div key={res.id} className="group flex items-center justify-between gap-2">
-              <a
-                href={res.url}
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-center gap-2 text-sm text-text hover:text-accent transition-colors truncate"
-              >
-                <Paperclip className="h-3.5 w-3.5 text-text-subtle" />
-                <span className="truncate">{res.name}</span>
-              </a>
-              {isEditing && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (confirm("Remove this resource?")) {
-                      tasksService
-                        .removeResource(task.id, res.id)
-                        .then(() => toast.success("Resource removed"))
-                        .catch(() => toast.error("Couldn't remove resource"));
-                    }
-                  }}
-                  className="opacity-0 group-hover:opacity-100 p-1 text-text-subtle hover:text-red-500 transition-colors"
-                  aria-label="Remove resource"
-                >
-                  <X className="h-3.5 w-3.5" />
-                </button>
-              )}
-            </div>
-          ))}
+          {task.resources.map((res) => {
+            return (
+              <div key={res.id} className="group flex items-center justify-between gap-2">
+                <div className="flex min-w-0 flex-1 items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setPreviewResource(res)}
+                    className="flex min-w-0 flex-1 items-center gap-2 text-sm text-text hover:text-accent transition-colors"
+                  >
+                    <Paperclip className="h-3.5 w-3.5 shrink-0 text-text-subtle" />
+                    <span className="truncate">{res.name}</span>
+                  </button>
+                  <a
+                    href={res.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="shrink-0 p-1 text-text-subtle hover:text-accent transition-colors"
+                    aria-label="Open in new tab"
+                  >
+                    <ExternalLink className="h-3.5 w-3.5" />
+                  </a>
+                </div>
+                {isEditing && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (confirm("Remove this resource?")) {
+                        tasksService
+                          .removeResource(task.id, res.id)
+                          .then(() => toast.success("Resource removed"))
+                          .catch(() => toast.error("Couldn't remove resource"));
+                      }
+                    }}
+                    className="shrink-0 p-1 text-text-subtle opacity-0 transition-colors hover:text-red-500 group-hover:opacity-100"
+                    aria-label="Remove resource"
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
+      <AttachmentPreviewModal
+        open={!!previewResource}
+        onClose={() => setPreviewResource(null)}
+        resource={previewResource}
+      />
       {isEditing && (
         <>
           {!adding ? (
@@ -262,7 +280,7 @@ export function ResourcesRow({ task, isEditing }: { task: Task; isEditing?: bool
                   onClick={() => {
                     setAdding(false);
                     setName("");
-                    setUrl("");
+                    setFile(null);
                   }}
                   className="flex h-7 w-7 items-center justify-center rounded-sm text-text-subtle hover:bg-surface-muted hover:text-text"
                 >
@@ -271,18 +289,14 @@ export function ResourcesRow({ task, isEditing }: { task: Task; isEditing?: bool
               </div>
               <div className="flex items-center gap-2">
                 <input
-                  placeholder="URL (https://...)"
-                  value={url}
-                  onChange={(e) => setUrl(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") submit();
-                  }}
-                  className="h-8 min-w-0 flex-1 rounded-sm border border-border bg-surface px-2 text-sm text-text outline-none placeholder:text-text-subtle"
+                  type="file"
+                  onChange={(e) => setFile(e.target.files?.[0] || null)}
+                  className="h-8 min-w-0 flex-1 rounded-sm border border-border bg-surface px-2 text-sm text-text outline-none file:mr-4 file:py-1 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-accent file:text-white hover:file:bg-accent-hover"
                 />
                 <button
                   type="button"
                   onClick={submit}
-                  disabled={pending || !name.trim() || !url.trim()}
+                  disabled={pending || !name.trim() || !file}
                   className="h-8 rounded-sm bg-accent px-3 text-sm font-medium text-white transition-opacity disabled:opacity-50"
                 >
                   {pending ? "Adding..." : "Add"}
