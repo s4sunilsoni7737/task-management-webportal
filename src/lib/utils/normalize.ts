@@ -74,6 +74,7 @@ export function normalizeUser(raw: unknown): User {
     email: strOpt(obj.email),
     avatarUrl: strOpt(obj.avatarUrl),
     isGuest: bool(obj.isGuest ?? true),
+    workspaceId: strOpt(obj.workspaceId),
     preferences: {
       theme:
         (typeof prefs.theme === "string" && (prefs.theme === "dark" || prefs.theme === "light")

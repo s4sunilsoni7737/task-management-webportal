@@ -23,11 +23,17 @@ export default function WorkspaceLayout({ children }: { children: React.ReactNod
   useMembers();
   useLabels();
 
-  useEffect(() => {
-    if (!accessToken) router.replace(routes.login());
-  }, [accessToken, router]);
+  const user = useAuthStore((s) => s.user);
 
-  if (!accessToken) {
+  useEffect(() => {
+    if (!accessToken) {
+      router.replace(routes.login());
+    } else if (user && user.id && !user.workspaceId) {
+      router.replace('/onboarding');
+    }
+  }, [accessToken, user, router]);
+
+  if (!accessToken || !user?.id) {
     return (
       <div className="fixed inset-0">
         <GlobalLoader />

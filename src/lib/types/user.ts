@@ -12,6 +12,7 @@ export interface User {
   avatarUrl: string | null;
   isGuest: boolean;
   preferences: UserPreferences;
+  workspaceId: string | null;
 }
 
 /** Minimal shape used for member pickers / avatar stacks across the app. */

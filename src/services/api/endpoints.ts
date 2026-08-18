@@ -14,6 +14,7 @@ export const API_ENDPOINTS = {
     DEMO: (role: string) => `/auth/demo/${role}`,
     GOOGLE: "/auth/google",
     GOOGLE_CALLBACK: "/auth/google/callback",
+    ONBOARDING: "/auth/onboarding",
   },
   USERS: {
     ME: "/users/me",

@@ -20,6 +20,15 @@ export const authService = {
     return { ...session, user: normalizeUser(session.user) };
   },
 
+  async completeOnboarding(role: 'owner' | 'member'): Promise<GuestSessionResponse> {
+    const session = await request<GuestSessionResponse>({
+      url: API_ENDPOINTS.AUTH.ONBOARDING,
+      method: "POST",
+      body: { role },
+    });
+    return { ...session, user: normalizeUser(session.user) };
+  },
+
   /**
    * Google OAuth is server-driven: navigating the browser to `GET /auth/google`
    * redirects to Google's consent screen, and the callback flow returns to

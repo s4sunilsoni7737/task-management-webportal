@@ -36,6 +36,7 @@ function CallbackContent() {
       email: null,
       avatarUrl: null,
       isGuest: false,
+      workspaceId: null,
       preferences: { theme: "light", colorMode: "black" },
     });
     router.replace(routes.tasks());

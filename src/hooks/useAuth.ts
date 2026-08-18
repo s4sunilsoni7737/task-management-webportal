@@ -33,3 +33,26 @@ export function useDemoLogin(role: 'owner' | 'member') {
     },
   });
 }
+
+export function useOnboarding() {
+  const router = useRouter();
+  const setSession = useAuthStore((s) => s.setSession);
+  const applyPreferences = useUiStore((s) => s.applyPreferences);
+  const theme = useUiStore((s) => s.theme);
+  const colorMode = useUiStore((s) => s.colorMode);
+
+  return useApiMutation({
+    mutationFn: (role: 'owner' | 'member') => authService.completeOnboarding(role),
+    errorMessage: "Couldn't complete onboarding. Please try again.",
+    onSuccess: (session) => {
+      setSession(session.accessToken, {
+        ...session.user,
+        preferences: session.user.preferences ?? { theme, colorMode },
+      });
+      const prefs = session.user.preferences ?? { theme, colorMode };
+      applyPreferences(prefs);
+      router.replace(routes.tasks());
+    },
+  });
+}
+
