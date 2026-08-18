@@ -20,14 +20,11 @@ export default function ProfileSettingsPage() {
 
   // Sync state if user changes externally
   useEffect(() => {
-    if (user?.name) setFullName(user.name);
-  }, [user?.name]);
-
-  function handleNameBlur() {
-    if (fullName.trim() && fullName !== user?.name) {
-      updateProfile.mutate({ name: fullName });
+    if (user) {
+      setFullName(user.name);
+      // title and username are placeholder UI fields
     }
-  }
+  }, [user]);
 
   function handleLeaveWorkspace() {
     // In a real app, this would hit an API endpoint to leave the workspace.
@@ -86,7 +83,6 @@ export default function ProfileSettingsPage() {
                 type="text"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                onBlur={handleNameBlur}
                 className="h-10 w-full rounded-md border-transparent bg-surface-muted px-4 text-sm text-text outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all disabled:opacity-50"
                 disabled={updateProfile.isPending}
               />
@@ -136,6 +132,21 @@ export default function ProfileSettingsPage() {
                 className="h-10 w-full rounded-md border-transparent bg-surface-muted px-4 text-sm text-text outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all"
               />
             </div>
+          </div>
+          
+          <div className="flex justify-end p-6 border-t border-border bg-surface-muted">
+            <button
+              type="button"
+              onClick={() => {
+                if (fullName.trim() !== user?.name) {
+                  updateProfile.mutate({ name: fullName });
+                }
+              }}
+              disabled={updateProfile.isPending}
+              className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-accent/90 disabled:opacity-50"
+            >
+              {updateProfile.isPending ? "Saving..." : "Save Profile"}
+            </button>
           </div>
         </div>
       </div>

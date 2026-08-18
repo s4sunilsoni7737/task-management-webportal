@@ -24,9 +24,10 @@ interface TaskHeaderProps {
   task: Task;
   onSave: (input: UpdateTaskInput) => void;
   isEditing?: boolean;
+  setEditing?: (editing: boolean) => void;
 }
 
-export function TaskHeader({ task, onSave, isEditing }: TaskHeaderProps) {
+export function TaskHeader({ task, onSave, isEditing, setEditing }: TaskHeaderProps) {
   const [title, setTitle] = useState(task.title);
   const [description, setDescription] = useState(task.description);
 
@@ -37,27 +38,48 @@ export function TaskHeader({ task, onSave, isEditing }: TaskHeaderProps) {
           value={title}
           rows={1}
           onChange={(e) => setTitle(e.target.value)}
-          onBlur={() => {
-            if (title.trim() && title !== task.title) onSave({ title: title.trim() });
-            else setTitle(task.title);
-          }}
-          className="w-full resize-none overflow-hidden border-none bg-transparent text-3xl font-bold tracking-tight text-text outline-none focus:ring-1 focus:ring-accent rounded-sm px-1"
+          className="w-full resize-none overflow-hidden border-none bg-transparent text-3xl font-bold tracking-tight text-text outline-none focus:ring-1 focus:ring-accent rounded-sm px-1 mb-2"
         />
       ) : (
         <h1 className="text-3xl font-bold text-text px-1 whitespace-pre-wrap tracking-tight">{task.title}</h1>
       )}
 
       {isEditing ? (
-        <textarea
-          value={description}
-          rows={2}
-          placeholder="Add a description..."
-          onChange={(e) => setDescription(e.target.value)}
-          onBlur={() => {
-            if (description !== task.description) onSave({ description });
-          }}
-          className="mt-1 w-full resize-none border-none bg-transparent text-sm leading-relaxed text-text-muted outline-none placeholder:text-text-subtle focus:ring-1 focus:ring-accent rounded-sm px-1"
-        />
+        <div className="flex flex-col gap-3">
+          <textarea
+            value={description}
+            rows={3}
+            placeholder="Add a description..."
+            onChange={(e) => setDescription(e.target.value)}
+            className="w-full resize-y border border-border bg-surface text-sm leading-relaxed text-text outline-none placeholder:text-text-subtle focus:border-accent focus:ring-1 focus:ring-accent rounded-md p-3"
+          />
+          {setEditing && (
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  if (title.trim() && title !== task.title) onSave({ title: title.trim() });
+                  if (description !== task.description) onSave({ description });
+                  setEditing(false);
+                }}
+                className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent/90"
+              >
+                Save
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setTitle(task.title);
+                  setDescription(task.description);
+                  setEditing(false);
+                }}
+                className="rounded-md border border-border bg-surface px-4 py-2 text-sm font-medium text-text hover:bg-surface-muted"
+              >
+                Cancel
+              </button>
+            </div>
+          )}
+        </div>
       ) : (
         <div className="mt-1 text-sm leading-relaxed text-text-muted px-1 whitespace-pre-wrap">
           {task.description || <span className="text-text-subtle italic">No description provided.</span>}

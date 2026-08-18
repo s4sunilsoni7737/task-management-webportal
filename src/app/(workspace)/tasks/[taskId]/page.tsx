@@ -211,7 +211,7 @@ export default function TaskDetailPage() {
       <div className="flex flex-1 overflow-hidden">
         <div className="flex-1 overflow-y-auto px-6 py-6 md:px-10 lg:px-14">
           <div className="mx-auto max-w-4xl pb-20">
-            <TaskHeader task={task} onSave={save} isEditing={isEditing} />
+            <TaskHeader task={task} onSave={save} isEditing={isEditing} setEditing={setIsEditing} />
 
             <div className="mb-10">
               <PropertiesRow task={task} onOpenDatePicker={() => isEditing && setDatePickerOpen(true)} dateAnchorRef={dateAnchorRef} />
