@@ -33,9 +33,9 @@ export function normalizeApiError(error: unknown): ApiError {
     }
 
     // The backend always responds with `{ success, userMessage, developerMessage, data }`.
-    // Prefer `userMessage` (human-readable) then `developerMessage`, and fall back to
-    // any generic `message`/nested `data.message` shapes for resilience.
-    const rawMessage = body?.userMessage ?? body?.developerMessage ?? body?.message ?? body?.data?.message;
+    // Prefer `developerMessage` (more descriptive) then `userMessage` (human-readable), and fall back to
+    // generic `message` from NestJS/express.
+    const rawMessage = body?.developerMessage ?? body?.userMessage ?? body?.message ?? body?.data?.message;
     const message = Array.isArray(rawMessage)
       ? rawMessage.join(", ")
       : rawMessage || body?.error || error.message || "Something went wrong.";
