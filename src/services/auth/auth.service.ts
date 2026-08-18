@@ -11,10 +11,10 @@ export interface GuestSessionResponse {
 }
 
 export const authService = {
-  /** Creates an anonymous guest session — the assignment's required primary CTA. */
-  async loginAsGuest(): Promise<GuestSessionResponse> {
+  /** Creates an anonymous demo session */
+  async loginAsDemo(role: 'owner' | 'member'): Promise<GuestSessionResponse> {
     const session = await request<GuestSessionResponse>({
-      url: API_ENDPOINTS.AUTH.GUEST,
+      url: API_ENDPOINTS.AUTH.DEMO(role),
       method: "POST",
     });
     return { ...session, user: normalizeUser(session.user) };

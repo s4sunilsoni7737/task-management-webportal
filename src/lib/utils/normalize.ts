@@ -119,7 +119,7 @@ export function normalizeTask(raw: unknown): Task {
     subtaskCount: num(obj.subtaskCount),
     commentCount: num(obj.commentCount),
     isLocked: bool(obj.isLocked),
-    watcherCount: num(obj.watcherCount),
+    viewerCount: num(obj.watcherCount),
   };
 }
 

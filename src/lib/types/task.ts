@@ -29,7 +29,7 @@ export interface Task {
   subtaskCount: number;
   commentCount: number;
   isLocked: boolean;
-  watcherCount: number;
+  viewerCount: number;
 }
 
 export interface CreateTaskInput {

@@ -1,10 +1,10 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useQueryClient } from "@tanstack/react-query";
-import { ChevronRight, Lock, LockOpen, MoreHorizontal, PanelRight, Share2, Trash2, Eye } from "lucide-react";
+import { ChevronRight, Lock, LockOpen, MoreHorizontal, PanelRight, Share2, Trash2, Eye, Pencil } from "lucide-react";
 import { EmptyState } from "@/components/ui/empty-state";
 import { GlobalLoader } from "@/components/ui/global-loader";
 import { IconButton } from "@/components/ui/icon-button";
@@ -42,19 +42,7 @@ function TaskDetailActions({
   setEditing,
 }: TaskDetailActionsProps) {
   const [overflowOpen, setOverflowOpen] = useState(false);
-  const [watching, setWatching] = useState(false);
   const overflowRef = useRef<HTMLButtonElement>(null!);
-
-  function toggleWatch() {
-    setWatching(true);
-    const action = task.watcherCount > 0 ? tasksService.unwatch(task.id) : tasksService.watch(task.id);
-    action
-      .then(() => {
-        toast.success(task.watcherCount > 0 ? "Stopped watching task" : "Now watching task");
-      })
-      .catch(() => toast.error("Couldn't update watch status"))
-      .finally(() => setWatching(false));
-  }
 
   return (
     <>
@@ -62,16 +50,13 @@ function TaskDetailActions({
         {task.isLocked ? <Lock className="h-4 w-4" /> : <LockOpen className="h-4 w-4" />}
       </IconButton>
 
-      <button
-        type="button"
-        onClick={toggleWatch}
-        disabled={watching}
-        aria-label={task.watcherCount > 0 ? "Stop watching task" : "Watch task"}
-        className="flex h-8 items-center gap-1 rounded-sm px-2 text-text-muted transition-colors hover:bg-surface-muted hover:text-text disabled:opacity-50"
+      <div
+        className="flex h-8 items-center gap-1 rounded-sm px-2 text-text-muted"
+        title={`${task.viewerCount} views`}
       >
         <Eye className="h-4 w-4" />
-        <span className="text-xs">{task.watcherCount}</span>
-      </button>
+        <span className="text-xs">{task.viewerCount}</span>
+      </div>
 
       <IconButton
         aria-label="Share task"
@@ -82,6 +67,12 @@ function TaskDetailActions({
       >
         <Share2 className="h-4 w-4" />
       </IconButton>
+
+      {!isEditing && !task.isLocked && (
+        <IconButton aria-label="Edit task" onClick={() => setEditing(true)}>
+          <Pencil className="h-4 w-4" />
+        </IconButton>
+      )}
 
       <IconButton
         ref={overflowRef}
@@ -98,16 +89,6 @@ function TaskDetailActions({
         align="end"
         className="w-[150px] p-1"
       >
-        {!isEditing && (
-          <MenuItem
-            icon={LockOpen} // Just a placeholder icon for edit
-            label="Edit task"
-            onClick={() => {
-              setEditing(true);
-              setOverflowOpen(false);
-            }}
-          />
-        )}
         <MenuItem
           icon={Trash2}
           label="Delete task"
@@ -149,6 +130,12 @@ export default function TaskDetailPage() {
   const [isEditing, setIsEditing] = useState(false);
   const [datePickerOpen, setDatePickerOpen] = useState(false);
   const dateAnchorRef = useRef<HTMLDivElement>(null!);
+
+  useEffect(() => {
+    if (taskId) {
+      tasksService.recordView(taskId).catch(() => {});
+    }
+  }, [taskId]);
 
   function save(input: UpdateTaskInput) {
     updateTask.mutate(input, {

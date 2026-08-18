@@ -97,12 +97,8 @@ export const tasksService = {
     });
   },
 
-  watch(id: string): Promise<void> {
-    return request<void>({ url: API_ENDPOINTS.TASKS.WATCH(id), method: "POST" });
-  },
-
-  unwatch(id: string): Promise<void> {
-    return request<void>({ url: API_ENDPOINTS.TASKS.WATCH(id), method: "DELETE" });
+  recordView(id: string): Promise<void> {
+    return request<void>({ url: API_ENDPOINTS.TASKS.VIEW(id), method: "POST" });
   },
 
   update(id: string, input: UpdateTaskInput): Promise<Task> {

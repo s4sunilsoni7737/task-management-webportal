@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { useGuestLogin } from "@/hooks/useAuth";
+import { useDemoLogin } from "@/hooks/useAuth";
 import { authService } from "@/services/auth/auth.service";
 
 export default function LoginPage() {
-  const guestLogin = useGuestLogin();
+  const loginOwner = useDemoLogin('owner');
+  const loginMember = useDemoLogin('member');
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-bg p-4">
@@ -26,17 +27,26 @@ export default function LoginPage() {
             Let&apos;s get back on track
           </h1>
           <p className="mb-5 text-center text-[13px] text-text-muted">
-            Enter your email below to login to your account.
+            Choose a demo account or login with Google.
           </p>
 
           <div className="flex flex-col gap-2">
             <Button
               variant="accent"
               className="h-10 w-full rounded-full"
-              onClick={() => guestLogin.mutate()}
-              disabled={guestLogin.isPending}
+              onClick={() => loginOwner.mutate()}
+              disabled={loginOwner.isPending || loginMember.isPending}
             >
-              {guestLogin.isPending ? "Signing in…" : "Continue as Guest"}
+              {loginOwner.isPending ? "Signing in…" : "Login as Demo Owner"}
+            </Button>
+            
+            <Button
+              variant="outline"
+              className="h-10 w-full rounded-full"
+              onClick={() => loginMember.mutate()}
+              disabled={loginOwner.isPending || loginMember.isPending}
+            >
+              {loginMember.isPending ? "Signing in…" : "Login as Demo Member"}
             </Button>
 
             <Button

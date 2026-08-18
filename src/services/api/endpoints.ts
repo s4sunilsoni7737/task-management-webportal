@@ -11,7 +11,7 @@ export type ApiId = string | number;
 
 export const API_ENDPOINTS = {
   AUTH: {
-    GUEST: "/auth/guest",
+    DEMO: (role: string) => `/auth/demo/${role}`,
     GOOGLE: "/auth/google",
     GOOGLE_CALLBACK: "/auth/google/callback",
   },
@@ -33,7 +33,7 @@ export const API_ENDPOINTS = {
     ROOT: "/tasks",
     DETAIL: (id: string) => `/tasks/${id}`,
     RESOURCES: (id: string) => `/tasks/${id}/resources`,
-    WATCH: (id: string) => `/tasks/${id}/watch`,
+    VIEW: (id: string) => `/tasks/${id}/view`,
     SUBTASKS: (id: string) => `/tasks/${id}/subtasks`,
     COMMENTS: (id: string) => `/tasks/${id}/comments`,
     COMMENT_DETAIL: (id: string, commentId: string) => `/tasks/${id}/comments/${commentId}`,

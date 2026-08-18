@@ -316,7 +316,7 @@ export function DetailsCard({ task, onSave, isEditing }: DetailsCardProps) {
   const priorityRef = useRef<HTMLButtonElement>(null!);
   const membersRef = useRef<HTMLDivElement>(null!);
   const datesRef = useRef<HTMLDivElement>(null!);
-  const labelsRef = useRef<HTMLButtonElement>(null!);
+  const labelsRef = useRef<HTMLDivElement>(null!);
   const reporterRef = useRef<HTMLButtonElement>(null!);
 
   function toggleMember(memberId: string) {
@@ -364,7 +364,7 @@ export function DetailsCard({ task, onSave, isEditing }: DetailsCardProps) {
 
       {!collapsed && (
         <div className="divide-y divide-border px-3">
-          <DetailRow icon={CircleDot} label="Status">
+          <DetailRow label="Status">
             <button
               ref={statusRef}
               type="button"
@@ -386,27 +386,27 @@ export function DetailsCard({ task, onSave, isEditing }: DetailsCardProps) {
             <button
               ref={priorityRef}
               type="button"
-              onClick={() => setOpenField(openField === "priority" ? null : "priority")}
-              className="group flex items-center gap-1.5 rounded-sm px-1.5 py-1 text-sm transition-colors hover:bg-surface-muted"
+              onClick={() => isEditing && setOpenField(openField === "priority" ? null : "priority")}
+              className={cn("group flex items-center gap-1.5 rounded-sm px-1.5 py-1 text-sm transition-colors", isEditing ? "hover:bg-surface-muted" : "cursor-default")}
             >
               <PriorityBadge priority={task.priority} />
-              <ChevronDown className={cn("h-3.5 w-3.5 text-text-subtle opacity-0 transition-opacity group-hover:opacity-100", openField === "priority" && "opacity-100 rotate-180")} />
+              {isEditing && <ChevronDown className={cn("h-3.5 w-3.5 text-text-subtle opacity-0 transition-opacity group-hover:opacity-100", openField === "priority" && "opacity-100 rotate-180")} />}
             </button>
             <PriorityPopover open={openField === "priority"} onClose={() => setOpenField(null)} anchorRef={priorityRef} value={task.priority} onChange={(priority) => onSave({ priority })} />
           </DetailRow>
 
           <DetailRow label="Members">
             <div ref={membersRef} className="flex min-h-7 items-center px-1.5">
-              <AvatarStack members={task.members} size="sm" onAdd={() => setOpenField(openField === "members" ? null : "members")} />
+              <AvatarStack members={task.members} size="sm" onAdd={isEditing ? () => setOpenField(openField === "members" ? null : "members") : undefined} />
             </div>
             <MemberPicker open={openField === "members"} onClose={() => setOpenField(null)} anchorRef={membersRef} members={members} selectedIds={task.members.map((m) => m.id)} onToggle={toggleMember} />
           </DetailRow>
 
           <DetailRow label="Dates">
-            <div ref={datesRef} className="flex min-h-7 flex-wrap items-center gap-2 px-1.5 cursor-pointer">
-              <DateChip date={task.startDate} fallbackText="Start" onClick={() => setOpenField(openField === "dates" ? null : "dates")} />
+            <div ref={datesRef} className={cn("flex min-h-7 flex-wrap items-center gap-2 px-1.5", isEditing ? "cursor-pointer" : "cursor-default")}>
+              <DateChip date={task.startDate} fallbackText="Start" onClick={isEditing ? () => setOpenField(openField === "dates" ? null : "dates") : undefined} />
               <ArrowRight className="h-3 w-3 text-text-subtle shrink-0" />
-              <DateChip date={task.dueDate} fallbackText="End" onClick={() => setOpenField(openField === "dates" ? null : "dates")} />
+              <DateChip date={task.dueDate} fallbackText="End" onClick={isEditing ? () => setOpenField(openField === "dates" ? null : "dates") : undefined} />
             </div>
             <DatePickerPopover open={openField === "dates"} onClose={() => setOpenField(null)} anchorRef={datesRef} startDate={task.startDate} endDate={task.dueDate} onChange={(range) => onSave(range)} />
           </DetailRow>
@@ -414,11 +414,13 @@ export function DetailsCard({ task, onSave, isEditing }: DetailsCardProps) {
           <DetailRow label="Labels">
             <div ref={labelsRef} className="flex min-h-7 flex-wrap items-center gap-1 px-1.5">
               {task.labels.map((l) => (
-                <LabelChip key={l.id} label={l} onRemove={() => toggleLabel(l.id)} />
+                <LabelChip key={l.id} label={l} onRemove={isEditing ? () => toggleLabel(l.id) : undefined} />
               ))}
-              <button type="button" onClick={() => setOpenField(openField === "labels" ? null : "labels")} aria-label="Add label" className="flex h-6 w-6 items-center justify-center rounded-sm text-text-subtle hover:bg-surface-muted hover:text-text">
-                <Plus className="h-3.5 w-3.5" />
-              </button>
+              {isEditing && (
+                <button type="button" onClick={() => setOpenField(openField === "labels" ? null : "labels")} aria-label="Add label" className="flex h-6 w-6 items-center justify-center rounded-sm text-text-subtle hover:bg-surface-muted hover:text-text">
+                  <Plus className="h-3.5 w-3.5" />
+                </button>
+              )}
             </div>
             <LabelPicker open={openField === "labels"} onClose={() => setOpenField(null)} anchorRef={labelsRef} labels={labels} selectedIds={task.labels.map((l) => l.id)} onToggle={toggleLabel} />
           </DetailRow>
@@ -436,7 +438,7 @@ export function DetailsCard({ task, onSave, isEditing }: DetailsCardProps) {
           </DetailRow>
 
           <DetailRow label="Reporter">
-            <button ref={reporterRef} type="button" onClick={() => setOpenField(openField === "reporter" ? null : "reporter")} className="flex min-h-7 items-center gap-1.5 rounded-sm px-1.5 text-sm transition-colors hover:bg-surface-muted">
+            <button ref={reporterRef} type="button" onClick={() => isEditing && setOpenField(openField === "reporter" ? null : "reporter")} className={cn("flex min-h-7 items-center gap-1.5 rounded-sm px-1.5 text-sm transition-colors", isEditing ? "hover:bg-surface-muted" : "cursor-default")}>
               {task.reporter ? (
                 <>
                   <Avatar name={task.reporter.name} src={task.reporter.avatarUrl} size="xs" />

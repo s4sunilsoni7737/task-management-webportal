@@ -12,7 +12,7 @@ import { routes } from "@/lib/routeBuilder";
  * they are applied optimistically here and re-confirmed by `AuthBootstrap`
  * via `GET /users/me` on every later page refresh.
  */
-export function useGuestLogin() {
+export function useDemoLogin(role: 'owner' | 'member') {
   const router = useRouter();
   const setSession = useAuthStore((s) => s.setSession);
   const applyPreferences = useUiStore((s) => s.applyPreferences);
@@ -20,8 +20,8 @@ export function useGuestLogin() {
   const colorMode = useUiStore((s) => s.colorMode);
 
   return useApiMutation({
-    mutationFn: () => authService.loginAsGuest(),
-    errorMessage: "Couldn't start a guest session. Please try again.",
+    mutationFn: () => authService.loginAsDemo(role),
+    errorMessage: "Couldn't start a demo session. Please try again.",
     onSuccess: (session) => {
       setSession(session.accessToken, {
         ...session.user,
