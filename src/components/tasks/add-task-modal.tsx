@@ -1,9 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { MemberPicker } from "@/components/ui/member-picker";
+import { AvatarStack } from "@/components/ui/avatar";
 import { useCreateTask } from "@/hooks/useTasks";
+import { useMembers } from "@/hooks/useLookups";
+import { toast } from "@/store/toastStore";
 import { TASK_STATUSES, PRIORITIES, type Priority, type TaskStatus } from "@/lib/types";
 
 interface AddTaskModalProps {
@@ -20,26 +24,70 @@ interface AddTaskModalProps {
  */
 export function AddTaskModal({ open, onClose, projectId, defaultStatus = "todo" }: AddTaskModalProps) {
   const createTask = useCreateTask();
+  const { data: allMembers = [] } = useMembers();
+
   const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const [status, setStatus] = useState<TaskStatus>(defaultStatus);
   const [priority, setPriority] = useState<Priority>("no_priority");
+  const [startDate, setStartDate] = useState("");
+  const [dueDate, setDueDate] = useState("");
+  const [memberIds, setMemberIds] = useState<string[]>([]);
+  
+  const [membersOpen, setMembersOpen] = useState(false);
+  const membersAnchorRef = useRef<HTMLDivElement>(null!);
 
   if (!open) return null;
 
   function submit() {
     const trimmed = title.trim();
     if (!trimmed) return;
+    
+    const todayStr = new Date().toISOString().split("T")[0];
+    if (startDate && startDate < todayStr) {
+      toast.error("Start date cannot be in the past");
+      return;
+    }
+    if (dueDate) {
+      if (startDate && dueDate < startDate) {
+        toast.error("Due date cannot be before start date");
+        return;
+      } else if (!startDate && dueDate < todayStr) {
+        toast.error("Due date cannot be in the past");
+        return;
+      }
+    }
+
     createTask.mutate(
-      { title: trimmed, status, priority, projectId: projectId ?? null },
+      { 
+        title: trimmed, 
+        description: description.trim(),
+        status, 
+        priority, 
+        projectId: projectId ?? null,
+        memberIds,
+        startDate: startDate || null,
+        dueDate: dueDate || null
+      },
       {
         onSuccess: () => {
           setTitle("");
+          setDescription("");
           setStatus(defaultStatus);
           setPriority("no_priority");
+          setStartDate("");
+          setDueDate("");
+          setMemberIds([]);
           onClose();
         },
       },
     );
+  }
+
+  const selectedMembers = allMembers.filter(m => memberIds.includes(m.id));
+
+  function toggleMember(id: string) {
+    setMemberIds(prev => prev.includes(id) ? prev.filter(m => m !== id) : [...prev, id]);
   }
 
   return (
@@ -75,6 +123,52 @@ export function AddTaskModal({ open, onClose, projectId, defaultStatus = "todo" 
           placeholder="What needs to be done?"
           className="mb-3 h-9 w-full rounded-sm border border-border bg-surface px-2.5 text-sm text-text outline-none placeholder:text-text-subtle focus:border-accent"
         />
+
+        <label className="mb-1 block text-xs font-medium text-text-subtle">Description (Optional)</label>
+        <textarea
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="Add more details..."
+          rows={3}
+          className="mb-3 w-full resize-none rounded-sm border border-border bg-surface p-2 text-sm text-text outline-none placeholder:text-text-subtle focus:border-accent scrollbar-thin"
+        />
+
+        <div className="mb-3 grid grid-cols-3 gap-3">
+          <div>
+            <label className="mb-1 block text-xs font-medium text-text-subtle">Start Date</label>
+            <input
+              type="date"
+              min={new Date().toISOString().split("T")[0]}
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              className="h-9 w-full rounded-sm border border-border bg-surface px-2 text-[13px] text-text outline-none focus:border-accent"
+            />
+          </div>
+          <div>
+            <label className="mb-1 block text-xs font-medium text-text-subtle">Due Date</label>
+            <input
+              type="date"
+              min={startDate || new Date().toISOString().split("T")[0]}
+              value={dueDate}
+              onChange={(e) => setDueDate(e.target.value)}
+              className="h-9 w-full rounded-sm border border-border bg-surface px-2 text-[13px] text-text outline-none focus:border-accent"
+            />
+          </div>
+          <div>
+            <label className="mb-1 block text-xs font-medium text-text-subtle">Assignees</label>
+            <div ref={membersAnchorRef} className="h-9 flex items-center">
+              <AvatarStack members={selectedMembers} size="sm" onAdd={() => setMembersOpen(true)} />
+            </div>
+            <MemberPicker
+              open={membersOpen}
+              onClose={() => setMembersOpen(false)}
+              anchorRef={membersAnchorRef}
+              members={allMembers}
+              selectedIds={memberIds}
+              onToggle={toggleMember}
+            />
+          </div>
+        </div>
 
         <label className="mb-1 block text-xs font-medium text-text-subtle">Status</label>
         <div className="mb-3 flex flex-wrap gap-1.5">
@@ -117,9 +211,10 @@ export function AddTaskModal({ open, onClose, projectId, defaultStatus = "todo" 
             Cancel
           </Button>
           <Button
-            variant="black"
+            variant="accent"
             size="sm"
             onClick={submit}
+            isLoading={createTask.isPending}
             disabled={!title.trim() || createTask.isPending}
           >
             {createTask.isPending ? "Creating…" : "Create Task"}

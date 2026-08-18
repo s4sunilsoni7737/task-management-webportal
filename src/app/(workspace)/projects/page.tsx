@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -179,7 +179,7 @@ export default function ProjectsPage() {
         <h1 className="text-xl font-bold text-text">Projects</h1>
         <div className="flex flex-wrap items-center gap-2">
           <SearchInput value={search} onChange={changeSearch} placeholder="Search projects..." />
-          <Button variant="black" size="sm" onClick={() => setModalOpen(true)}>
+          <Button variant="accent" size="sm" onClick={() => setModalOpen(true)}>
             <Plus className="h-3.5 w-3.5" />
             Add Project
           </Button>
@@ -268,7 +268,7 @@ export default function ProjectsPage() {
                 Cancel
               </Button>
               <Button
-                variant="black"
+                variant="accent"
                 size="sm"
                 onClick={handleAddProject}
                 disabled={!name.trim() || createProject.isPending}

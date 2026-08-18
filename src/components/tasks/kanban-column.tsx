@@ -39,6 +39,7 @@ export function KanbanColumn({
 }: KanbanColumnProps) {
   const [isDragOver, setIsDragOver] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [isAddingTask, setIsAddingTask] = useState(false);
   const queryClient = useQueryClient();
   const createTask = useCreateTask();
   const config = STATUS_CONFIG[status];
@@ -82,7 +83,7 @@ export function KanbanColumn({
         }
       }}
       className={cn(
-        "flex w-[340px] shrink-0 flex-col gap-3 rounded-xl border border-border bg-surface-muted/30 p-3 pt-4 transition-colors",
+        "flex w-[340px] shrink-0 flex-col gap-3 rounded-xl border border-border bg-surface-muted p-3 pt-4 transition-colors",
         isDragOver && !draggingColumn && "border-accent bg-accent-soft/40",
         draggingColumn === status && "opacity-50"
       )}
@@ -98,10 +99,9 @@ export function KanbanColumn({
             onDragEnd={() => {
               onDragStartColumn?.(null);
             }}
-            className="cursor-grab active:cursor-grabbing flex items-center justify-center shrink-0"
-            style={{ width: "14px", height: "14px", opacity: 1 }}
+            className="cursor-grab active:cursor-grabbing flex items-center justify-center shrink-0 text-text"
           >
-            <GripVertical className="h-full w-full text-text-subtle" />
+            <GripVertical className="h-4 w-4" strokeWidth={2.5} />
           </div>
           <span
             style={{ width: "56px", height: "14px", opacity: 1 }}
@@ -111,12 +111,20 @@ export function KanbanColumn({
           </span>
           {isUpdating && <Loader2 className="h-3.5 w-3.5 animate-spin text-text-subtle ml-2" />}
         </div>
-        <div className="flex items-center gap-1 text-text-subtle">
-          <button className="rounded hover:bg-surface-muted p-1 hover:text-text">
-            <Plus className="h-4 w-4" strokeWidth={1.5} />
+        <div className="flex items-center gap-1 text-text">
+          <button
+            type="button"
+            className="rounded hover:bg-surface-muted p-1 hover:text-text-strong"
+            onClick={() => setIsAddingTask(true)}
+          >
+            <Plus className="h-4 w-4" strokeWidth={2.5} />
           </button>
-          <button className="rounded hover:bg-surface-muted p-1 hover:text-text">
-            <MoreHorizontal className="h-4 w-4" strokeWidth={1.5} />
+          <button
+            type="button"
+            className="rounded hover:bg-surface-muted p-1 hover:text-text-strong"
+            onClick={() => alert("Column settings coming soon!")}
+          >
+            <MoreHorizontal className="h-4 w-4" strokeWidth={2.5} />
           </button>
         </div>
       </div>
@@ -125,7 +133,13 @@ export function KanbanColumn({
         {tasks.map((task) => (
           <KanbanCard key={task.id} task={task} onDragStart={onDragStart} />
         ))}
-        <InlineAddTaskRow onAdd={addTask} pending={createTask.isPending} label="Add Task" />
+        <InlineAddTaskRow
+          onAdd={addTask}
+          pending={createTask.isPending}
+          label="Add Task"
+          isEditing={isAddingTask}
+          onEditingChange={setIsAddingTask}
+        />
       </div>
     </div>
   );

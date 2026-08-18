@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ComponentType } from "react";
-import { Briefcase, ChevronDown, ChevronRight, ChevronsUpDown, ClipboardList } from "lucide-react";
+import { Layers, ChevronDown, ChevronRight, ChevronsUpDown, LayoutDashboard } from "lucide-react";
 import { WorkspaceMenu } from "@/components/admin/workspace-menu";
 import { Avatar } from "@/components/ui/avatar";
 import { useAuthStore } from "@/store/authStore";
@@ -46,21 +46,21 @@ export function Sidebar({ variant }: SidebarProps) {
           <button
             type="button"
             onClick={() => setWorkspaceSectionOpen((v) => !v)}
-            className="flex h-7 w-full items-center gap-1 px-1 text-xs font-medium text-text-subtle"
+            className="flex h-9 w-full items-center justify-between px-3 mt-4 mb-1 text-[15px] font-medium text-text"
           >
-            {workspaceSectionOpen ? (
-              <ChevronDown className="h-3 w-3" />
-            ) : (
-              <ChevronRight className="h-3 w-3" />
-            )}
             Workspace
+            {workspaceSectionOpen ? (
+              <ChevronDown className="h-4 w-4 text-text-subtle" />
+            ) : (
+              <ChevronRight className="h-4 w-4 text-text-subtle" />
+            )}
           </button>
         )}
 
         {(workspaceSectionOpen || isIconRail) && (
           <div className="flex flex-col gap-0.5">
-            <SidebarNavItem href={routes.tasks()} icon={ClipboardList} label="Tasks" />
-            <SidebarNavItem href={routes.projects()} icon={Briefcase} label="Projects" />
+            <SidebarNavItem href={routes.tasks()} icon={LayoutDashboard} label="Tasks" />
+            <SidebarNavItem href={routes.projects()} icon={Layers} label="Projects" />
           </div>
         )}
       </nav>
@@ -119,8 +119,8 @@ function SidebarNavItem({ href, icon: Icon, label, onNavigate }: SidebarNavItemP
       onClick={onNavigate}
       aria-current={active ? "page" : undefined}
       className={cn(
-        "flex h-9 items-center gap-2.5 rounded-sm px-2.5 text-sm font-medium transition-colors",
-        active ? "bg-accent text-accent-fg" : "text-text-muted hover:bg-accent-soft hover:text-accent",
+        "flex h-9 w-full items-center gap-2 rounded-xl px-3 text-[15px] font-medium transition-colors",
+        active ? "bg-surface-muted text-text" : "text-text-muted hover:bg-surface-muted hover:text-text",
       )}
     >
       <Icon className="h-4 w-4 shrink-0" />
@@ -139,21 +139,21 @@ function WorkspaceSwitcher({ isIconRail }: { isIconRail: boolean }) {
   const avatarUrl = user?.avatarUrl;
 
   return (
-    <div className="relative border-b border-border p-2">
+    <div className="relative p-2">
       <button
         ref={anchorRef}
         type="button"
         onClick={() => setProfileMenuOpen((v) => !v)}
         className={cn(
-          "flex h-11 w-full items-center gap-2 rounded-sm px-1.5 text-left transition-colors hover:bg-accent-soft hover:text-accent",
-          profileMenuOpen && "bg-accent-soft text-accent"
+          "flex h-11 w-full items-center gap-2 rounded-sm px-1.5 text-left transition-colors hover:bg-surface-muted hover:text-text",
+          profileMenuOpen && "bg-surface-muted text-text"
         )}
       >
         <Avatar name={displayName} src={avatarUrl} size="sm" />
         {!isIconRail && (
           <>
-            <span className="flex-1 truncate text-sm font-semibold text-text">{displayName}</span>
-            <ChevronsUpDown className="h-3.5 w-3.5 shrink-0 text-text-subtle" />
+            <span className="flex-1 truncate text-[15px] font-bold text-text">{displayName}</span>
+            <ChevronsUpDown className="h-4 w-4 shrink-0 text-text" />
           </>
         )}
       </button>

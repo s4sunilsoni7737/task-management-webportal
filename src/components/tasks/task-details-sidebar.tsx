@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import type { ComponentType, ReactNode } from "react";
 import { parseISO } from "date-fns";
 import {
+  ArrowRight,
   ArrowRightLeft,
   CalendarClock,
   CalendarDays,
@@ -90,23 +91,15 @@ function toIso(date: Date): string {
   return date.toISOString().slice(0, 10);
 }
 
-interface DetailRowProps {
-  icon: ComponentType<{ className?: string }>;
-  label: string;
-  children: ReactNode;
-}
-
-function DetailRow({ icon: Icon, label, children }: DetailRowProps) {
+function DetailRow({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <div className="flex min-h-[34px] items-center gap-2 py-1">
-      <div className="flex w-24 shrink-0 items-center gap-1.5 text-xs text-text-subtle">
-        <Icon className="h-3.5 w-3.5" />
-        {label}
-      </div>
-      <div className="min-w-0 flex-1">{children}</div>
+    <div className="flex min-h-[34px] items-center gap-2 py-1.5">
+      <div className="w-24 shrink-0 text-sm font-medium text-text">{label}</div>
+      <div className="min-w-0 flex-1 text-sm text-text-muted">{children}</div>
     </div>
   );
 }
+
 
 interface StatusPopoverProps {
   open: boolean;
@@ -225,6 +218,8 @@ export function DatePickerPopover({ open, onClose, anchorRef, startDate, endDate
 
   const selectedStart = pendingStart;
   const selectedEnd = endDate ? parseISO(endDate) : null;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
   function handleSelect(day: Date) {
     if (!pendingStart || (selectedEnd && day < pendingStart)) {
@@ -250,6 +245,7 @@ export function DatePickerPopover({ open, onClose, anchorRef, startDate, endDate
         selectedStart={selectedStart}
         selectedEnd={selectedEnd}
         onSelectDate={handleSelect}
+        minDate={today}
       />
     </Popover>
   );
@@ -386,124 +382,71 @@ export function DetailsCard({ task, onSave, isEditing }: DetailsCardProps) {
             />
           </DetailRow>
 
-          <DetailRow icon={Flag} label="Priority">
+          <DetailRow label="Priority">
             <button
               ref={priorityRef}
               type="button"
-              onClick={() => isEditing && setOpenField("priority")}
-              className={cn("rounded-sm px-1.5 py-1", isEditing ? "hover:bg-surface-muted" : "cursor-default")}
+              onClick={() => setOpenField(openField === "priority" ? null : "priority")}
+              className="group flex items-center gap-1.5 rounded-sm px-1.5 py-1 text-sm transition-colors hover:bg-surface-muted"
             >
               <PriorityBadge priority={task.priority} />
+              <ChevronDown className={cn("h-3.5 w-3.5 text-text-subtle opacity-0 transition-opacity group-hover:opacity-100", openField === "priority" && "opacity-100 rotate-180")} />
             </button>
-            <PriorityPopover
-              open={openField === "priority"}
-              onClose={() => setOpenField(null)}
-              anchorRef={priorityRef}
-              value={task.priority}
-              onChange={(priority) => onSave({ priority })}
-            />
+            <PriorityPopover open={openField === "priority"} onClose={() => setOpenField(null)} anchorRef={priorityRef} value={task.priority} onChange={(priority) => onSave({ priority })} />
           </DetailRow>
 
-          <DetailRow icon={Users} label="Members">
-            <div ref={membersRef}>
-              <AvatarStack members={task.members} size="xs" onAdd={() => isEditing && setOpenField("members")} />
+          <DetailRow label="Members">
+            <div ref={membersRef} className="flex min-h-7 items-center px-1.5">
+              <AvatarStack members={task.members} size="sm" onAdd={() => setOpenField(openField === "members" ? null : "members")} />
             </div>
-            <MemberPicker
-              open={openField === "members"}
-              onClose={() => setOpenField(null)}
-              anchorRef={membersRef}
-              members={members}
-              selectedIds={task.members.map((m) => m.id)}
-              onToggle={toggleMember}
-            />
-          </DetailRow>
-          <DetailRow icon={CalendarDays} label="Dates">
-            <div
-              ref={datesRef}
-              onClick={() => isEditing && setOpenField("dates")}
-              className={cn("w-fit", isEditing && "cursor-pointer")}
-            >
-              <DateChip date={task.dueDate} />
-            </div>
-            <DatePickerPopover
-              open={openField === "dates"}
-              onClose={() => setOpenField(null)}
-              anchorRef={datesRef}
-              startDate={task.startDate}
-              endDate={task.dueDate}
-              onChange={(range) => onSave(range)}
-            />
+            <MemberPicker open={openField === "members"} onClose={() => setOpenField(null)} anchorRef={membersRef} members={members} selectedIds={task.members.map((m) => m.id)} onToggle={toggleMember} />
           </DetailRow>
 
-          <DetailRow icon={Tag} label="Labels">
-            <div className="flex flex-wrap items-center gap-1">
-              {task.labels.map((label) => (
-                <LabelChip key={label.id} label={label} onRemove={() => toggleLabel(label.id)} />
+          <DetailRow label="Dates">
+            <div ref={datesRef} className="flex min-h-7 flex-wrap items-center gap-2 px-1.5 cursor-pointer">
+              <DateChip date={task.startDate} fallbackText="Start" onClick={() => setOpenField(openField === "dates" ? null : "dates")} />
+              <ArrowRight className="h-3 w-3 text-text-subtle shrink-0" />
+              <DateChip date={task.dueDate} fallbackText="End" onClick={() => setOpenField(openField === "dates" ? null : "dates")} />
+            </div>
+            <DatePickerPopover open={openField === "dates"} onClose={() => setOpenField(null)} anchorRef={datesRef} startDate={task.startDate} endDate={task.dueDate} onChange={(range) => onSave(range)} />
+          </DetailRow>
+
+          <DetailRow label="Labels">
+            <div ref={labelsRef} className="flex min-h-7 flex-wrap items-center gap-1 px-1.5">
+              {task.labels.map((l) => (
+                <LabelChip key={l.id} label={l} onRemove={() => toggleLabel(l.id)} />
               ))}
-              <button
-                ref={labelsRef}
-                type="button"
-                onClick={() => isEditing && setOpenField("labels")}
-                aria-label="Add label"
-                className={
-                  task.labels.length === 0
-                    ? "text-xs text-text-subtle hover:text-text cursor-pointer transition-colors"
-                    : "flex h-[20px] w-[20px] items-center justify-center rounded-full border border-dashed border-border-strong text-text-subtle hover:border-accent hover:text-accent"
-                }
-              >
-                {task.labels.length === 0 ? "Add labels..." : <Plus className="h-2.5 w-2.5" />}
+              <button type="button" onClick={() => setOpenField(openField === "labels" ? null : "labels")} aria-label="Add label" className="flex h-6 w-6 items-center justify-center rounded-sm text-text-subtle hover:bg-surface-muted hover:text-text">
+                <Plus className="h-3.5 w-3.5" />
               </button>
             </div>
-            <LabelPicker
-              open={openField === "labels"}
-              onClose={() => setOpenField(null)}
-              anchorRef={labelsRef}
-              labels={labels}
-              selectedIds={task.labels.map((l) => l.id)}
-              onToggle={toggleLabel}
-            />
+            <LabelPicker open={openField === "labels"} onClose={() => setOpenField(null)} anchorRef={labelsRef} labels={labels} selectedIds={task.labels.map((l) => l.id)} onToggle={toggleLabel} />
           </DetailRow>
 
-          <DetailRow icon={UserCircle} label="Teams">
-            {isEditing ? (
-              <input
-                value={team}
-                onChange={(e) => setTeam(e.target.value)}
-                onBlur={() => {
-                  if (team !== (task.team ?? "")) onSave({ team: team || null });
-                }}
-                placeholder="Add team..."
-                className="w-full bg-transparent text-sm text-text outline-none placeholder:text-text-subtle focus:ring-1 focus:ring-accent rounded-sm px-1"
-              />
-            ) : (
-              <span className="text-sm text-text px-1">{task.team || <span className="text-text-subtle">None</span>}</span>
-            )}
+          <DetailRow label="Teams">
+            <div className="px-1.5">
+              {task.team ? (
+                <span className="text-sm text-text">{task.team}</span>
+              ) : isEditing ? (
+                <input value={team} onChange={(e) => setTeam(e.target.value)} onBlur={() => onSave({ team })} placeholder="None" className="w-full bg-transparent text-sm text-text outline-none placeholder:text-text-subtle" />
+              ) : (
+                <span className="text-sm text-text-subtle">None</span>
+              )}
+            </div>
           </DetailRow>
 
-          <DetailRow icon={UserCircle} label="Reporter">
-            <button
-              ref={reporterRef}
-              type="button"
-              onClick={() => isEditing && setOpenField("reporter")}
-              className={cn("flex items-center gap-1.5 rounded-sm px-1.5 py-1", isEditing ? "hover:bg-surface-muted" : "cursor-default")}
-            >
+          <DetailRow label="Reporter">
+            <button ref={reporterRef} type="button" onClick={() => setOpenField(openField === "reporter" ? null : "reporter")} className="flex min-h-7 items-center gap-1.5 rounded-sm px-1.5 text-sm transition-colors hover:bg-surface-muted">
               {task.reporter ? (
                 <>
-                  <Avatar name={task.reporter.name} size="xs" />
-                  <span className="text-sm text-text">{task.reporter.name}</span>
+                  <Avatar name={task.reporter.name} src={task.reporter.avatarUrl} size="xs" />
+                  <span className="text-text">{task.reporter.name}</span>
                 </>
               ) : (
-                <span className="text-xs text-text-subtle">Unassigned</span>
+                <span className="text-text-subtle">None</span>
               )}
             </button>
-            <ReporterPicker
-              open={openField === "reporter"}
-              onClose={() => setOpenField(null)}
-              anchorRef={reporterRef}
-              members={members}
-              selectedId={task.reporter?.id ?? null}
-              onSelect={(reporterId) => onSave({ reporterId })}
-            />
+            <MemberPicker open={openField === "reporter"} onClose={() => setOpenField(null)} anchorRef={reporterRef} members={members} selectedIds={task.reporter ? [task.reporter.id] : []} onToggle={(id) => onSave({ reporterId: id === task.reporter?.id ? null : id })} />
           </DetailRow>
         </div>
       )}

@@ -31,7 +31,7 @@ export function TaskGroup({ status, tasks, visibleFields, projectId }: TaskGroup
   }
 
   return (
-    <CollapsiblePanel title={config.label} count={tasks.length} defaultOpen>
+    <CollapsiblePanel title={config.label} defaultOpen>
       {tasks.length === 0 ? (
         <div className="rounded-md border border-dashed border-border">
           <EmptyState title={`No tasks in ${config.label}`} />

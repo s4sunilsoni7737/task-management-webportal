@@ -105,7 +105,7 @@ export function Popover({
       role="menu"
       style={style}
       className={cn(
-        "z-popover animate-fade-in-scale rounded-md border border-border bg-surface shadow-popover",
+        "z-[var(--z-popover)] animate-fade-in-scale rounded-md border border-border bg-surface shadow-popover",
         className,
       )}
     >

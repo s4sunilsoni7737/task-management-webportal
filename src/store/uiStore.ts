@@ -30,7 +30,7 @@ export const useUiStore = create<UiState>()(
   persist(
     (set) => ({
       theme: "light",
-      colorMode: "blue",
+      colorMode: "black",
       sidebarCollapsed: false,
       mobileSidebarOpen: false,
       taskView: "list",

@@ -133,7 +133,7 @@ function ThemeSubmenu({ open, onClose, anchorRef }: ThemeSubmenuProps) {
     setTheme(value); // optimistic DOM + store update
     onClose();
     // Persist to the backend — the source of truth for this preference.
-    updatePreferences.mutate({ theme: value, colorMode: colorMode || user?.preferences?.colorMode || "blue" });
+    updatePreferences.mutate({ theme: value, colorMode: colorMode || user?.preferences?.colorMode || "black" });
   }
 
   return (

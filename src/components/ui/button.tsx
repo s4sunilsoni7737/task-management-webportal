@@ -1,4 +1,5 @@
 import { forwardRef, type ButtonHTMLAttributes } from "react";
+import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type ButtonVariant = "black" | "outline" | "ghost" | "accent";
@@ -7,6 +8,7 @@ type ButtonSize = "sm" | "md";
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
   size?: ButtonSize;
+  isLoading?: boolean;
 }
 
 const VARIANT_CLASSES: Record<ButtonVariant, string> = {
@@ -23,13 +25,14 @@ const SIZE_CLASSES: Record<ButtonSize, string> = {
 };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
-  { className, variant = "outline", size = "md", type = "button", ...props },
+  { className, variant = "outline", size = "md", type = "button", isLoading, disabled, children, ...props },
   ref,
 ) {
   return (
     <button
       ref={ref}
       type={type}
+      disabled={disabled || isLoading}
       className={cn(
         "inline-flex shrink-0 items-center justify-center rounded-sm font-medium transition-colors",
         "disabled:cursor-not-allowed disabled:opacity-50",
@@ -39,6 +42,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
         className,
       )}
       {...props}
-    />
+    >
+      {isLoading && <Loader2 className="h-4 w-4 animate-spin shrink-0" />}
+      {children}
+    </button>
   );
 });

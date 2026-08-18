@@ -11,6 +11,7 @@ import { InlineAddTaskRow } from "@/components/tasks/inline-add-task-row";
 import { useMediaQuery, BREAKPOINTS } from "@/hooks/useMediaQuery";
 import { useMembers } from "@/hooks/useLookups";
 import { routes } from "@/lib/routeBuilder";
+import { formatDate } from "@/lib/utils/formatters";
 import { useDeleteTask, useUpdateTask } from "@/hooks/useTasks";
 import type { Member, Priority, Task } from "@/lib/types";
 import type { TaskFieldVisibility } from "@/components/tasks/task-fields";
@@ -50,15 +51,15 @@ export function TaskTable({ tasks, visibleFields, onAddTask, isAddingTask }: Tas
     <div className="overflow-x-auto rounded-md border border-border">
       <table className="w-full min-w-[700px] table-fixed border-collapse">
         <thead>
-          <tr className="border-b border-border bg-surface-muted text-left text-xs font-medium text-text-muted">
-            <th className="w-full px-3 py-2 font-medium">Task</th>
-            {visibleFields.priority && <th className="w-32 px-3 py-2 font-medium">Priority</th>}
-            {visibleFields.members && <th className="w-28 px-3 py-2 font-medium">Members</th>}
-            {visibleFields.dueDate && <th className="w-32 px-3 py-2 font-medium">Due Date</th>}
-            {visibleFields.labels && <th className="w-40 px-3 py-2 font-medium">Labels</th>}
-            {visibleFields.status && <th className="w-28 px-3 py-2 font-medium">Status</th>}
-            {visibleFields.reporter && <th className="w-32 px-3 py-2 font-medium">Reporter</th>}
-            <th className="w-20 px-2 py-2 font-medium text-right">Actions</th>
+          <tr className="border-b border-border bg-surface-muted text-left text-sm font-medium text-text">
+            <th className="w-full px-4 py-3 font-medium">Task</th>
+            {visibleFields.priority && <th className="w-32 px-4 py-3 font-medium">Priority</th>}
+            {visibleFields.members && <th className="w-28 px-4 py-3 font-medium">Members</th>}
+            {visibleFields.dueDate && <th className="w-32 px-4 py-3 font-medium">Due Date</th>}
+            {visibleFields.labels && <th className="w-40 px-4 py-3 font-medium">Labels</th>}
+            {visibleFields.status && <th className="w-28 px-4 py-3 font-medium">Status</th>}
+            {visibleFields.reporter && <th className="w-32 px-4 py-3 font-medium">Reporter</th>}
+            <th className="w-20 px-4 py-3 font-medium text-right">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -67,7 +68,7 @@ export function TaskTable({ tasks, visibleFields, onAddTask, isAddingTask }: Tas
           ))}
           {onAddTask && (
             <tr className="border-t border-border">
-              <td colSpan={100} className="px-1 py-1">
+              <td colSpan={100} className="px-4 py-2">
                 <InlineAddTaskRow onAdd={onAddTask} pending={isAddingTask} />
               </td>
             </tr>
@@ -94,47 +95,47 @@ function TaskDesktopRow({
       onClick={() => router.push(routes.taskDetail(task.id))}
       className="cursor-pointer border-b border-border text-sm last:border-b-0 hover:bg-surface-muted"
     >
-      <td className="px-3 py-2 text-text">
+      <td className="px-4 py-3 text-[15px] text-text">
         <span className="line-clamp-1">{task.title}</span>
       </td>
       {visibleFields.priority && (
-        <td className="px-3 py-2">
+        <td className="px-4 py-3">
           <TaskPriorityCell value={task.priority} onChange={(priority) => updateTask.mutate({ priority })} />
         </td>
       )}
       {visibleFields.members && (
-        <td className="px-3 py-2">
+        <td className="px-4 py-3">
           <TaskMembersCell members={task.members} onChange={(memberIds) => updateTask.mutate({ memberIds })} />
         </td>
       )}
       {visibleFields.dueDate && (
-        <td className="px-3 py-2">
-          <DateChip date={task.dueDate} short />
+        <td className="px-4 py-3 text-[15px] text-text">
+          {task.dueDate ? formatDate(task.dueDate) : ""}
         </td>
       )}
       {visibleFields.labels && (
-        <td className="px-3 py-2">
+        <td className="px-4 py-3">
           <div className="flex flex-wrap gap-1">
             {task.labels.map(l => <LabelChip key={l.id} label={l} />)}
           </div>
         </td>
       )}
       {visibleFields.status && (
-        <td className="px-3 py-2">
+        <td className="px-4 py-3">
           <StatusBadge status={task.status} />
         </td>
       )}
       {visibleFields.reporter && (
-        <td className="px-3 py-2">
+        <td className="px-4 py-3">
           {task.reporter ? (
             <div className="flex items-center gap-1.5">
               <Avatar name={task.reporter.name} src={task.reporter.avatarUrl} size="sm" />
-              <span className="text-xs text-text-muted">{task.reporter.name}</span>
+              <span className="text-[15px] text-text-muted">{task.reporter.name}</span>
             </div>
-          ) : <span className="text-xs text-text-muted">Unknown</span>}
+          ) : <span className="text-[15px] text-text-muted">Unknown</span>}
         </td>
       )}
-      <td className="px-2 py-2 text-right" onClick={(e) => e.stopPropagation()}>
+      <td className="px-4 py-3 text-right" onClick={(e) => e.stopPropagation()}>
         <OverflowMenu
           label={`Actions for ${task.title}`}
           onEdit={() => router.push(routes.taskDetail(task.id))}

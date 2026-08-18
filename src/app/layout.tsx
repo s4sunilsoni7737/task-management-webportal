@@ -25,7 +25,7 @@ const THEME_INIT_SCRIPT = `
   try {
     var raw = localStorage.getItem("dexter-ui");
     var theme = "light";
-    var colorMode = "blue";
+    var colorMode = "black";
     if (raw) {
       var parsed = JSON.parse(raw);
       theme = (parsed.state && parsed.state.theme) || theme;

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { CheckCircle2, X, XCircle, Info } from "lucide-react";
+import { CheckCircle2, X, XCircle, Info, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useToastStore, type ToastItem } from "@/store/toastStore";
 
@@ -9,12 +9,14 @@ const ICONS: Record<ToastItem["variant"], React.ElementType> = {
   success: CheckCircle2,
   error: XCircle,
   info: Info,
+  loading: Loader2,
 };
 
 const VARIANT_STYLES: Record<ToastItem["variant"], string> = {
   success: "text-[#0F9F6E]",
   error: "text-priority-high",
   info: "text-accent",
+  loading: "text-text-subtle animate-spin",
 };
 
 function ToastRow({ toast }: { toast: ToastItem }) {
@@ -22,9 +24,11 @@ function ToastRow({ toast }: { toast: ToastItem }) {
   const Icon = ICONS[toast.variant];
 
   useEffect(() => {
-    const timer = setTimeout(() => dismiss(toast.id), 4000);
-    return () => clearTimeout(timer);
-  }, [toast.id, dismiss]);
+    if (toast.variant !== "loading") {
+      const timer = setTimeout(() => dismiss(toast.id), 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [toast.id, dismiss, toast.variant]);
 
   return (
     <div

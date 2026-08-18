@@ -3,22 +3,29 @@ import { getErrorMessage } from "@/services/api/api-error-handler";
 
 export interface ToastItem {
   id: string;
-  variant: "success" | "error" | "info";
+  variant: "success" | "error" | "info" | "loading";
   message: string;
 }
 
 interface ToastState {
   toasts: ToastItem[];
-  push: (toast: Omit<ToastItem, "id">) => void;
+  push: (toast: Omit<ToastItem, "id">, id?: string) => string;
   dismiss: (id: string) => void;
 }
 
 export const useToastStore = create<ToastState>((set) => ({
   toasts: [],
-  push: (toast) =>
-    set((state) => ({
-      toasts: [...state.toasts, { ...toast, id: crypto.randomUUID() }],
-    })),
+  push: (toast, explicitId) => {
+    const id = explicitId || crypto.randomUUID();
+    set((state) => {
+      // If updating an existing toast
+      if (state.toasts.some(t => t.id === id)) {
+        return { toasts: state.toasts.map(t => t.id === id ? { ...t, ...toast } : t) };
+      }
+      return { toasts: [...state.toasts, { ...toast, id }] };
+    });
+    return id;
+  },
   dismiss: (id) => set((state) => ({ toasts: state.toasts.filter((t) => t.id !== id) })),
 }));
 
@@ -27,14 +34,20 @@ export const useToastStore = create<ToastState>((set) => ({
  * without needing to be a React component: `toast.success("Saved")`.
  */
 export const toast = {
-  success(message: string) {
-    useToastStore.getState().push({ variant: "success", message });
+  success(message: string, id?: string) {
+    return useToastStore.getState().push({ variant: "success", message }, id);
   },
-  error(error: unknown, fallback = "Something went wrong.") {
+  error(error: unknown, fallback = "Something went wrong.", id?: string) {
     const message = error ? getErrorMessage(error) : fallback;
-    useToastStore.getState().push({ variant: "error", message: message || fallback });
+    return useToastStore.getState().push({ variant: "error", message: message || fallback }, id);
   },
-  info(message: string) {
-    useToastStore.getState().push({ variant: "info", message });
+  info(message: string, id?: string) {
+    return useToastStore.getState().push({ variant: "info", message }, id);
   },
+  loading(message: string, id?: string) {
+    return useToastStore.getState().push({ variant: "loading", message }, id);
+  },
+  dismiss(id: string) {
+    useToastStore.getState().dismiss(id);
+  }
 };

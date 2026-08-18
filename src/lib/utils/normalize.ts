@@ -83,7 +83,7 @@ export function normalizeUser(raw: unknown): User {
           : "light"),
       colorMode: (() => {
         const mode = prefs.colorMode ?? obj.colorMode;
-        return (typeof mode === "string" ? mode : "blue") as User["preferences"]["colorMode"];
+        return (typeof mode === "string" ? mode : "black") as User["preferences"]["colorMode"];
       })(),
     },
   };

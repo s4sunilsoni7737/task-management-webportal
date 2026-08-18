@@ -44,7 +44,7 @@ export function AuthBootstrap({ children }: { children: React.ReactNode }) {
           const root = document.documentElement;
           applyDocumentTheme(
             root.classList.contains("dark") ? "dark" : "light",
-            (root.getAttribute("data-color-mode") as "blue") ?? "blue",
+            (root.getAttribute("data-color-mode") as "black") ?? "black",
           );
         }
       })

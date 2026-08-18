@@ -229,6 +229,7 @@ export default function TaskDetailPage() {
             <div className="mb-10">
               <PropertiesRow task={task} onOpenDatePicker={() => isEditing && setDatePickerOpen(true)} dateAnchorRef={dateAnchorRef} />
               <LabelsRow task={task} onChange={(labelIds) => save({ labelIds })} isEditing={isEditing} />
+              <ResourcesRow task={task} isEditing={isEditing} />
             </div>
 
             <DatePickerPopover
@@ -241,7 +242,6 @@ export default function TaskDetailPage() {
             />
 
             <SubtasksSection task={task} isEditing={isEditing} />
-            <ResourcesRow task={task} isEditing={isEditing} />
             <CommentsSection taskId={task.id} />
           </div>
         </div>

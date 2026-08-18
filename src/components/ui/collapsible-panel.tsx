@@ -33,12 +33,12 @@ export function CollapsiblePanel({
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
-          className="flex items-center gap-1.5 text-sm font-semibold text-text"
+          className="flex items-center gap-1.5 text-base font-medium text-text"
         >
           {open ? (
-            <ChevronDown className="h-3.5 w-3.5 text-text-subtle" />
+            <ChevronDown className="h-4 w-4 text-text" />
           ) : (
-            <ChevronRight className="h-3.5 w-3.5 text-text-subtle" />
+            <ChevronRight className="h-4 w-4 text-text" />
           )}
           {title}
           {typeof count === "number" && (

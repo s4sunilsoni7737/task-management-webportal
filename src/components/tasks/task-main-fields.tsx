@@ -41,10 +41,10 @@ export function TaskHeader({ task, onSave, isEditing }: TaskHeaderProps) {
             if (title.trim() && title !== task.title) onSave({ title: title.trim() });
             else setTitle(task.title);
           }}
-          className="w-full resize-none overflow-hidden border-none bg-transparent text-2xl font-bold text-text outline-none focus:ring-1 focus:ring-accent rounded-sm px-1"
+          className="w-full resize-none overflow-hidden border-none bg-transparent text-3xl font-bold tracking-tight text-text outline-none focus:ring-1 focus:ring-accent rounded-sm px-1"
         />
       ) : (
-        <h1 className="text-2xl font-bold text-text px-1 whitespace-pre-wrap">{task.title}</h1>
+        <h1 className="text-3xl font-bold text-text px-1 whitespace-pre-wrap tracking-tight">{task.title}</h1>
       )}
 
       {isEditing ? (
@@ -199,7 +199,7 @@ export function ResourcesRow({ task, isEditing }: { task: Task; isEditing?: bool
   }
 
   return (
-    <div className="mb-8 flex items-start gap-4">
+    <div className="mb-4 flex items-start gap-4">
       <div className="w-24 shrink-0 pt-1 text-sm font-semibold text-text">Resources</div>
       <div className="min-w-0 flex-1 flex flex-col gap-2">
       {task.resources && task.resources.length > 0 && (

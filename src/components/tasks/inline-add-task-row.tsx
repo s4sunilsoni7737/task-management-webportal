@@ -7,11 +7,20 @@ interface InlineAddTaskRowProps {
   onAdd: (title: string) => void;
   label?: string;
   pending?: boolean;
+  isEditing?: boolean;
+  onEditingChange?: (editing: boolean) => void;
 }
 
 /** "+ Add Task" row used at the end of every group/column/subtasks table. */
-export function InlineAddTaskRow({ onAdd, label = "Add Task", pending }: InlineAddTaskRowProps) {
-  const [editing, setEditing] = useState(false);
+export function InlineAddTaskRow({ onAdd, label = "Add Task", pending, isEditing, onEditingChange }: InlineAddTaskRowProps) {
+  const [internalEditing, setInternalEditing] = useState(false);
+  const editing = isEditing !== undefined ? isEditing : internalEditing;
+  
+  function setEditing(val: boolean) {
+    if (onEditingChange) onEditingChange(val);
+    else setInternalEditing(val);
+  }
+
   const [title, setTitle] = useState("");
   const submittingRef = useRef(false);
 

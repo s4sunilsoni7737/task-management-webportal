@@ -36,7 +36,7 @@ function CallbackContent() {
       email: null,
       avatarUrl: null,
       isGuest: false,
-      preferences: { theme: "light", colorMode: "blue" },
+      preferences: { theme: "light", colorMode: "black" },
     });
     router.replace(routes.tasks());
   }, [router, searchParams, setSession]);

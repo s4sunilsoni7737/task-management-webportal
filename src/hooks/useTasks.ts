@@ -39,6 +39,7 @@ export function useCreateTask() {
     mutationFn: (input: CreateTaskInput) => tasksService.create(input),
     successMessage: "Task created",
     errorMessage: "Couldn't create task",
+    pendingMessage: "Creating task...",
     invalidateQueries: [["tasks"], ["projects"]],
   });
 }
@@ -47,6 +48,7 @@ export function useUpdateTask(taskId: string) {
   return useApiMutation({
     mutationFn: (input: UpdateTaskInput) => tasksService.update(taskId, input),
     errorMessage: "Couldn't update task",
+    pendingMessage: "Updating task...",
     invalidateQueries: [["tasks"], ["tasks", taskId]],
   });
 }
@@ -55,6 +57,7 @@ export function useDeleteTask() {
   return useApiMutation({
     mutationFn: (id: string) => tasksService.remove(id),
     successMessage: "Task deleted",
+    pendingMessage: "Deleting task...",
     errorMessage: "Couldn't delete task",
     invalidateQueries: [["tasks"], ["projects"]],
   });

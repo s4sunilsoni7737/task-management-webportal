@@ -23,6 +23,7 @@ interface CalendarProps {
   selectedStart: Date | null;
   selectedEnd: Date | null;
   onSelectDate: (date: Date) => void;
+  minDate?: Date;
 }
 
 const WEEKDAY_LABELS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
@@ -32,7 +33,7 @@ const WEEKDAY_LABELS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
  * ("Su Mo Tu We Th Fr Sa" weekday labels, dark filled marker for the
  * selected date, light gray marker for the range/today state).
  */
-export function Calendar({ month, onMonthChange, selectedStart, selectedEnd, onSelectDate }: CalendarProps) {
+export function Calendar({ month, onMonthChange, selectedStart, selectedEnd, onSelectDate, minDate }: CalendarProps) {
   const gridStart = startOfWeek(startOfMonth(month));
   const gridEnd = endOfWeek(endOfMonth(month));
   const days = eachDayOfInterval({ start: gridStart, end: gridEnd });
@@ -79,6 +80,7 @@ export function Calendar({ month, onMonthChange, selectedStart, selectedEnd, onS
             <button
               key={day.toISOString()}
               type="button"
+              disabled={minDate ? day < minDate : false}
               onClick={() => onSelectDate(day)}
               className={cn(
                 "flex h-6 w-6 items-center justify-center justify-self-center rounded-full text-[12px] transition-colors",
@@ -87,6 +89,7 @@ export function Calendar({ month, onMonthChange, selectedStart, selectedEnd, onS
                 inRange && !isStart && !isEnd && "bg-accent-soft text-accent",
                 (isStart || isEnd) && "bg-black-action font-medium text-white",
                 isToday(day) && !isStart && !isEnd && "ring-1 ring-inset ring-border-strong",
+                minDate && day < minDate && "opacity-30 cursor-not-allowed hover:bg-transparent"
               )}
             >
               {format(day, "d")}

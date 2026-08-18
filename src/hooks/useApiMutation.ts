@@ -5,6 +5,8 @@ interface UseApiMutationOptions<TData, TVariables> {
   mutationFn: (variables: TVariables) => Promise<TData>;
   /** Success toast message, or a function to derive it from the response/variables. */
   successMessage?: string | ((data: TData, variables: TVariables) => string);
+  /** Pending toast message. If true, defaults to "Processing...". */
+  pendingMessage?: string | boolean;
   /** Fallback error message when the backend doesn't provide one. */
   errorMessage?: string;
   /** Query keys to invalidate on success. */
@@ -30,6 +32,7 @@ interface UseApiMutationOptions<TData, TVariables> {
 export function useApiMutation<TData, TVariables = void>({
   mutationFn,
   successMessage,
+  pendingMessage,
   errorMessage,
   invalidateQueries = [],
   onSuccess,
@@ -40,22 +43,36 @@ export function useApiMutation<TData, TVariables = void>({
 
   return useMutation({
     mutationFn,
-    onSuccess: async (data, variables) => {
+    onMutate: () => {
+      if (pendingMessage) {
+        const msg = typeof pendingMessage === "string" ? pendingMessage : "Processing...";
+        // We generate an ID and store it on the mutation context so we can dismiss it later
+        const toastId = toast.loading(msg);
+        return { toastId };
+      }
+    },
+    onSuccess: async (data, variables, context: any) => {
       if (successMessage) {
         const message =
           typeof successMessage === "function" ? successMessage(data, variables) : successMessage;
-        toast.success(message);
+        toast.success(message, context?.toastId);
+      } else if (context?.toastId) {
+        toast.dismiss(context.toastId);
       }
       await Promise.all(
         invalidateQueries.map((key) => queryClient.invalidateQueries({ queryKey: key }))
       );
       onSuccess?.(data, variables);
     },
-    onError: (error, variables) => {
-      toast.error(error, errorMessage ?? "Operation failed");
+    onError: (error, variables, context: any) => {
+      toast.error(error, errorMessage ?? "Operation failed", context?.toastId);
       onError?.(error, variables);
     },
-    onSettled: (data, error, variables) => {
+    onSettled: (data, error, variables, context: any) => {
+      if (context?.toastId && !successMessage && !error) {
+         // Fallback dismiss if no success message was shown
+         toast.dismiss(context.toastId);
+      }
       onSettled?.(data, error, variables);
     },
   });

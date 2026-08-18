@@ -45,7 +45,7 @@ export function TasksToolbar({
         onViewChange={onViewChange}
       />
       <FilterPopover members={members} labels={labels} filters={filters} onChange={onFiltersChange} />
-      <Button variant="black" size="sm" onClick={onAddTask} className="h-8 rounded-md px-3 font-medium ml-1 mr-4">
+      <Button variant="accent" size="sm" onClick={onAddTask} className="h-8 rounded-md px-3 font-medium ml-1 mr-4">
         <Plus className="h-4 w-4 mr-1.5" />
         Add Task
       </Button>

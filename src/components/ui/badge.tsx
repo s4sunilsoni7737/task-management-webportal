@@ -38,7 +38,7 @@ export function PriorityBadge({ priority, showLabel = true, className }: Priorit
 
   return (
     <span
-      className={cn("inline-flex items-center gap-1.5 text-sm", className)}
+      className={cn("inline-flex items-center gap-1.5 text-sm font-medium", className)}
       style={{ color: `var(${config.colorVar})` }}
     >
       <Icon className="h-3.5 w-3.5 shrink-0" />
@@ -58,7 +58,7 @@ export function LabelChip({ label, onRemove, className }: LabelChipProps) {
   return (
     <span
       className={cn(
-        "inline-flex h-[24px] items-center gap-1.5 rounded-full bg-surface-muted px-2.5 text-[11px] font-medium text-text",
+        "inline-flex h-[24px] items-center gap-1.5 rounded-full border border-border bg-surface-muted px-2.5 text-[11px] font-medium text-text",
         className,
       )}
     >
@@ -83,10 +83,11 @@ interface DateChipProps {
   short?: boolean;
   onClick?: () => void;
   className?: string;
+  fallbackText?: string;
 }
 
 /** Compact date chip used in task rows, cards, and the Properties row on Task Detail. */
-export function DateChip({ date, short, onClick, className }: DateChipProps) {
+export function DateChip({ date, short, onClick, className, fallbackText = "Set date..." }: DateChipProps) {
   if (!date) {
     return (
       <button
@@ -98,7 +99,7 @@ export function DateChip({ date, short, onClick, className }: DateChipProps) {
         )}
       >
         <CalendarDays className="h-3 w-3 shrink-0" />
-        Set date
+        {fallbackText}
       </button>
     );
   }
