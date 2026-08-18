@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useOnboarding } from "@/hooks/useAuth";
 import { useAuthStore } from "@/store/authStore";
@@ -8,6 +10,13 @@ export default function OnboardingPage() {
   const completeOnboardingOwner = useOnboarding();
   const completeOnboardingMember = useOnboarding();
   const user = useAuthStore((s) => s.user);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (user?.workspaceId) {
+      router.replace('/tasks');
+    }
+  }, [user?.workspaceId, router]);
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-bg p-4">
