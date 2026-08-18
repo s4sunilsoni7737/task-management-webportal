@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Pencil } from "lucide-react";
+import { Pencil, User, Mail } from "lucide-react";
 import { Avatar } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/store/authStore";
 import { useUpdateProfile } from "@/hooks/useUsers";
 import { DEFAULT_WORKSPACE_NAME } from "@/constants";
@@ -135,18 +136,17 @@ export default function ProfileSettingsPage() {
           </div>
           
           <div className="flex justify-end p-6 border-t border-border bg-surface-muted">
-            <button
-              type="button"
+            <Button
+              variant="accent"
               onClick={() => {
                 if (fullName.trim() !== user?.name) {
                   updateProfile.mutate({ name: fullName });
                 }
               }}
-              disabled={updateProfile.isPending}
-              className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-accent/90 disabled:opacity-50"
+              isLoading={updateProfile.isPending}
             >
-              {updateProfile.isPending ? "Saving..." : "Save Profile"}
-            </button>
+              Save Profile
+            </Button>
           </div>
         </div>
       </div>

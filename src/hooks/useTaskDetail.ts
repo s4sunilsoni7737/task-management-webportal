@@ -21,7 +21,7 @@ export function useActivity(taskId: string | undefined) {
 export function useAddComment(taskId: string) {
   const queryClient = useQueryClient();
   return useApiMutation({
-    mutationFn: (body: string) => tasksService.addComment(taskId, { body }),
+    mutationFn: (input: { body: string; file?: File }) => tasksService.addComment(taskId, input),
     errorMessage: "Couldn't post comment",
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tasks", taskId, "comments"] });

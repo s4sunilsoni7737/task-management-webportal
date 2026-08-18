@@ -19,6 +19,7 @@ import type { Task, UpdateTaskInput, Label } from "@/lib/types";
 import { Popover } from "@/components/ui/popover";
 import { Check } from "lucide-react";
 import { AttachmentPreviewModal, getFileIcon } from "@/components/tasks/attachment-preview-modal";
+import { Button } from "@/components/ui/button";
 
 interface TaskHeaderProps {
   task: Task;
@@ -55,28 +56,26 @@ export function TaskHeader({ task, onSave, isEditing, setEditing }: TaskHeaderPr
           />
           {setEditing && (
             <div className="flex items-center gap-2">
-              <button
-                type="button"
+              <Button
+                variant="accent"
                 onClick={() => {
                   if (title.trim() && title !== task.title) onSave({ title: title.trim() });
                   if (description !== task.description) onSave({ description });
                   setEditing(false);
                 }}
-                className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent/90"
               >
                 Save
-              </button>
-              <button
-                type="button"
+              </Button>
+              <Button
+                variant="outline"
                 onClick={() => {
                   setTitle(task.title);
                   setDescription(task.description);
                   setEditing(false);
                 }}
-                className="rounded-md border border-border bg-surface px-4 py-2 text-sm font-medium text-text hover:bg-surface-muted"
               >
                 Cancel
-              </button>
+              </Button>
             </div>
           )}
         </div>

@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { MessageSquare, Paperclip, SendHorizontal, Smile } from "lucide-react";
+import { useState, useRef } from "react";
+import { MessageSquare, Paperclip, SendHorizontal, Smile, X, Loader2, Send } from "lucide-react";
 import { Avatar } from "@/components/ui/avatar";
 import { EmptyState } from "@/components/ui/empty-state";
 import { OverflowMenu } from "@/components/ui/menu";
@@ -12,7 +12,7 @@ import { DEFAULT_WORKSPACE_NAME } from "@/constants";
 import type { Comment } from "@/lib/types";
 
 interface CommentComposerProps {
-  onSubmit: (body: string) => void;
+  onSubmit: (input: { body: string; file?: File }) => void;
   pending?: boolean;
   placeholder?: string;
   compact?: boolean;
@@ -21,47 +21,71 @@ interface CommentComposerProps {
 function CommentComposer({ onSubmit, pending, placeholder = "Add a comment...", compact }: CommentComposerProps) {
   const user = useAuthStore((s) => s.user);
   const [value, setValue] = useState("");
+  const [file, setFile] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   function submit() {
     const trimmed = value.trim();
-    if (!trimmed) return;
-    onSubmit(trimmed);
+    if (!trimmed && !file) return;
+    onSubmit({ body: trimmed, file: file || undefined });
     setValue("");
+    setFile(null);
   }
 
   return (
-    <div className={`flex items-center gap-2.5 rounded-md border border-border bg-surface px-3 ${compact ? "h-10" : "h-[52px]"}`}>
-      {compact && <Avatar name={user?.name ?? DEFAULT_WORKSPACE_NAME} size="xs" />}
-      <input
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" && !e.shiftKey) {
-            e.preventDefault();
-            submit();
-          }
-        }}
-        placeholder={placeholder}
-        disabled={pending}
-        className="min-w-0 flex-1 bg-transparent text-sm text-text outline-none placeholder:text-text-subtle"
-      />
-      <button
-        type="button"
-        aria-label="Attach file"
-        disabled
-        className="flex h-7 w-7 items-center justify-center rounded-sm text-text-subtle disabled:cursor-not-allowed"
-      >
-        <Paperclip className="h-3.5 w-3.5" />
-      </button>
-      <button
-        type="button"
-        aria-label="Send comment"
-        onClick={submit}
-        disabled={pending || !value.trim()}
-        className="flex h-7 w-7 items-center justify-center rounded-sm text-accent transition-colors hover:bg-accent-soft disabled:cursor-not-allowed disabled:text-text-subtle disabled:hover:bg-transparent"
-      >
-        <SendHorizontal className="h-3.5 w-3.5" />
-      </button>
+    <div className="flex flex-col gap-2">
+      {file && (
+        <div className="flex items-center justify-between rounded-md border border-border bg-surface px-3 py-2 text-sm text-text">
+          <span className="truncate">{file.name}</span>
+          <button type="button" onClick={() => setFile(null)} className="text-text-muted hover:text-text">
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+      )}
+      <div className={`flex items-center gap-2.5 rounded-md border border-border bg-surface px-3 ${compact ? "h-10" : "h-[52px]"}`}>
+        {compact && <Avatar name={user?.name ?? DEFAULT_WORKSPACE_NAME} size="xs" />}
+        <input
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              submit();
+            }
+          }}
+          placeholder={placeholder}
+          disabled={pending}
+          className="min-w-0 flex-1 bg-transparent text-sm text-text outline-none placeholder:text-text-subtle"
+        />
+        <input
+          type="file"
+          ref={fileInputRef}
+          className="hidden"
+          onChange={(e) => {
+            if (e.target.files && e.target.files[0]) {
+              setFile(e.target.files[0]);
+            }
+          }}
+        />
+        <button
+          type="button"
+          aria-label="Attach file"
+          onClick={() => fileInputRef.current?.click()}
+          disabled={pending}
+          className="flex h-7 w-7 items-center justify-center rounded-sm text-text-subtle hover:bg-surface-muted hover:text-text disabled:cursor-not-allowed"
+        >
+          <Paperclip className="h-3.5 w-3.5" />
+        </button>
+        <button
+          type="button"
+          aria-label="Send comment"
+          onClick={submit}
+          disabled={pending || (!value.trim() && !file)}
+          className="flex h-7 w-7 items-center justify-center rounded-sm text-accent transition-colors hover:bg-accent-soft disabled:cursor-not-allowed disabled:text-text-subtle disabled:hover:bg-transparent"
+        >
+          {pending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <SendHorizontal className="h-3.5 w-3.5" />}
+        </button>
+      </div>
     </div>
   );
 }
@@ -112,7 +136,25 @@ function CommentItem({ comment, taskId }: CommentItemProps) {
             className="mt-0.5 w-full resize-none rounded-sm border border-accent bg-surface px-2 py-1 text-sm text-text outline-none"
           />
         ) : (
-          <p className="mt-0.5 text-sm text-text-muted">{comment.body}</p>
+          <div>
+            <p className="mt-0.5 text-sm text-text-muted whitespace-pre-wrap">{comment.body}</p>
+            {comment.attachments && comment.attachments.length > 0 && (
+              <div className="mt-2 flex flex-wrap gap-2">
+                {comment.attachments.map((att, idx) => (
+                  <a
+                    key={idx}
+                    href={att.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1.5 rounded-md border border-border bg-surface px-2.5 py-1.5 text-xs text-text-muted hover:bg-surface-muted hover:text-text transition-colors"
+                  >
+                    <Paperclip className="h-3 w-3" />
+                    <span className="truncate max-w-[200px]">{att.name}</span>
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
         )}
       </div>
       <div className="flex shrink-0 items-start gap-1">
@@ -161,14 +203,14 @@ export function CommentsSection({ taskId }: { taskId: string }) {
               compact
               placeholder="Leave a reply..."
               pending={addComment.isPending}
-              onSubmit={(body) => addComment.mutate(body)}
+              onSubmit={(input) => addComment.mutate(input)}
             />
           </div>
         </div>
       )}
 
       <div className="mt-3">
-        <CommentComposer pending={addComment.isPending} onSubmit={(body) => addComment.mutate(body)} />
+        <CommentComposer pending={addComment.isPending} onSubmit={(input) => addComment.mutate(input)} />
       </div>
     </div>
   );

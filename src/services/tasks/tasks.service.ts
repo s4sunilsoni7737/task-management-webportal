@@ -130,11 +130,17 @@ export const tasksService = {
     );
   },
 
-  addComment(id: string, input: { body: string; attachments?: { name: string; url: string }[] }): Promise<Comment> {
+  addComment(id: string, input: { body: string; file?: File }): Promise<Comment> {
+    const formData = new FormData();
+    formData.append("body", input.body);
+    if (input.file) {
+      formData.append("file", input.file);
+    }
+
     return request<Comment>({
       url: API_ENDPOINTS.TASKS.COMMENTS(id),
       method: "POST",
-      body: input,
+      body: formData,
     }).then(normalizeComment);
   },
 
