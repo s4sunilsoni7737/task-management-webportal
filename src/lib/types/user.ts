@@ -13,6 +13,7 @@ export interface User {
   isGuest: boolean;
   preferences: UserPreferences;
   workspaceId: string | null;
+  role?: 'owner' | 'member';
 }
 
 /** Minimal shape used for member pickers / avatar stacks across the app. */
