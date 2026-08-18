@@ -109,6 +109,19 @@ export default function ProfileSettingsPage() {
             </div>
           </div>
 
+          {/* Role */}
+          <div className="flex items-center justify-between border-b border-border p-6">
+            <div className="w-1/3 pr-4">
+              <span className="block text-sm font-medium text-text">Workspace Role</span>
+              <span className="mt-0.5 block text-xs text-text-subtle">Your permissions level in this workspace</span>
+            </div>
+            <div className="w-2/3 max-w-md">
+              <div className="h-10 w-full rounded-md border border-border bg-surface px-4 py-2 text-sm text-text-subtle flex items-center">
+                {user?.role === 'owner' ? 'Workspace Owner' : 'Member'}
+              </div>
+            </div>
+          </div>
+
           {/* Username */}
           <div className="flex items-center justify-between p-6">
             <div className="w-1/3 pr-4">
