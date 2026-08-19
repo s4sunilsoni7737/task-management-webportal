@@ -59,8 +59,8 @@ export function Sidebar({ variant }: SidebarProps) {
 
         {(workspaceSectionOpen || isIconRail) && (
           <div className="flex flex-col gap-0.5">
-            <SidebarNavItem href={routes.tasks()} icon={LayoutDashboard} label="Tasks" />
-            <SidebarNavItem href={routes.projects()} icon={Layers} label="Projects" />
+            <SidebarNavItem href={routes.tasks()} icon={LayoutDashboard} label="Tasks" onNavigate={() => isDrawer && setMobileSidebarOpen(false)} />
+            <SidebarNavItem href={routes.projects()} icon={Layers} label="Projects" onNavigate={() => isDrawer && setMobileSidebarOpen(false)} />
           </div>
         )}
       </nav>

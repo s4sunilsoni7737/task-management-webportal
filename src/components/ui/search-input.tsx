@@ -49,7 +49,7 @@ export function SearchInput({ value, onChange, placeholder = "Search..." }: Sear
     <div
       className={cn(
         "flex h-8 items-center gap-1.5 rounded-sm border border-border bg-surface px-2 transition-all",
-        "w-32 focus-within:w-52 sm:w-40 sm:focus-within:w-64",
+        "w-full sm:w-40 sm:focus-within:w-64",
       )}
     >
       <Search className="h-3.5 w-3.5 shrink-0 text-text-subtle" />

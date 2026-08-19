@@ -92,7 +92,7 @@ export function AddTaskModal({ open, onClose, projectId, defaultStatus = "todo" 
 
   return (
     <div
-      className="fixed inset-0 z-[var(--z-modal)] flex items-center justify-center bg-black/30 p-4 animate-fade-in"
+      className="fixed inset-0 z-modal flex items-center justify-center bg-black/30 p-4 animate-fade-in"
       onClick={onClose}
     >
       <div

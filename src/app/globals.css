@@ -67,14 +67,14 @@
     to { transform: translateX(0); }
   }
 
-  --z-sticky: 30;
-  --z-dropdown: 40;
-  --z-sidebar-backdrop: 45;
-  --z-sidebar: 50;
-  --z-modal: 60;
-  --z-modal-raised: 70;
-  --z-popover: 80;
-  --z-toast: 90;
+  --z-index-sticky: 30;
+  --z-index-dropdown: 40;
+  --z-index-sidebar-backdrop: 45;
+  --z-index-sidebar: 50;
+  --z-index-modal: 60;
+  --z-index-modal-raised: 70;
+  --z-index-popover: 80;
+  --z-index-toast: 90;
 }
 /* ---------------------------------------------------------------------
    Design tokens

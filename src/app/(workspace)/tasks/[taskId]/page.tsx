@@ -191,7 +191,7 @@ export default function TaskDetailPage() {
             </span>
           ))}
         </nav>
-        <div className="flex shrink-0 items-center gap-1 sm:gap-1.5">
+        <div className="flex shrink-0 items-center gap-1 sm:gap-1.5 mr-4">
           <TaskDetailActions
             task={task}
             onToggleLock={() => save({ isLocked: !task.isLocked })}
@@ -208,9 +208,9 @@ export default function TaskDetailPage() {
         </div>
       </div>
 
-      <div className="flex flex-1 overflow-hidden">
-        <div className="flex-1 overflow-y-auto px-6 py-6 md:px-10 lg:px-14">
-          <div className="mx-auto max-w-4xl pb-20">
+      <div className="flex flex-col md:flex-row flex-1 overflow-y-auto md:overflow-hidden gap-3">
+        <div className="flex-1 md:overflow-y-auto pl-4 pr-4 py-4 md:py-6 md:pl-10 lg:pl-14 md:pr-0">
+          <div className="pb-20">
             <TaskHeader task={task} onSave={save} isEditing={isEditing} setEditing={setIsEditing} />
 
             <div className="mb-10">
@@ -234,8 +234,8 @@ export default function TaskDetailPage() {
         </div>
 
         {panelOpen && (
-          <div className="w-[340px] shrink-0 border-l border-border bg-bg overflow-y-auto hidden md:block">
-            <div className="flex flex-col gap-5 p-5">
+          <div className="w-full md:w-[320px] shrink-0 md:overflow-y-auto">
+            <div className="flex flex-col gap-3 pb-6 px-4 md:py-6 md:pr-6 md:pl-0">
               <DetailsCard task={task} onSave={save} isEditing={isEditing} />
               <UpdatesCard taskId={task.id} />
             </div>

@@ -186,9 +186,9 @@ export function CommentsSection({ taskId }: { taskId: string }) {
     <div className="mt-8">
       <h2 className="mb-4 text-base font-semibold text-text">Comments</h2>
       {isLoading ? (
-        <div className="h-24 animate-pulse rounded-md bg-surface-muted" />
+        <div className="h-24 animate-pulse rounded-lg bg-surface-muted" />
       ) : (
-        <div className="rounded-md border border-border">
+        <div className="flex flex-col gap-3 rounded-lg border border-border bg-surface p-3 shadow-[0px_1px_1px_0px_#0000000A,0px_3px_6px_-2px_#00000005]">
           {comments.length === 0 ? (
             <EmptyState icon={MessageSquare} title="No comments yet" description="Start the discussion below." />
           ) : (
@@ -198,7 +198,7 @@ export function CommentsSection({ taskId }: { taskId: string }) {
               ))}
             </div>
           )}
-          <div className="border-t border-border p-2.5">
+          <div className="border-t border-border pt-3">
             <CommentComposer
               compact
               placeholder="Leave a reply..."

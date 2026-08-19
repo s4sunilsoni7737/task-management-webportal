@@ -256,8 +256,8 @@ export function UpdatesCard({ taskId }: { taskId: string }) {
   const [collapsed, setCollapsed] = useState(false);
 
   return (
-    <div className="rounded-md border border-border bg-surface">
-      <div className="border-b border-border px-3 py-2.5">
+    <div className="flex flex-col gap-3 rounded-lg border border-border bg-surface p-3 shadow-[0px_1px_1px_0px_#0000000A,0px_3px_6px_-2px_#00000005]">
+      <div className="flex items-center justify-between">
         <button
           type="button"
           onClick={() => setCollapsed((v) => !v)}
@@ -269,7 +269,7 @@ export function UpdatesCard({ taskId }: { taskId: string }) {
       </div>
 
       {!collapsed && (
-        <div className="flex flex-col gap-3 p-3">
+        <div className="flex flex-col gap-3">
           {isLoading && <div className="h-16 animate-pulse rounded-md bg-surface-muted" />}
           {!isLoading && activity.length === 0 && (
             <p className="text-xs text-text-subtle">No updates yet.</p>
@@ -332,8 +332,8 @@ export function DetailsCard({ task, onSave, isEditing }: DetailsCardProps) {
   }
 
   return (
-    <div className="rounded-md border border-border bg-surface">
-      <div className="flex items-center gap-2 border-b border-border px-3 py-2.5">
+    <div className="flex flex-col gap-3 rounded-lg border border-border bg-surface p-3 shadow-[0px_1px_1px_0px_#0000000A,0px_3px_6px_-2px_#00000005]">
+      <div className="flex items-center gap-2">
         <button
           type="button"
           onClick={() => setCollapsed((v) => !v)}
@@ -363,7 +363,7 @@ export function DetailsCard({ task, onSave, isEditing }: DetailsCardProps) {
       </div>
 
       {!collapsed && (
-        <div className="divide-y divide-border px-3">
+        <div className="divide-y divide-border">
           <DetailRow label="Status">
             <button
               ref={statusRef}

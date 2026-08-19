@@ -179,7 +179,7 @@ export default function ProjectsPage() {
         <h1 className="text-xl font-bold text-text">Projects</h1>
         <div className="flex flex-wrap items-center gap-2">
           <SearchInput value={search} onChange={changeSearch} placeholder="Search projects..." />
-          <Button variant="accent" size="sm" onClick={() => setModalOpen(true)}>
+          <Button variant="accent" size="sm" onClick={() => setModalOpen(true)} className="mr-4">
             <Plus className="h-3.5 w-3.5" />
             Add Project
           </Button>
@@ -214,7 +214,7 @@ export default function ProjectsPage() {
 
       {modalOpen && (
         <div
-          className="fixed inset-0 z-[var(--z-modal)] flex items-center justify-center bg-black/30 p-4 animate-fade-in"
+          className="fixed inset-0 z-modal flex items-center justify-center bg-black/30 p-4 animate-fade-in"
           onClick={() => setModalOpen(false)}
         >
           <div

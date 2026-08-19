@@ -96,8 +96,8 @@ interface PropertiesRowProps {
 
 export function PropertiesRow({ task, onOpenDatePicker, dateAnchorRef }: PropertiesRowProps) {
   return (
-    <div className="mb-4 flex items-start gap-4">
-      <div className="w-24 shrink-0 pt-1 text-sm font-semibold text-text">Properties</div>
+    <div className="mb-4 flex flex-col sm:flex-row items-start gap-1 sm:gap-4">
+      <div className="w-full sm:w-24 shrink-0 sm:pt-1 text-sm font-semibold text-text">Properties</div>
       <div className="flex flex-wrap items-center gap-3">
         {task.reporter && (
           <div className="flex items-center gap-1.5 text-[12px] font-medium text-text">
@@ -162,8 +162,8 @@ export function LabelsRow({ task, onChange, isEditing }: LabelsRowProps) {
   }
 
   return (
-    <div className="mb-4 flex items-start gap-4">
-      <div className="w-24 shrink-0 pt-1 text-sm font-semibold text-text">Labels</div>
+    <div className="mb-4 flex flex-col sm:flex-row items-start gap-1 sm:gap-4">
+      <div className="w-full sm:w-24 shrink-0 sm:pt-1 text-sm font-semibold text-text">Labels</div>
       <div className="flex flex-wrap items-center gap-1.5">
         {task.labels.map((label) => (
           <LabelChip key={label.id} label={label} onRemove={isEditing ? () => toggle(label.id) : undefined} />
@@ -220,8 +220,8 @@ export function ResourcesRow({ task, isEditing }: { task: Task; isEditing?: bool
   }
 
   return (
-    <div className="mb-4 flex items-start gap-4">
-      <div className="w-24 shrink-0 pt-1 text-sm font-semibold text-text">Resources</div>
+    <div className="mb-4 flex flex-col sm:flex-row items-start gap-1 sm:gap-4">
+      <div className="w-full sm:w-24 shrink-0 sm:pt-1 text-sm font-semibold text-text">Resources</div>
       <div className="min-w-0 flex-1 flex flex-col gap-2">
       {task.resources && task.resources.length > 0 && (
         <div className="flex flex-col gap-2">
@@ -340,33 +340,37 @@ export function SubtasksSection({ task, isEditing }: { task: Task; isEditing?: b
 
   return (
     <CollapsiblePanel title="Subtasks" count={subtasks.length} defaultOpen className="mb-5">
-      {isLoading ? (
-        <div className="h-20 animate-pulse rounded-md bg-surface-muted" />
-      ) : subtasks.length === 0 ? (
-        <div className="rounded-md border border-dashed border-border">
-          <EmptyState title="No subtasks yet" />
-          {isEditing && (
-            <div className="border-t border-border px-1 py-1">
-              <InlineAddTaskRow
-                onAdd={(title) => addSubtask.mutate(title)}
-                pending={addSubtask.isPending}
-                label="Add a subtask..."
-              />
-            </div>
-          )}
-        </div>
-      ) : (
-        <div className="flex flex-col gap-1.5">
-          <TaskTable tasks={subtasks} visibleFields={DEFAULT_TASK_FIELDS} />
-          {isEditing && (
-            <InlineAddTaskRow
-              onAdd={(title) => addSubtask.mutate(title)}
-              pending={addSubtask.isPending}
-              label="Add a subtask..."
-            />
-          )}
-        </div>
-      )}
+      <div className="flex flex-col gap-3 rounded-lg border border-border bg-surface p-3 shadow-[0px_1px_1px_0px_#0000000A,0px_3px_6px_-2px_#00000005]">
+        {isLoading ? (
+          <div className="h-20 animate-pulse rounded-lg bg-surface-muted" />
+        ) : subtasks.length === 0 ? (
+          <div className="rounded-md border border-dashed border-border p-3">
+            <EmptyState title="No subtasks yet" />
+            {isEditing && (
+              <div className="mt-3">
+                <InlineAddTaskRow
+                  onAdd={(title) => addSubtask.mutate(title)}
+                  pending={addSubtask.isPending}
+                  label="Add a subtask..."
+                />
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="flex flex-col gap-3">
+            <TaskTable tasks={subtasks} visibleFields={DEFAULT_TASK_FIELDS} />
+            {isEditing && (
+              <div className="pt-2 border-t border-border">
+                <InlineAddTaskRow
+                  onAdd={(title) => addSubtask.mutate(title)}
+                  pending={addSubtask.isPending}
+                  label="Add a subtask..."
+                />
+              </div>
+            )}
+          </div>
+        )}
+      </div>
     </CollapsiblePanel>
   );
 }

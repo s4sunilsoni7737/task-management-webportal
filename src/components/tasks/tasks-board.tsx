@@ -35,7 +35,7 @@ export function TasksBoard({ tasks, projectId, statusFilter }: TasksBoardProps) 
   const displayColumns = statusFilter ? columns.filter((c) => c === statusFilter) : columns;
 
   return (
-    <div ref={parent} className="flex gap-2 overflow-x-auto scrollbar-thin pb-2">
+    <div ref={parent} className="flex flex-col sm:flex-row gap-4 sm:gap-2 sm:overflow-x-auto scrollbar-thin pb-2">
       {displayColumns.map((status) => (
         <KanbanColumn
           key={status}

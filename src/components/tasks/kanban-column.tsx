@@ -83,7 +83,7 @@ export function KanbanColumn({
         }
       }}
       className={cn(
-        "flex w-[340px] shrink-0 flex-col gap-3 rounded-xl border border-border bg-surface-muted p-3 pt-4 transition-colors",
+        "flex w-full sm:w-[340px] shrink-0 flex-col gap-3 rounded-xl border border-border bg-surface-muted p-3 pt-4 transition-colors",
         isDragOver && !draggingColumn && "border-accent bg-accent-soft/40",
         draggingColumn === status && "opacity-50"
       )}
