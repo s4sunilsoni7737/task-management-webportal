@@ -55,7 +55,7 @@ The application is fully responsive and provides an excellent user experience ac
 - **Touch Target Sizing**: Interactive icons follow the design spec's literal "~32×32px" sizing for pixel fidelity to the reference screens, rather than the standard ≥40px touch-target guideline.
 
 ## Live Project URLs
-- **Frontend App**: [https://ablespace-ten.vercel.app/tasks](https://ablespace-ten.vercel.app/tasks)
+- **Frontend App**: [https://task-management-webportal.vercel.app](https://task-management-webportal.vercel.app)
 - **Backend API Docs**: [https://task-management-api-gold.vercel.app/api/docs](https://task-management-api-gold.vercel.app/api/docs)
 
 ---

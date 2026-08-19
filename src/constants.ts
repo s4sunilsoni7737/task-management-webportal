@@ -14,7 +14,7 @@
  * directly at build time.
  * 
  * Live URLs:
- * Frontend: https://ablespace-ten.vercel.app/tasks
+ * Frontend: https://task-management-webportal.vercel.app
  * Backend Docs: https://task-management-api-gold.vercel.app/api/docs
  */
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "";
