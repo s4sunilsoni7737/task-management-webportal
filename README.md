@@ -1,4 +1,4 @@
-# Full Stack Developer (Fresher) – Technical Assessment: Task Management System
+# Full Stack Developer – Technical Assessment: Task Management System
 
 This repository contains the implementation of the **Pyramid** Task Management System for the Full-Stack Developer technical assessment.
 
@@ -53,6 +53,23 @@ The application is fully responsive and provides an excellent user experience ac
 - **OAuth Buttons**: The Google OAuth button is present for visual fidelity but acts as a stub, as no real OAuth provider was configured in the scope.
 - **Resources / Attachments**: Shown in the UI for fidelity, but functional file uploads were omitted as they were not defined in the core REST API scope.
 - **Touch Target Sizing**: Interactive icons follow the design spec's literal "~32×32px" sizing for pixel fidelity to the reference screens, rather than the standard ≥40px touch-target guideline.
+
+## Live Project URLs
+- **Frontend App**: [https://ablespace-ten.vercel.app/tasks](https://ablespace-ten.vercel.app/tasks)
+- **Backend API Docs**: [https://task-management-api-gold.vercel.app/api/docs](https://task-management-api-gold.vercel.app/api/docs)
+
+---
+
+## Configuration & Security Philosophy
+
+*Why `constants.ts` over `.env`?*
+
+In this project, configuration (such as `API_BASE_URL`) is managed via static TypeScript constants in `src/constants.ts` for production environments. For local development, we still use `.env` files for developer convenience (see `.env.example` for required keys).
+
+This transition to `constants.ts` for live deployments is an intentional security and architecture decision:
+- **Leakage Risk**: Frontend `.env` files are notoriously susceptible to accidental version-control commits or public exposure via misconfigured web servers. They are frequently targeted by automated vulnerability scanners in supply chain attacks.
+- **Runtime Safety**: By relying on static TypeScript constants in production, we guarantee better type safety and avoid runtime environment injection vulnerabilities (like prototype pollution).
+- **CI/CD Integration**: In live production and CI/CD pipelines, we use YAML scripts to securely provide the path of the constants file and inject credentials dynamically at build time (`export const API_BASE_URL = <base_url>;`), keeping secrets completely out of the server environment space.
 
 ---
 
