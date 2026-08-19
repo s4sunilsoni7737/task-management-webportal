@@ -165,7 +165,7 @@ function KanbanCard({ task, onDragStart }: KanbanCardProps) {
         onDragStart(task.id);
       }}
       onClick={() => router.push(routes.taskDetail(task.id))}
-      className="flex cursor-grab flex-col gap-4 rounded-xl border border-border bg-surface p-4 shadow-sm transition-shadow hover:shadow-md active:cursor-grabbing"
+      className="flex cursor-grab flex-col gap-4 rounded-xl border border-border bg-surface p-4 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md active:scale-[0.98] active:cursor-grabbing"
     >
       <div className="flex items-start justify-between gap-2">
         <p className="text-base font-medium text-text">{task.title}</p>

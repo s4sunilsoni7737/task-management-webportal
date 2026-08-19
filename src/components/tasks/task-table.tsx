@@ -93,7 +93,7 @@ function TaskDesktopRow({
   return (
     <tr
       onClick={() => router.push(routes.taskDetail(task.id))}
-      className="cursor-pointer border-b border-border text-sm last:border-b-0 hover:bg-surface-muted"
+      className="cursor-pointer border-b border-border text-sm last:border-b-0 hover:bg-surface-muted transition-colors group"
     >
       <td className="px-4 py-3 text-[15px] text-text">
         <span className="line-clamp-1">{task.title}</span>
@@ -154,7 +154,7 @@ function TaskMobileCard({ task, visibleFields }: { task: Task; visibleFields: Ta
   return (
     <div
       onClick={() => router.push(routes.taskDetail(task.id))}
-      className="cursor-pointer rounded-md border border-border bg-surface px-3 py-2.5"
+      className="cursor-pointer rounded-md border border-border bg-surface px-3 py-2.5 active:scale-[0.98] transition-transform duration-200"
     >
       <div className="flex items-start justify-between gap-2">
         <span className="line-clamp-2 text-sm font-medium text-text">{task.title}</span>

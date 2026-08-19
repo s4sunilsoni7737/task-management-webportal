@@ -98,7 +98,7 @@ export function AvatarStack({ members, max = 3, size = "sm", onAdd, className }:
   return (
     <div className={cn("flex items-center -space-x-1.5", className)}>
       {visible.map((member) => (
-        <Avatar key={member.id} name={member.name} src={member.avatarUrl} size={size} ring />
+        <Avatar key={member.id} name={member.name} src={member.avatarUrl} size={size} ring className="relative transition-transform duration-200 hover:-translate-y-1 hover:z-10" />
       ))}
       {overflow > 0 && (
         <div className="flex h-6 w-6 items-center justify-center rounded-full bg-surface-muted text-[10px] font-medium text-text-muted ring-2 ring-surface">

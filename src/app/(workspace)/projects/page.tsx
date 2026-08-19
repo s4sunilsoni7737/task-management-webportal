@@ -64,7 +64,7 @@ function ProjectDesktopRow({ project }: { project: Project }) {
   return (
     <tr
       onClick={() => router.push(routes.projectDetail(project.id))}
-      className="cursor-pointer border-b border-border text-sm last:border-b-0 hover:bg-surface-muted"
+      className="cursor-pointer border-b border-border text-sm last:border-b-0 hover:bg-surface-muted transition-colors group"
     >
       <td className="px-3 py-2 text-text">
         <span className="line-clamp-1">{project.name}</span>
@@ -104,16 +104,16 @@ function ProjectMobileCard({ project }: { project: Project }) {
   return (
     <div
       onClick={() => router.push(routes.projectDetail(project.id))}
-      className="cursor-pointer rounded-md border border-border bg-surface px-3 py-2.5"
+      className="cursor-pointer rounded-md border border-border bg-surface px-3 py-2.5 active:scale-[0.98] transition-transform duration-200"
     >
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
           <p className="line-clamp-2 text-sm font-medium text-text">{project.name}</p>
           {project.lead && (
-            <p className="mt-0.5 flex items-center gap-1.5 text-xs text-text-muted">
+            <div className="mt-0.5 flex items-center gap-1.5 text-xs text-text-muted">
               <Avatar name={project.lead.name} size="xs" />
               {project.lead.name}
-            </p>
+            </div>
           )}
         </div>
         <div className="shrink-0" onClick={(e) => e.stopPropagation()}>
